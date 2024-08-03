@@ -1,33 +1,23 @@
-const updateAccelerationVectors = (masses, g, softeningConstant) => {
-  const massesLen = masses.length;
+const g = 39.5;
+const dt = 0.008; // 0.008 years is equal to 2.92 days
+const softeningConstant = 0.15;
 
-  for (let i = 0; i < massesLen; i++) {
-    let ax = 0;
-    let ay = 0;
-    let az = 0;
-
-    const massI = masses[i];
-
-    for (let j = 0; j < massesLen; j++) {
-      if (i !== j) {
-        const massJ = masses[j];
-
-        const dx = massJ.x - massI.x;
-        const dy = massJ.y - massI.y;
-        const dz = massJ.z - massI.z;
-
-        const distSq = dx * dx + dy * dy + dz * dz;
-
-        f = (g * massJ.m) / (distSq * Math.sqrt(distSq + softeningConstant));
-
-        ax += dx * f;
-        ay += dy * f;
-        az += dz * f;
-      }
-    }
-
-    massI.ax = ax;
-    massI.ay = ay;
-    massI.az = az;
+const masses = [{
+    name: "Sun", // We use solar masses as the unit of mass, so the mass of the Sun is exactly 1
+    m: 1,
+    x: -1.50324727873647e-6,
+    y: -3.93762725944737e-6,
+    z: -4.86567877183925e-8,
+    vx: 3.1669325898331e-5,
+    vy: -6.85489559263319e-6,
+    vz: -7.90076642683254e-7
   }
-};
+  // Mercury, Venus, Earth and Mars data can be found in the pen for this tutorial
+];
+
+const innerSolarSystem = new nBodyProblem({
+  g,
+  dt,
+  masses: JSON.parse(JSON.stringify(masses)), 
+  softeningConstant
+});
