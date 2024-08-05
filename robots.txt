@@ -1,1 +1,7 @@
+User-agent: Googlebot
+Disallow: /projects/wigets
 
+User-agent: *
+Allow: /
+
+Sitemap: https://unknown07724.github.io/sitemap.xml
