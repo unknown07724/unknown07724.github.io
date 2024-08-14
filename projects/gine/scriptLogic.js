@@ -123,3 +123,39 @@ const engine = new Engine();
 engine.loadScene(scene);
 `;
 }
+
+let scriptInterval = null;  // Variable to store the script interval
+
+// Run the script
+document.getElementById('runScript').addEventListener('click', () => {
+    const scriptContent = document.getElementById('scriptEditor').value;
+
+    // Clear any existing interval
+    if (scriptInterval) {
+        clearInterval(scriptInterval);
+    }
+
+    // Create a new script function
+    try {
+        const scriptFunction = new Function('canvas', 'ctx', scriptContent);
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set an interval to run the script
+        scriptInterval = setInterval(() => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas before each run
+            scriptFunction(canvas, ctx);
+        }, 1000 / 60); // Run at 60 FPS
+    } catch (e) {
+        console.error('Script error:', e);
+    }
+});
+
+// Stop the script
+document.getElementById('stopScript').addEventListener('click', () => {
+    if (scriptInterval) {
+        clearInterval(scriptInterval);
+        scriptInterval = null;
+    }
+});
+
