@@ -1,3 +1,5 @@
+// Game Engine Code
+
 class GameObject {
     constructor(x, y, width, height, color) {
         this.x = x;
@@ -22,7 +24,6 @@ class GameObject {
     draw(context) {
         context.fillStyle = this.color;
         context.fillRect(this.x, this.y, this.width, this.height);
-        console.log(`Drawing object at (${this.x}, ${this.y}) with size (${this.width}, ${this.height})`); // Debugging line
     }
 }
 
@@ -91,7 +92,6 @@ class Engine {
 
     loadScene(scene) {
         this.scene = scene;
-        console.log('Scene loaded with', scene.gameObjects.length, 'objects'); // Debugging line
     }
 }
 
@@ -105,5 +105,3 @@ class Script {
     }
 }
 
-// Start the engine
-const engine = new Engine();
