@@ -5,6 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gine - Simple Game Engine</title>
     <style>
+           #scriptList {
+            background: #333;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            height: 150px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        #scriptList button {
+            margin: 5px 0;
+            background: #444;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        #scriptList button:hover {
+            background: #555;
+        }
+
+        #addScriptButton {
+            margin-bottom: 10px;
+        }
         body, html {
             margin: 0;
             padding: 0;
@@ -72,14 +96,22 @@
 <body>
     <canvas id="gameCanvas"></canvas>
     <div id="editorContainer">
+        <div id="scriptListContainer">
+            <button id="addScriptButton">Add Script</button>
+            <div id="scriptList">
+                <!-- Script names will be listed here -->
+            </div>
+        </div>
         <textarea id="scriptEditor" placeholder="Write your script here..."></textarea>
         <div id="controls">
             <div>
                 <label for="examplesDropdown">Examples: </label>
                 <select id="examplesDropdown">
                     <option value="">Select an example...</option>
-                    <option value="combined">Shapes</option>
-
+                    <option value="circle">Circle Example</option>
+                    <option value="halfCircle">Half Circle Example</option>
+                    <option value="hexagon">Hexagon Example</option>
+                    <option value="combined">Combined Example</option>
                 </select>
             </div>
             <div>
@@ -97,6 +129,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     <!-- Load custom script logic -->
     <script src="scriptLogic.js"></script>
-</body>
-</html>
 
