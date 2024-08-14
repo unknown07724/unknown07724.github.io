@@ -4,11 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gine</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            color: #fff;
+        }
+
+        canvas {
+            background-color: #333;
+            border: 2px solid #fff;
+            flex: 1;
+        }
+
+        #editorContainer {
+            background: #222;
+            padding: 10px;
+            border-top: 2px solid #fff;
+        }
+
+        #scriptEditor {
+            width: 100%;
+            height: 150px;
+            background: #111;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 5px;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        #controls {
+            margin-top: 10px;
+        }
+
+        button {
+            background: #555;
+            border: none;
+            color: #fff;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #777;
+        }
+    </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
+    <div id="editorContainer">
+        <textarea id="scriptEditor" placeholder="Write your script here..."></textarea>
+        <div id="controls">
+            <button id="runScript">Run Script</button>
+        </div>
+    </div>
+
+    <!-- Load the engine -->
     <script src="engine.js"></script>
-    <script src="main.js"></script> <!-- Game script -->
+
+    <!-- Embedded script to handle dynamic script execution -->
+    <script>
+        // The script editor functionality
+        document.getElementById('runScript').addEventListener('click', () => {
+            const scriptContent = document.getElementById('scriptEditor').value;
+
+            // Clear existing scripts
+            const oldScript = document.querySelector('script[data-type="userScript"]');
+            if (oldScript) {
+                oldScript.remove();
+            }
+
+            // Create a new script element for the user's script
+            const userScript = document.createElement('script');
+            userScript.textContent = scriptContent;
+            userScript.setAttribute('data-type', 'userScript');
+            document.body.appendChild(userScript);
+        });
+    </script>
 </body>
 </html>
