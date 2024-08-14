@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gine - Simple Game Engine</title> <!-- Updated title tag -->
+    <title>Gine - Simple Game Engine</title>
     <style>
         body, html {
             margin: 0;
@@ -67,6 +67,7 @@
         <textarea id="scriptEditor" placeholder="Write your script here..."></textarea>
         <div id="controls">
             <button id="runScript">Run Script</button>
+            <button id="exportProject">Export Project</button>
         </div>
     </div>
 
@@ -91,6 +92,65 @@
             userScript.textContent = scriptContent;
             userScript.setAttribute('data-type', 'userScript');
             document.body.appendChild(userScript);
+        });
+
+        document.getElementById('exportProject').addEventListener('click', () => {
+            const scriptContent = document.getElementById('scriptEditor').value;
+
+            // HTML template with embedded user script
+            const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gine - Exported Project</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #gameCanvas {
+            background-color: #333;
+            border: 2px solid #fff;
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Load the engine -->
+    <script src="engine.js"></script>
+    <!-- Load utility functions -->
+    <script src="utils.js"></script>
+
+    <script>
+        ${scriptContent}
+    </script>
+</body>
+</html>
+`;
+
+            // Create a blob from the HTML content
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+
+            // Create a download link
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Gine_Project.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         });
 
         // Example script content for testing
