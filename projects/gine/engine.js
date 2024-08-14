@@ -1,181 +1,107 @@
-class Engine {
-    constructor() {
-        this.scenes = {};
-        this.currentScene = null;
-        this.lastTime = 0;
-    }
-
-    start() {
-        this.lastTime = performance.now();
-        requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
-    }
-
-    gameLoop(timestamp) {
-        const deltaTime = timestamp - this.lastTime;
-        this.lastTime = timestamp;
-
-        if (this.currentScene) {
-            this.currentScene.update(deltaTime);
-            this.currentScene.render();
-        }
-
-        requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
-    }
-
-    createScene(name) {
-        const scene = new Scene(name);
-        this.scenes[name] = scene;
-        return scene;
-    }
-
-    switchScene(name) {
-        this.currentScene = this.scenes[name];
-    }
-}
-
-class Scene {
-    constructor(name) {
-        this.name = name;
-        this.gameObjects = [];
-    }
-
-    addGameObject(gameObject) {
-        this.gameObjects.push(gameObject);
-    }
-
-    update(deltaTime) {
-        this.gameObjects.forEach(go => go.update(deltaTime));
-    }
-
-    render() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.gameObjects.forEach(go => go.render(ctx));
-    }
-}
-
 class GameObject {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, color) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.components = [];
+        this.color = color;
+        this.scripts = [];
     }
 
-    addComponent(component) {
-        this.components.push(component);
-        component.gameObject = this;
+    addScript(script) {
+        script.parent = this;
+        this.scripts.push(script);
     }
 
-    update(deltaTime) {
-        this.components.forEach(c => c.update(deltaTime));
-    }
-
-    render(ctx) {
-        this.components.forEach(c => c.render(ctx));
-    }
-}
-
-class Component {
-    constructor() {
-        this.gameObject = null;
-    }
-
-    update(deltaTime) {}
-    render(ctx) {}
-}
-class ScriptComponent extends Component {
-    constructor(script) {
-        super();
-        this.script = script;
-    }
-
-    update(deltaTime) {
-        if (this.script.update) {
-            this.script.update(this.gameObject, deltaTime);
+    update() {
+        for (const script of this.scripts) {
+            script.update();
         }
     }
 
-    render(ctx) {
-        if (this.script.render) {
-            this.script.render(this.gameObject, ctx);
+    draw(context) {
+        context.fillStyle = this.color;
+        context.fillRect(this.x, this.y, this.width, this.height);
+    }
+}
+
+class Scene {
+    constructor() {
+        this.gameObjects = [];
+    }
+
+    addObject(gameObject) {
+        this.gameObjects.push(gameObject);
+    }
+
+    update() {
+        for (const object of this.gameObjects) {
+            object.update();
+        }
+    }
+
+    draw(context) {
+        for (const object of this.gameObjects) {
+            object.draw(context);
         }
     }
 }
 
-// Example of how a game developer might use the scripting component
-const myScript = {
-    update(gameObject, deltaTime) {
-        gameObject.x += 100 * deltaTime / 1000; // Move right
-    },
-    render(gameObject, ctx) {
-        ctx.fillStyle = 'red';
-        ctx.fillRect(gameObject.x, gameObject.y, gameObject.width, gameObject.height);
-    }
-};
-
-const scriptComponent = new ScriptComponent(myScript);
-class AssetManager {
+class Engine {
     constructor() {
-        this.assets = {};
+        this.canvas = document.getElementById('gameCanvas');
+        this.context = this.canvas.getContext('2d');
+        this.scene = null;
+        this.init();
     }
 
-    loadImage(name, src) {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.src = src;
-            img.onload = () => {
-                this.assets[name] = img;
-                resolve(img);
-            };
-            img.onerror = reject;
-        });
+    init() {
+        window.addEventListener('resize', () => this.resizeCanvas());
+        this.resizeCanvas();
+        this.start();
     }
 
-    getAsset(name) {
-        return this.assets[name];
+    resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+
+    start() {
+        const loop = () => {
+            this.update();
+            this.draw();
+            requestAnimationFrame(loop);
+        };
+        loop();
+    }
+
+    update() {
+        if (this.scene) {
+            this.scene.update();
+        }
+    }
+
+    draw() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        if (this.scene) {
+            this.scene.draw(this.context);
+        }
+    }
+
+    loadScene(scene) {
+        this.scene = scene;
     }
 }
-function exportGame() {
-    const zip = new JSZip();
-    const gameFolder = zip.folder("game");
 
-    // Export engine core
-    gameFolder.file("engine.js", generateEngineCode());
+class Script {
+    constructor() {
+        this.parent = null;
+    }
 
-    // Export game scripts and assets
-    gameFolder.file("game.js", generateGameCode());
-    gameFolder.file("index.html", generateHTML());
-
-    zip.generateAsync({type: "blob"}).then((content) => {
-        saveAs(content, "game.zip");
-    });
+    update() {
+        // Implement specific script behavior here
+    }
 }
 
-function generateEngineCode() {
-    // Return the string of your engine's code
-    return `/* Engine code here */`;
-}
-
-function generateGameCode() {
-    // Return the string of your game's code
-    return `/* Game code here */`;
-}
-
-function generateHTML() {
-    return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Game</title>
-</head>
-<body>
-    <canvas id="gameCanvas"></canvas>
-    <script src="engine.js"></script>
-    <script src="game.js"></script>
-</body>
-</html>
-    `;
-}
+// Start the engine
+const engine = new Engine();
