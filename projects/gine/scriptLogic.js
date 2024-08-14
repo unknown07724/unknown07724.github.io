@@ -159,3 +159,43 @@ document.getElementById('stopScript').addEventListener('click', () => {
     }
 });
 
+// Function to handle example selection
+document.getElementById('examplesDropdown').addEventListener('change', function() {
+    const example = this.value;
+    let exampleScript = '';
+
+    switch (example) {
+        case 'movingCircle':
+            exampleScript = `
+                // Initialize variables
+                let x = 50;
+                let y = 50;
+                let dx = 2;
+                let dy = 2;
+                const radius = 20;
+                
+                // Draw function
+                function draw() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+                    drawCircle(ctx, x, y, radius, 'blue'); // Draw the circle
+                    x += dx; // Update x position
+                    y += dy; // Update y position
+                    
+                    // Bounce off the walls
+                    if (x + radius > canvas.width || x - radius < 0) dx = -dx;
+                    if (y + radius > canvas.height || y - radius < 0) dy = -dy;
+                }
+
+                // Continuously call the draw function
+                draw();
+            `;
+            break;
+        // Add other cases for different examples
+        default:
+            exampleScript = '';
+            break;
+    }
+
+    document.getElementById('scriptEditor').value = exampleScript;
+});
+
