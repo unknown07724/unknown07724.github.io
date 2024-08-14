@@ -10,53 +10,61 @@
             padding: 0;
             background-color: #000;
             color: #fff;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            overflow: hidden; /* Prevent page scrolling */
+            overflow: hidden;
         }
 
         #gameCanvas {
             background-color: #333;
             border: 2px solid #fff;
-            flex: 1; /* Canvas takes remaining space */
+            flex-grow: 1;
+            width: 100%;
+            display: block;
         }
 
         #editorContainer {
             background: #222;
             padding: 10px;
-            height: 150px; /* Fixed height to ensure visibility */
+            height: 200px;
+            overflow-y: auto;
+            border-top: 2px solid #fff;
             box-sizing: border-box;
-            flex-shrink: 0; /* Prevent the editor from shrinking */
-            overflow-y: auto; /* Allow scrolling if content overflows */
+            width: 100%;
+            flex-shrink: 0;
         }
 
         #scriptEditor {
             width: 100%;
-            height: 100%;
+            height: calc(100% - 40px);
             background: #111;
             color: #fff;
             border: 1px solid #444;
-            padding: 5px;
+            padding: 10px;
             font-family: monospace;
-            resize: none;
             box-sizing: border-box;
+            resize: none;
+            overflow-y: auto;
         }
 
         #controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-top: 10px;
-            text-align: right;
         }
 
-        button {
+        button, select {
             background: #555;
             border: none;
             color: #fff;
             padding: 10px;
             cursor: pointer;
+            margin-left: 10px;
         }
 
-        button:hover {
+        button:hover, select:hover {
             background: #777;
         }
     </style>
@@ -66,8 +74,19 @@
     <div id="editorContainer">
         <textarea id="scriptEditor" placeholder="Write your script here..."></textarea>
         <div id="controls">
-            <button id="runScript">Run Script</button>
-            <button id="exportProject">Export Project</button>
+            <div>
+                <label for="examplesDropdown">Examples: </label>
+                <select id="examplesDropdown">
+                    <option value="">Select an example...</option>
+                    <option value="circle">Circle Example</option>
+                    <option value="halfCircle">Half Circle Example</option>
+                    <option value="hexagon">Hexagon Example</option>
+                </select>
+            </div>
+            <div>
+                <button id="runScript">Run Script</button>
+                <button id="exportProject">Export Project</button>
+            </div>
         </div>
     </div>
 
@@ -75,69 +94,10 @@
     <script src="engine.js"></script>
     <!-- Load utility functions -->
     <script src="utils.js"></script>
-
-    <!-- Embedded script to handle dynamic script execution -->
-    <script>
-        document.getElementById('runScript').addEventListener('click', () => {
-            const scriptContent = document.getElementById('scriptEditor').value;
-
-            // Remove any previous user scripts
-            const oldScript = document.querySelector('script[data-type="userScript"]');
-            if (oldScript) {
-                oldScript.remove();
-            }
-
-            // Create a new script element for the user's script
-            const userScript = document.createElement('script');
-            userScript.textContent = scriptContent;
-            userScript.setAttribute('data-type', 'userScript');
-            document.body.appendChild(userScript);
-        });
-
-        document.getElementById('exportProject').addEventListener('click', () => {
-            const scriptContent = document.getElementById('scriptEditor').value;
-
-            // HTML template with embedded user script
-            const htmlContent = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gine - Exported Project</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        #gameCanvas {
-            background-color: #333;
-            border: 2px solid #fff;
-            flex: 1;
-        }
-    </style>
-</head>
-<body>
-    <canvas id="gameCanvas"></canvas>
-
-    <!-- Load the engine -->
-    <script src="engine.js"></script>
-    <!-- Load utility functions -->
-    <script src="utils.js"></script>
-
-    <script>
-        ${scriptContent}
-    </script>
+    <!-- Load JSZip for zipping functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <!-- Load custom script logic -->
+    <script src="scriptLogic.js"></script>
 </body>
 </html>
 
-    </script>
-</body>
-</html>
