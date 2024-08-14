@@ -199,3 +199,58 @@ document.getElementById('examplesDropdown').addEventListener('change', function(
     document.getElementById('scriptEditor').value = exampleScript;
 });
 
+let scriptInterval = null;  // Variable to store the script interval
+let createdElements = [];  // Array to store created elements
+
+// Function to run the script
+function runScript() {
+    const scriptContent = document.getElementById('scriptEditor').value;
+
+    // Clear any existing interval
+    if (scriptInterval) {
+        clearInterval(scriptInterval);
+        scriptInterval = null;
+    }
+
+    // Clear previously created elements
+    createdElements.forEach(element => element.remove());
+    createdElements = []; // Reset the array
+
+    // Create a new script function
+    try {
+        const scriptFunction = new Function('canvas', 'ctx', 'utils', scriptContent);
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set an interval to run the script
+        scriptInterval = setInterval(() => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas before each run
+            scriptFunction(canvas, ctx, utils); // Execute the script with canvas, ctx, and utils
+
+            // Append new elements to the createdElements array
+            document.querySelectorAll('[data-created-by-script]').forEach(element => {
+                createdElements.push(element);
+            });
+        }, 1000 / 60); // Run at 60 FPS
+    } catch (e) {
+        console.error('Script error:', e);
+    }
+}
+
+// Function to stop the script
+function stopScript() {
+    if (scriptInterval) {
+        clearInterval(scriptInterval);
+        scriptInterval = null;
+
+        // Remove all created elements
+        createdElements.forEach(element => element.remove());
+        createdElements = []; // Reset the array
+    }
+}
+
+// Add event listeners
+document.getElementById('runScript').addEventListener('click', runScript);
+document.getElementById('stopScript').addEventListener('click', stopScript);
+
+
