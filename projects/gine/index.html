@@ -117,10 +117,35 @@
             width: 100%;
             display: block;
         }
+
+         #controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 10px;
+            background: #333;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        button, select {
+            background: #555;
+            border: none;
+            color: #fff;
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+
+        button:hover, select:hover {
+            background: #777;
+        }
+
+        select {
+            margin-left: 0;
+        }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
     <div id="editorContainer">
         <div id="scriptListContainer">
             <button id="addScriptButton">Add Script</button>
@@ -142,10 +167,12 @@
             </div>
             <div>
                 <button id="runScript">Run Script</button>
+                <button id="stopScript">Stop Script</button>
                 <button id="exportProject">Export Project</button>
             </div>
         </div>
     </div>
+    <canvas id="gameCanvas"></canvas>
 
     <!-- Load the engine -->
     <script src="engine.js"></script>
@@ -155,4 +182,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     <!-- Load custom script logic -->
     <script src="scriptLogic.js"></script>
-
+</body>
+</html>
