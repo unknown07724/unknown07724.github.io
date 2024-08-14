@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gine</title>
+    <title>2D Game Engine with UI</title>
     <style>
         body, html {
             margin: 0;
@@ -67,14 +67,15 @@
 
     <!-- Load the engine -->
     <script src="engine.js"></script>
+    <!-- Load utility functions -->
+    <script src="utils.js"></script>
 
     <!-- Embedded script to handle dynamic script execution -->
     <script>
-        // The script editor functionality
         document.getElementById('runScript').addEventListener('click', () => {
             const scriptContent = document.getElementById('scriptEditor').value;
 
-            // Clear existing scripts
+            // Remove any previous user scripts
             const oldScript = document.querySelector('script[data-type="userScript"]');
             if (oldScript) {
                 oldScript.remove();
@@ -86,6 +87,48 @@
             userScript.setAttribute('data-type', 'userScript');
             document.body.appendChild(userScript);
         });
+
+        // Example script content for testing
+        const exampleScript = `
+            // Example script using the new utility functions
+
+            class CircleObject extends GameObject {
+                draw(context) {
+                    // Use the utility function to draw a circle
+                    drawCircle(context, this.x, this.y, this.width / 2, 'blue');
+                }
+            }
+
+            class HalfCircleObject extends GameObject {
+                draw(context) {
+                    // Use the utility function to draw a half-circle
+                    drawHalfCircle(context, this.x, this.y, this.width / 2, 'green', true);
+                }
+            }
+
+            // Input handling
+            const keys = {};
+            window.addEventListener('keydown', (e) => keys[e.key] = true);
+            window.addEventListener('keyup', (e) => delete keys[e.key]);
+
+            // Create a scene
+            const scene = new Scene();
+
+            // Create and add circle object
+            const circle = new CircleObject(100, 100, 50, 50, 'blue');
+            scene.addObject(circle);
+
+            // Create and add half-circle object
+            const halfCircle = new HalfCircleObject(200, 200, 50, 50, 'green');
+            scene.addObject(halfCircle);
+
+            // Start the engine and load the scene
+            const engine = new Engine();
+            engine.loadScene(scene);
+        `;
+
+        // Initialize with the example script
+        document.getElementById('scriptEditor').value = exampleScript;
     </script>
 </body>
 </html>
