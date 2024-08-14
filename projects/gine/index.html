@@ -25,10 +25,10 @@
         #editorContainer {
             background: #222;
             padding: 10px;
-            border-top: 2px solid #fff;
             height: 150px; /* Fixed height to ensure visibility */
             box-sizing: border-box;
             flex-shrink: 0; /* Prevent the editor from shrinking */
+            overflow-y: auto; /* Allow scrolling if content overflows */
         }
 
         #scriptEditor {
@@ -40,7 +40,6 @@
             padding: 5px;
             font-family: monospace;
             resize: none;
-            overflow-y: auto;
             box-sizing: border-box;
         }
 
