@@ -5,67 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gine - Simple Game Engine</title>
     <style>
-           #scriptList {
-            background: #333;
-            padding: 10px;
+        
+           #editorContainer {
+            background: #222;
+            height: 300px; /* Adjusted height to ensure all elements fit */
+            width: 100%;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            height: 150px;
-            overflow-y: auto;
-            margin-bottom: 10px;
-        }
-
-        #scriptList button {
-            margin: 5px 0;
-            background: #444;
-            padding: 5px;
-            cursor: pointer;
-        }
-
-        #scriptList button:hover {
-            background: #555;
-        }
-
-        #addScriptButton {
-            margin-bottom: 10px;
-        }
-        body, html {
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            color: #fff;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+            flex-shrink: 0;
             overflow: hidden;
         }
 
-        #gameCanvas {
-            background-color: #333;
-            border: 2px solid #fff;
-            flex-grow: 1;
-            width: 100%;
-            display: block;
+        #scriptListContainer {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px; /* Reduced padding to fit all elements */
+            background: #333;
         }
 
-        #editorContainer {
-            background: #222;
-            padding: 10px;
-            height: 200px;
+        #scriptList {
+            background: #444;
+            padding: 5px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 80px; /* Reduced height */
             overflow-y: auto;
-            border-top: 2px solid #fff;
-            box-sizing: border-box;
-            width: 100%;
-            flex-shrink: 0;
+            margin-right: 10px;
+            border: 1px solid #555;
+        }
+
+        #scriptList button {
+            margin: 3px 0;
+            background: #555;
+            padding: 5px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        #scriptList button:hover {
+            background: #666;
+        }
+
+        #addScriptButton {
+            background: #555;
+            border: none;
+            color: #fff;
+            padding: 6px 10px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #addScriptButton:hover {
+            background: #777;
         }
 
         #scriptEditor {
             width: 100%;
-            height: calc(100% - 40px);
+            height: calc(100% - 120px); /* Height adjusted to fit within container */
             background: #111;
             color: #fff;
             border: 1px solid #444;
-            padding: 10px;
+            padding: 8px;
             font-family: monospace;
             box-sizing: border-box;
             resize: none;
@@ -76,20 +78,34 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
+            padding: 5px 10px;
+            background: #333;
+            box-sizing: border-box;
+            flex-shrink: 0;
         }
 
         button, select {
             background: #555;
             border: none;
             color: #fff;
-            padding: 10px;
+            padding: 6px 10px;
             cursor: pointer;
-            margin-left: 10px;
         }
 
         button:hover, select:hover {
             background: #777;
+        }
+
+        select {
+            margin-left: 0;
+        }
+
+        #gameCanvas {
+            background-color: #333;
+            border: 2px solid #fff;
+            flex-grow: 1;
+            width: 100%;
+            display: block;
         }
     </style>
 </head>
