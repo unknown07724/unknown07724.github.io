@@ -13,21 +13,22 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden; /* Prevent scrolling */
+            overflow: hidden; /* Prevent page scrolling */
         }
 
         #gameCanvas {
             background-color: #333;
             border: 2px solid #fff;
-            flex: 1; /* Make canvas take up available space */
+            flex: 1; /* Canvas takes remaining space */
         }
 
         #editorContainer {
             background: #222;
             padding: 10px;
             border-top: 2px solid #fff;
-            height: 150px; /* Set a fixed height */
-            box-sizing: border-box; /* Include padding in height */
+            height: 150px; /* Fixed height to ensure visibility */
+            box-sizing: border-box;
+            flex-shrink: 0; /* Prevent the editor from shrinking */
         }
 
         #scriptEditor {
@@ -38,9 +39,9 @@
             border: 1px solid #444;
             padding: 5px;
             font-family: monospace;
-            resize: none; /* Disable resizing */
-            overflow-y: auto; /* Allow scrolling within the editor if content overflows */
-            box-sizing: border-box; /* Include padding in height */
+            resize: none;
+            overflow-y: auto;
+            box-sizing: border-box;
         }
 
         #controls {
