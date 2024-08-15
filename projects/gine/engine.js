@@ -1,8 +1,7 @@
 // Game Engine Code
 
 class GameObject {
-    constructor(x, y, width, height, color) {
-     constructor(imageSrc, x = 0, y = 0, width = 50, height = 50, rotation = 0) {
+   constructor(imageSrc, x = 0, y = 0, width = 50, height = 50, rotation = 0) {
         this.image = new Image();
         this.image.src = imageSrc;
         this.x = x;
@@ -10,6 +9,7 @@ class GameObject {
         this.width = width;
         this.height = height;
         this.rotation = rotation;
+        this.isSelected = false; // To track if the object is selected
     }
 
     }
