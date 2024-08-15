@@ -1,5 +1,35 @@
 // utils.js
 
+
+function isKeyDown(key) {
+        return this.keys[key] === true;
+    }
+
+    // Check if a key was just released
+    function isKeyUp(key) {
+        return this.keys[key] === false;
+    }
+
+    // Handle an action when a specific key is pressed
+    function onKeyPress(key, action) {
+        window.addEventListener('keydown', (event) => {
+            if (event.key === key) {
+                action();
+            }
+        });
+    }
+
+    // Handle an action when a specific key is released
+    function onKeyRelease(key, action) {
+        window.addEventListener('keyup', (event) => {
+            if (event.key === key) {
+                action();
+            }
+        });
+    }
+
+
+
 /**
  * Draws a circle on the canvas.
  * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
