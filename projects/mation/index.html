@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Shatter Animation</title>
+    <title>Mation - Simple Animation software</title>
     <style>
+        /* Add this to your CSS section */
+.context-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    z-index: 1000;
+}
+
+.context-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 5px 0;
+}
+
+.context-menu ul li {
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.context-menu ul li:hover {
+    background-color: #eee;
+}
+
         body {
             font-family: Arial, sans-serif;
             display: flex;
