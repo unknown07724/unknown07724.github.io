@@ -2,12 +2,16 @@
 
 class GameObject {
     constructor(x, y, width, height, color) {
+     constructor(imageSrc, x = 0, y = 0, width = 50, height = 50, rotation = 0) {
+        this.image = new Image();
+        this.image.src = imageSrc;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.color = color;
-        this.scripts = [];
+        this.rotation = rotation;
+    }
+
     }
 
     addScript(script) {
