@@ -108,4 +108,14 @@ class Script {
         // Implement specific script behavior here
     }
 }
+document.getElementById('addGameObject').addEventListener('click', () => {
+    const fileInput = document.getElementById('textureUpload');
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const objectURL = URL.createObjectURL(file);
+        
+        const newObject = createGameObject(objectURL, 50, 50, 100, 100);
+        gameObjects.push(newObject);
+    }
+});
 
