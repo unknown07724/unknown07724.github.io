@@ -147,6 +147,19 @@
 </head>
 <body>
     <div id="editorContainer">
+        <!-- Property Editor UI -->
+<div id="propertyEditor" style="position: absolute; right: 10px; top: 50px; width: 250px; background: #eee; padding: 10px; border-radius: 8px;">
+    <h3>Game Properties</h3>
+    <label for="skyColorInput">Sky Color:</label>
+    <input type="color" id="skyColorInput" value="#333">
+    <br/><br/>
+
+    <h3>Object Properties</h3>
+    <div id="objectProperties">
+        <p>No object selected</p>
+    </div>
+</div>
+
         <div id="scriptListContainer">
             <button id="addScriptButton">Add Script</button>
             <div id="scriptList">
@@ -181,6 +194,8 @@
 
     <!-- Load the engine -->
     <script src="engine.js"></script>
+
+    <script src="ui.js"></script>
     <!-- Load utility functions -->
     <script src="utils.js"></script>
     <!-- Load JSZip for zipping functionality -->
