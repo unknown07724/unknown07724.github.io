@@ -1,7 +1,7 @@
 // Game Engine Code
 
 class GameObject {
-   constructor(imageSrc, x = 0, y = 0, width = 50, height = 50, rotation = 0) {
+    constructor(imageSrc, x = 0, y = 0, width = 50, height = 50, rotation = 0, isPhysical = false, methods = {}) {
         this.image = new Image();
         this.image.src = imageSrc;
         this.x = x;
@@ -9,10 +9,79 @@ class GameObject {
         this.width = width;
         this.height = height;
         this.rotation = rotation;
+        this.isPhysical = isPhysical;  // Whether the object has physical properties
+        this.methods = methods;  // Custom methods that can be executed
         this.isSelected = false; // To track if the object is selected
     }
 
+    draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+        ctx.rotate(this.rotation * Math.PI / 180);
+        ctx.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+        ctx.restore();
+
+        if (this.isSelected) {
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+        }
     }
+
+    setPosition(x, y) {
+        this.x = x;
+    }
+
+    setSize(width, height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    setRotation(rotation) {
+        this.rotation = rotation;
+    }
+
+    toggleSelection() {
+        this.isSelected = !this.isSelected;
+    }
+
+    isInside(x, y) {
+        return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
+    }
+
+    runMethod(methodName, ...args) {
+        if (this.methods[methodName]) {
+            return this.methods[methodName](...args);
+        }
+        console.error(`Method ${methodName} not found on object.`);
+    }
+
+    checkCollision(otherObject) {
+        if (!this.isPhysical || !otherObject.isPhysical) return false;
+
+        return !(
+            this.x > otherObject.x + otherObject.width ||
+            this.x + this.width < otherObject.x ||
+            this.y > otherObject.y + otherObject.height ||
+            this.y + this.height < otherObject.y
+        );
+    }
+
+    delete() {
+        const index = gameObjects.indexOf(this);
+        if (index > -1) {
+            gameObjects.splice(index, 1);
+        }
+    }
+}
+
+// Utility function to create a new game object
+function createGameObject(imageSrc, x, y, width, height, rotation, isPhysical, methods) {
+    const newObject = new GameObject(imageSrc, x, y, width, height, rotation, isPhysical, methods);
+    gameObjects.push(newObject);
+    return newObject;
+}
+
 
     addScript(script) {
         script.parent = this;
