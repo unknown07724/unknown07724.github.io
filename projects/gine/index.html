@@ -148,17 +148,19 @@
 <body>
     <div id="editorContainer">
         <!-- Property Editor UI -->
-<div id="propertyEditor" style="position: absolute; right: 10px; top: 50px; width: 250px; background: #333; padding: 10px; border-radius: 8px;">
-    <h3>Game Properties</h3>
-    <label for="skyColorInput">Sky Color:</label>
-    <input type="color" id="skyColorInput" value="#333">
-    <br/><br/>
-
-    <h3>Object Properties</h3>
+<div id="propertiesPanel">
+    <h3>Properties</h3>
     <div id="objectProperties">
-        <p>No object selected</p>
+        <!-- Object-specific properties will be dynamically populated here -->
+    </div>
+    <div id="gameProperties">
+        <!-- Game-wide properties will be shown here -->
+        <h4>Game Settings</h4>
+        <label for="skyColor">Sky Color:</label>
+        <input type="color" id="skyColor" onchange="updateSkyColor(this.value)">
     </div>
 </div>
+
         <!-- Extensions Panel -->
 <div id="extensionsPanel" style="position: absolute; left: 10px; top: 50px; width: 250px; background: #eee; padding: 10px; border-radius: 8px;">
     <h3>Extensions</h3>
