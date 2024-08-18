@@ -5,6 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gine - Simple Game Engine</title>
     <style>
+        #propertiesPanel {
+    position: fixed;
+    right: 0;
+    top: 50px;
+    width: 300px;
+    height: calc(100% - 100px);
+    background: #f0f0f0;
+    border-left: 2px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+#propertiesPanel h3 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+#propertiesPanel h4 {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+#objectProperties, #gameProperties {
+    margin-bottom: 20px;
+}
+
+#propertiesPanel label {
+    display: block;
+    margin-top: 10px;
+}
+
+#propertiesPanel input[type="text"],
+#propertiesPanel input[type="number"],
+#propertiesPanel input[type="color"] {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+ 
         body, html {
             margin: 0;
             padding: 0;
