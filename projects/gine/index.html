@@ -189,22 +189,10 @@
 </head>
 <body>
     <div id="editorContainer">
-        <!-- Property Editor UI -->
-<div id="propertiesPanel">
-    <h3>Properties</h3>
-    <div id="objectProperties">
-        <!-- Object-specific properties will be dynamically populated here -->
-    </div>
-    <div id="gameProperties">
-        <!-- Game-wide properties will be shown here -->
-        <h4>Game Settings</h4>
-        <label for="skyColor">Sky Color:</label>
-        <input type="color" id="skyColor" onchange="updateSkyColor(this.value)">
-    </div>
-</div>
+
 
         <!-- Extensions Panel -->
-<div id="extensionsPanel" style="position: absolute; left: 10px; top: 50px; width: 250px; background: #eee; padding: 10px; border-radius: 8px;">
+<div id="extensionsPanel" style="position: absolute; left: 10px; top: 50px; width: 250px; background: #fff; padding: 10px; border-radius: 8px;">
     <h3>Extensions</h3>
     <div id="extensionsList">
         <label>
@@ -246,7 +234,18 @@
                 <button id="exportProject">Export Project</button>
                 <input type="file" id="textureUpload" accept="image/*"/>
                 <button id="addGameObject">Add GameObject</button>
-
+<div id="propertiesPanel">
+    <h3>Properties</h3>
+    <div id="objectProperties">
+        <!-- Object-specific properties will be dynamically populated here -->
+    </div>
+    <div id="gameProperties">
+        <!-- Game-wide properties will be shown here -->
+        <h4>Game Settings</h4>
+        <label for="skyColor">Sky Color:</label>
+        <input type="color" id="skyColor" onchange="updateSkyColor(this.value)">
+    </div>
+</div>
             </div>
         </div>
     </div>
