@@ -7,11 +7,23 @@
     <style>
         body { margin: 0; font-family: Arial, sans-serif; display: flex; height: 100vh; }
         .block-palette, .scripting-area { flex: 1; padding: 10px; box-sizing: border-box; }
-        .block-palette { background-color: #f0f0f0; }
+        .block-palette { background-color: #f0f0f0; display: flex; flex-direction: column; }
         .scripting-area { background-color: #ffffff; border-left: 2px solid #ddd; }
+        .block { 
+            width: 150px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .block.motion { background-color: #4C97FF; }
+        .block.looks { background-color: #9966FF; }
+        .block.control { background-color: #FFAB19; }
+        .block:hover { transform: scale(1.05); }
         .stage { width: 300px; height: 300px; background-color: #ddd; margin: 10px; }
         .toolbar { background-color: #333; color: white; padding: 10px; text-align: center; }
-    </style>
 </head>
 <body>
 
