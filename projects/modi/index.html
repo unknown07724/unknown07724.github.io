@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scratch Clone - Project Editor</title>
+    <title>Scratch Clone - Block Styling</title>
     <style>
         body { margin: 0; font-family: Arial, sans-serif; display: flex; height: 100vh; }
         .block-palette, .scripting-area { flex: 1; padding: 10px; box-sizing: border-box; }
@@ -24,13 +24,22 @@
         .block:hover { transform: scale(1.05); }
         .stage { width: 300px; height: 300px; background-color: #ddd; margin: 10px; }
         .toolbar { background-color: #333; color: white; padding: 10px; text-align: center; }
+    </style>
 </head>
 <body>
 
     <div class="block-palette">
-        <!-- Block categories and blocks go here -->
-        <div class="block" draggable="true">Move 10 Steps</div>
-        <div class="block" draggable="true">Turn 15 Degrees</div>
+        <!-- Motion Blocks -->
+        <div class="block motion" draggable="true">Move 10 Steps</div>
+        <div class="block motion" draggable="true">Turn 15 Degrees</div>
+
+        <!-- Looks Blocks -->
+        <div class="block looks" draggable="true">Say "Hello!"</div>
+        <div class="block looks" draggable="true">Change Costume</div>
+
+        <!-- Control Blocks -->
+        <div class="block control" draggable="true">Repeat 10</div>
+        <div class="block control" draggable="true">Wait 1 Second</div>
     </div>
 
     <div class="scripting-area">
@@ -48,51 +57,24 @@
     </div>
 
     <script>
-      document.querySelectorAll('.block').forEach(block => {
-    block.addEventListener('dragstart', (event) => {
-        event.dataTransfer.setData('text', event.target.innerHTML);
-    });
-});
+        // JavaScript for drag-and-drop and block functionality
+        document.querySelectorAll('.block').forEach(block => {
+            block.addEventListener('dragstart', (event) => {
+                event.dataTransfer.setData('text', event.target.outerHTML);
+            });
+        });
 
-document.querySelector('.scripting-area').addEventListener('dragover', (event) => {
-    event.preventDefault();
-});
+        document.querySelector('.scripting-area').addEventListener('dragover', (event) => {
+            event.preventDefault();
+        });
 
-document.querySelector('.scripting-area').addEventListener('drop', (event) => {
-    event.preventDefault();
-    const data = event.dataTransfer.getData('text');
-    const newBlock = document.createElement('div');
-    newBlock.className = 'block';
-    newBlock.innerHTML = data;
-    event.target.appendChild(newBlock);
-});
-const canvas = document.querySelector('.stage');
-const ctx = canvas.getContext('2d');
-
-function drawSprite(x, y) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the stage
-    ctx.fillStyle = 'blue';
-    ctx.fillRect(x, y, 50, 50); // Draw a basic square sprite
-}
-
-let x = 0, y = 0;
-drawSprite(x, y);
-
-document.getElementById('start').addEventListener('click', () => {
-    // Example: Move the sprite 10 steps right
-    x += 10;
-    drawSprite(x, y);
-});
-
-document.getElementById('stop').addEventListener('click', () => {
-    // Stop logic here
-});
-
-document.getElementById('save').addEventListener('click', () => {
-    // Serialize and save project logic here
-});
-
+        document.querySelector('.scripting-area').addEventListener('drop', (event) => {
+            event.preventDefault();
+            const data = event.dataTransfer.getData('text');
+            const newBlock = document.createElement('div');
+            newBlock.innerHTML = data;
+            event.target.appendChild(newBlock.firstChild);
+        });
     </script>
 </body>
 </html>
-
