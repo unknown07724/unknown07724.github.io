@@ -1,1 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scratch Clone - Project Editor</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; display: flex; height: 100vh; }
+        .block-palette, .scripting-area { flex: 1; padding: 10px; box-sizing: border-box; }
+        .block-palette { background-color: #f0f0f0; }
+        .scripting-area { background-color: #ffffff; border-left: 2px solid #ddd; }
+        .stage { width: 300px; height: 300px; background-color: #ddd; margin: 10px; }
+        .toolbar { background-color: #333; color: white; padding: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="block-palette">
+        <!-- Block categories and blocks go here -->
+        <div class="block" draggable="true">Move 10 Steps</div>
+        <div class="block" draggable="true">Turn 15 Degrees</div>
+    </div>
+
+    <div class="scripting-area">
+        <!-- Drag-and-drop blocks go here -->
+    </div>
+
+    <div class="stage">
+        <!-- Canvas or Stage area for sprites -->
+    </div>
+
+    <div class="toolbar">
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="save">Save</button>
+    </div>
+
+    <script>
+        // JavaScript for drag-and-drop and block functionality
+    </script>
+</body>
+</html>
 
