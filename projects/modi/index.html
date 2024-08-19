@@ -36,7 +36,50 @@
     </div>
 
     <script>
-        // JavaScript for drag-and-drop and block functionality
+      document.querySelectorAll('.block').forEach(block => {
+    block.addEventListener('dragstart', (event) => {
+        event.dataTransfer.setData('text', event.target.innerHTML);
+    });
+});
+
+document.querySelector('.scripting-area').addEventListener('dragover', (event) => {
+    event.preventDefault();
+});
+
+document.querySelector('.scripting-area').addEventListener('drop', (event) => {
+    event.preventDefault();
+    const data = event.dataTransfer.getData('text');
+    const newBlock = document.createElement('div');
+    newBlock.className = 'block';
+    newBlock.innerHTML = data;
+    event.target.appendChild(newBlock);
+});
+const canvas = document.querySelector('.stage');
+const ctx = canvas.getContext('2d');
+
+function drawSprite(x, y) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the stage
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(x, y, 50, 50); // Draw a basic square sprite
+}
+
+let x = 0, y = 0;
+drawSprite(x, y);
+
+document.getElementById('start').addEventListener('click', () => {
+    // Example: Move the sprite 10 steps right
+    x += 10;
+    drawSprite(x, y);
+});
+
+document.getElementById('stop').addEventListener('click', () => {
+    // Stop logic here
+});
+
+document.getElementById('save').addEventListener('click', () => {
+    // Serialize and save project logic here
+});
+
     </script>
 </body>
 </html>
