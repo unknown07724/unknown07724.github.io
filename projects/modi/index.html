@@ -112,23 +112,39 @@
 
     <script>
         // JavaScript for drag-and-drop and block functionality
-        document.querySelectorAll('.block').forEach(block => {
-            block.addEventListener('dragstart', (event) => {
-                event.dataTransfer.setData('text', event.target.outerHTML);
-            });
-        });
+        // Enable dragging on all blocks
+document.querySelectorAll('.block').forEach(block => {
+    block.addEventListener('dragstart', (event) => {
+        event.dataTransfer.setData('text', event.target.outerHTML);
+    });
+});
 
-        document.querySelector('.scripting-area').addEventListener('dragover', (event) => {
-            event.preventDefault();
-        });
+// Make only designated containers droppable
+document.querySelectorAll('.scripting-area, .block.control.repeat .inner-blocks').forEach(area => {
+    area.addEventListener('dragover', (event) => {
+        event.preventDefault();
+    });
 
-        document.querySelector('.scripting-area').addEventListener('drop', (event) => {
-            event.preventDefault();
-            const data = event.dataTransfer.getData('text');
-            const newBlock = document.createElement('div');
-            newBlock.innerHTML = data;
-            event.target.appendChild(newBlock.firstChild);
-        });
+    area.addEventListener('drop', (event) => {
+        event.preventDefault();
+        const data = event.dataTransfer.getData('text');
+        const newBlock = document.createElement('div');
+        newBlock.innerHTML = data;
+        event.target.appendChild(newBlock.firstChild);
+    });
+});
+
+// Prevent non-container blocks from being droppable
+document.querySelectorAll('.block:not(.control):not(.repeat)').forEach(nonContainer => {
+    nonContainer.addEventListener('dragover', (event) => {
+        event.preventDefault();
+    });
+    
+    nonContainer.addEventListener('drop', (event) => {
+        event.preventDefault();
+    });
+});
+
     </script>
 </body>
 </html>
