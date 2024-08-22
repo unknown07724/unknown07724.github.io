@@ -9,8 +9,12 @@ function openApp(appName) {
         case 'file-manager':
             content = getFileManagerContent();
             break;
+        case 'terminal':
+            content = getTerminalContent();
+            break;
         default:
             content = `<div>Unknown App</div>`;
     }
     createWindow(appName, content);
 }
+
