@@ -1,169 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>People Playground Game</title>
-  <style>
-    /* Add some basic styling to our game container */
-    #game-container {
-      width: 800px;
-      height: 600px;
-      border: 1px solid black;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>People Playground Game</title>
+<style>
+/* Add some basic styling to our game container */
+#game-container {
+width: 800px;
+height: 600px;
+border: 1px solid black;
+}
+
+/* Add some basic styling to our UI elements */
+.ui-button {
+background-color: #4CAF50;
+color: #ffffff;
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+
+.ui-button:hover {
+background-color: #3e8e41;
+}
+</style>
 </head>
 <body>
-  <!-- Create a container for our game -->
-  <div id="game-container"></div>
+<!-- Create a container for our game -->
+<div id="game-container"></div>
 
-  <!-- Add the Phaser and Three.js libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.50.1/dist/phaser.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Create a UI panel to spawn items -->
+<div id="ui-panel">
+<button class="ui-button" id="spawn-cat-button">Spawn Cat</button>
+<button class="ui-button" id="spawn-dog-button">Spawn Dog</button>
+<button class="ui-button" id="spawn-explosive-button">Spawn Explosive</button>
+</div>
 
-  <!-- Add our game script -->
-  <script>
-    // Initialize Phaser and Three.js
-    const game = new Phaser.Game({
-      type: Phaser.CANVAS,
-      parent: 'game-container',
-      scene: {
-        preload: preload,
-        create: create,
-        update: update
-      }
-    });
+<!-- Add the Phaser and Three.js libraries -->
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.50.1/dist/phaser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-    const threeScene = new THREE.Scene();
-    const threeCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const threeRenderer = new THREE.WebGLRenderer({
-      canvas: game.canvas,
-      antialias: true
-    });
+<!-- Add our game script -->
+<script>
+// Initialize Phaser and Three.js
+const game = new Phaser.Game({
+type: Phaser.CANVAS,
+parent: 'game-container',
+scene: {
+preload: preload,
+create: create,
+update: update
+}
+});
 
-    // Preload assets
-    function preload() {
-      this.load.image('cat', 'assets/cat.png');
-      this.load.image('dog', 'assets/dog.png');
-      this.load.image('bird', 'assets/bird.png');
-      this.load.image('fish', 'assets/fish.png');
-      this.load.image('explosive', 'assets/explosive.png');
-      this.load.image('knife', 'assets/knife.png');
-      this.load.image('pistol', 'assets/pistol.png');
-    }
+const threeScene = new THREE.Scene();
+const threeCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const threeRenderer = new THREE.WebGLRenderer({
+canvas: game.canvas,
+antialias: true
+});
 
-    // Create the game world
-    function create() {
-      // Create the physics world
-      const physicsWorld = new Phaser.Physics.Arcade.World();
+// Preload assets
+function preload() {
+this.load.image('cat', 'assets/cat.png');
+this.load.image('dog', 'assets/dog.png');
+this.load.image('explosive', 'assets/explosive.png');
+}
 
-      // Create the ragdolls
-      const catRagdoll = createRagdoll('cat', 10, 10, 10);
-      const dogRagdoll = createRagdoll('dog', 20, 20, 20);
-      const birdRagdoll = createRagdoll('bird', 5, 5, 5);
-      const fishRagdoll = createRagdoll('fish', 15, 15, 15);
+// Create the game world
+function create() {
+// Create the physics world
+const physicsWorld = new Phaser.Physics.Arcade.World();
 
-      // Create the items
-      const explosive = createItem('explosive', 30, 30, 30);
-      const knife = createItem('knife', 10, 10, 10);
-      const pistol = createItem('pistol', 20, 20, 20);
+// Add event listeners to UI buttons
+  document.getElementById('spawn-cat-button').addEventListener('click', () => {
+spawnItem('cat', 10, 10, 10);
+});
 
-      // Add the ragdolls and items to the scene
-      threeScene.add(catRagdoll);
-      threeScene.add(dogRagdoll);
-      threeScene.add(birdRagdoll);
-      threeScene.add(fishRagdoll);
-      threeScene.add(explosive);
-      threeScene.add(knife);
-      threeScene.add(pistol);
+document.getElementById('spawn-dog-button').addEventListener('click', () => {
+spawnItem('dog', 20, 20, 20);
+});
 
-      // Create a floor plane
-      const floorPlane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000), new THREE.MeshBasicMaterial({ color: 0xffffff }));
-      floorPlane.position.set(0, -10, 0);
-      threeScene.add(floorPlane);
+document.getElementById('spawn-explosive-button').addEventListener('click', () => {
+spawnItem('explosive', 30, 30, 30);
+});
+}
 
-      // Create a wall plane
-      const wallPlane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000), new THREE.MeshBasicMaterial({ color: 0xffffff }));
-      wallPlane.position.set(500, 0, 0);
-      wallPlane.rotation.y = Math.PI / 2;
-      threeScene.add(wallPlane);
-    }
+// Spawn an item
+function spawnItem(name, width, height, depth) {
+const item = createItem(name, width, height, depth);
+threeScene.add(item);
+}
 
-    // Update the game world
-    function update(time, delta) {
-      // Update the physics world
-      physicsWorld.update();
-
-      // Update the ragdolls and items
-      updateRagdolls();
-      updateItems();
-
-      // Render the Three.js scene
-      threeRenderer.render(threeScene, threeCamera);
-    }
-
-    // Function to create a ragdoll
-    function createRagdoll(name, width, height, depth) {
-      const ragdoll = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), new THREE.MeshBasicMaterial({ map: this.load.texture(name) }));
-      ragdoll.position.set(Math.random() * 100, Math.random() * 100, Math.random() * 100);
-      ragdoll.physicsBody = new Phaser.Physics.Arcade.Body(ragdoll, { mass: 1, friction: 0.5 });
-      return ragdoll;
-    }
-
-    // Function to create an item
-    function createItem(name, width, height, depth) {
+// Create an item
+function createItem(name, width, height, depth) {
 const item = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), new THREE.MeshBasicMaterial({ map: this.load.texture(name) }));
-      item.position.set(Math.random() * 100, Math.random() * 100, Math.random() * 100);
-      return item;
-    }
+item.position.set(Math.random() * 100, Math.random() * 100, Math.random() * 100);
+return item;
+}
 
-    // Function to update the ragdolls
-    function updateRagdolls() {
-      // Update the ragdolls' positions and physics bodies
-      catRagdoll.position.x += Math.random() * 10 - 5;
-      catRagdoll.position.y += Math.random() * 10 - 5;
-      catRagdoll.position.z += Math.random() * 10 - 5;
-      catRagdoll.physicsBody.update();
+// Update the game world
+function update(time, delta) {
+// Update the physics world
+physicsWorld.update();
 
-      // Update the other ragdolls similarly...
-    }
-
-    // Function to update the items
-    function updateItems() {
-      // Update the items' positions and physics bodies
-      explosive.position.x += Math.random() * 10 - 5;
-      explosive.position.y += Math.random() * 10 - 5;
-      explosive.position.z += Math.random() * 10 - 5;
-
-      // Update the other items similarly...
-    }
-
-    // Add physics interactions with items and objects
-    function handlePhysicsInteractions() {
-      // Check for collisions between ragdolls and items
-      if (catRagdoll.physicsBody.checkCollision(explosive.physicsBody)) {
-        console.log('Cat collided with explosive!');
-        // Add explosion effect here...
-      }
-
-      // Check for collisions between ragdolls and objects
-      if (dogRagdoll.physicsBody.checkCollision(floorPlane)) {
-        console.log('Dog collided with floor!');
-        // Add sound effect here...
-      }
-
-      // Check for collisions between items and objects
-      if (knife.physicsBody.checkCollision(wallPlane)) {
-        console.log('Knife collided with wall!');
-        // Add sound effect here...
-      }
-    }
-
-    // Call the physics interaction function in the update loop
-    update(time, delta) {
-      //...
-      handlePhysicsInteractions();
-    }
-  </script>
+// Render the Three.js scene
+threeRenderer.render(threeScene, threeCamera);
+}
+</script>
 </body>
 </html>
