@@ -1,22 +1,27 @@
 // system/core/desktop.js
 
-// system/core/desktop.js
+function initializeDesktop() {
+    const desktop = document.createElement('div');
+    desktop.id = 'desktop';
+    document.body.appendChild(desktop);
 
-function openApp(appName) {
-    let appPath = `/system/apps/${appName}.html`;
-    let appContent = getFileContent(appPath);
-    
-    if (appContent) {
-        createWindow(appName, `<iframe srcdoc="${escapeHTML(appContent)}" style="width: 100%; height: 100%; border: none;"></iframe>`);
-    } else {
-        createWindow(appName, `<div>App not found</div>`);
-    }
+    // Add icons to the desktop
+    addAppIcon('Text Editor', 'text-editor', '/icons/text-editor.png');
+    addAppIcon('File Manager', 'file-manager', '/icons/file-manager.png');
+    addAppIcon('Terminal', 'terminal', '/icons/terminal.png');
 }
 
-function escapeHTML(html) {
-    return html.replace(/&/g, '&amp;')
-               .replace(/</g, '&lt;')
-               .replace(/>/g, '&gt;')
-               .replace(/"/g, '&quot;')
-               .replace(/'/g, '&#039;');
+function addAppIcon(name, appName, iconSrc) {
+    const desktop = document.getElementById('desktop');
+    const icon = document.createElement('div');
+    icon.className = 'app-icon';
+    icon.innerHTML = `
+        <img src="${iconSrc}" alt="${name}">
+        <span>${name}</span>
+    `;
+    icon.addEventListener('dblclick', () => openApp(appName));
+    desktop.appendChild(icon);
 }
+
+// Initialize desktop on page load
+window.onload = initializeDesktop;
