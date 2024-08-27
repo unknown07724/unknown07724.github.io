@@ -11,35 +11,43 @@
     <div id="error-message" style="display: none;"></div>
     
     <script>
-        function handleError(cause, errorDetails = null) {
-            const errorMessage = document.getElementById('error-message');
-            const currentTime = new Date().toLocaleString();
-            let errorContent = `
-                <h1>System Crash</h1>
-                <p><strong>Cause:</strong> ${cause}</p>
-                <p><strong>Time:</strong> ${currentTime}</p>
-            `;
+        function handleError(cause, errorDetails = null, isAppCrash = false) {
+    const errorMessage = document.getElementById('error-message');
+    const currentTime = new Date().toLocaleString();
+    let errorContent = `
+        <h1>System Crash</h1>
+        <p><strong>Cause:</strong> ${cause}</p>
+        <p><strong>Time:</strong> ${currentTime}</p>
+    `;
 
-            if (errorDetails) {
-                errorContent += `
-                    <p><strong>Error Details:</strong> ${errorDetails.message}</p>
-                    <p><strong>Line:</strong> ${errorDetails.line}</p>
-                `;
-            }
+    if (errorDetails) {
+        errorContent += `
+            <p><strong>Error Details:</strong> ${errorDetails.message}</p>
+            <p><strong>Line:</strong> ${errorDetails.line}</p>
+        `;
+    }
 
-            errorMessage.innerHTML = errorContent;
-            errorMessage.style.display = 'flex'; // Use 'flex' to apply full-screen styling
-            document.getElementById('desktop').style.display = 'none';
+    errorMessage.innerHTML = errorContent;
+    errorMessage.style.display = 'flex'; // Full-screen display
+    document.getElementById('desktop').style.display = 'none'; // Hide other content
 
-            // Log additional details to the console
-            console.error('System Crash:', {
-                cause,
-                time: currentTime,
-                errorDetails,
-                userAgent: navigator.userAgent,
-                platform: navigator.platform
-            });
-        }
+    if (isAppCrash) {
+        setTimeout(() => {
+            console.log('Restarting OS due to app crash...');
+            initializeOS(); // Restart the OS or handle app-specific restart
+        }, 5000); // Delay before restart
+    }
+
+    // Log additional details to the console
+    console.error('System Crash:', {
+        cause,
+        time: currentTime,
+        errorDetails,
+        userAgent: navigator.userAgent,
+        platform: navigator.platform
+    });
+}
+
 
         async function loadSystemScript(src) {
             try {
