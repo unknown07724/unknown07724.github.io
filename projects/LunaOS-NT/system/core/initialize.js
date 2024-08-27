@@ -1,6 +1,5 @@
 // system/core/initialize.js
 const SystemFiles = {
-  const fileSystem = {
     '/': {
         'system/': {
             'boot.js': { content: `console.log('Booting OS...');`, protected: true },
@@ -78,6 +77,47 @@ const SystemFiles = {
         }
     }
 };
+const filesInUse = new Set();
+
+function markFileInUse(path) {
+    filesInUse.add(path);
+}
+
+function unmarkFileInUse(path) {
+    filesInUse.delete(path);
+}
+
+function isFileInUse(path) {
+    return filesInUse.has(path);
+}
+
+// Modify deleteFile function
+function deleteFile(path) {
+    if (isFileInUse(path)) {
+        console.error(`Error: Cannot delete file in use: ${path}`);
+        alert(`Error: Cannot delete file in use: ${path}`);
+        return;
+    }
+
+    // Proceed with deletion logic as before
+    // ...
+}
+function initializeDesktop() {
+    for (const path in fileSystem['/']) {
+        autoRepairFile(path);
+    }
+
+    // Proceed with normal initialization
+    console.log("System initialized.");
+    // Additional initialization code...
+}
+
+function autoRepairFile(path) {
+    // Same logic as shown above...
+}
+
+window.onload = initializeDesktop;
+
 function initializeDesktop() {
     if (!checkSystemFiles()) {
         cloneSystemFilesToLocalStorage();
