@@ -3,36 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web OS</title>
     <link rel="stylesheet" href="styles.css">
+    <title>Web OS</title>
 </head>
 <body>
-    <div id="desktop">
-        <!-- Taskbar -->
-        <div id="taskbar">
-            <div id="start-menu">Start</div>
-            <div id="open-windows"></div>
-        </div>
-
-        <!-- Desktop Icons -->
-        <div id="icons">
-            <div class="icon" onclick="openApp('text-editor')">
-                <img src="icons/text-editor.png" alt="Text Editor">
-                <span>Text Editor</span>
-            </div>
-            <div class="icon" onclick="openApp('file-manager')">
-                <img src="icons/files.webp" alt="File Manager">
-                <span>File Manager</span>
-            </div>
-        </div>
-    </div>
-     <script src="/system/core/fileSystem.js"></script>
+    <script src="/system/core/fileSystem.js"></script>
     <script src="/system/core/windowManager.js"></script>
     <script src="/system/core/desktop.js"></script>
-
-    <!-- Application Windows -->
-    <div id="windows"></div>
-
-    <script src="scripts.js"></script>
 </body>
 </html>
+
