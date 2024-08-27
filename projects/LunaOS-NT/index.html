@@ -8,48 +8,74 @@
 </head>
 <body>
     <div id="desktop"></div>
-    <div id="error-message" style="display: none;"></div>
-    
+    <div id="error-message">
+        <div id="popup-window">
+            <h2>Application Error</h2>
+            <p id="error-details"></p>
+            <button onclick="closePopup()">Close</button>
+        </div>
+    </div>
+
     <script>
-        function handleError(cause, errorDetails = null, isAppCrash = false) {
-    const errorMessage = document.getElementById('error-message');
-    const currentTime = new Date().toLocaleString();
-    let errorContent = `
-        <h1>System Crash</h1>
-        <p><strong>Cause:</strong> ${cause}</p>
-        <p><strong>Time:</strong> ${currentTime}</p>
-    `;
+        function showPopup(appName, time) {
+            const popupWindow = document.getElementById('popup-window');
+            const errorDetails = document.getElementById('error-details');
+            
+            errorDetails.innerHTML = `
+                <p><strong>App:</strong> ${appName}</p>
+                <p><strong>Time:</strong> ${time}</p>
+            `;
+            popupWindow.style.display = 'block';
+            document.getElementById('desktop').style.display = 'none'; // Hide other content
+        }
 
-    if (errorDetails) {
-        errorContent += `
-            <p><strong>Error Details:</strong> ${errorDetails.message}</p>
-            <p><strong>Line:</strong> ${errorDetails.line}</p>
-        `;
-    }
+        function closePopup() {
+            const popupWindow = document.getElementById('popup-window');
+            popupWindow.style.display = 'none';
+            document.getElementById('desktop').style.display = 'block'; // Show desktop content
+        }
 
-    errorMessage.innerHTML = errorContent;
-    errorMessage.style.display = 'flex'; // Full-screen display
-    document.getElementById('desktop').style.display = 'none'; // Hide other content
+        function handleError(cause, errorDetails = null, isAppCrash = false, isSystemCrash = false) {
+            const errorMessage = document.getElementById('error-message');
+            const currentTime = new Date().toLocaleString();
+            let errorContent = `
+                <h1>System Crash</h1>
+                <p><strong>Cause:</strong> ${cause}</p>
+                <p><strong>Time:</strong> ${currentTime}</p>
+            `;
 
-    if (isAppCrash) {
-        setTimeout(() => {
-            console.log('Restarting OS due to app crash...');
-            initializeOS(); // Restart the OS or handle app-specific restart
-        }, 5000); // Delay before restart
-    }
+            if (errorDetails) {
+                errorContent += `
+                    <p><strong>Error Details:</strong> ${errorDetails.message}</p>
+                    <p><strong>Line:</strong> ${errorDetails.line}</p>
+                `;
+            }
 
-    // Log additional details to the console
-    console.error('System Crash:', {
-        cause,
-        time: currentTime,
-        errorDetails,
-        userAgent: navigator.userAgent,
-        platform: navigator.platform
-    });
-}
+            errorMessage.innerHTML = errorContent;
+            errorMessage.style.display = 'flex'; // Full-screen display
+            document.getElementById('desktop').style.display = 'none'; // Hide other content
 
+            if (isSystemCrash) {
+                console.log('Restarting the system due to critical component failure...');
+                setTimeout(() => {
+                    location.reload(); // Reload the entire page to restart the system
+                }, 5000); // Delay before restart
+            } else if (isAppCrash) {
+                console.log('Displaying error popup for app crash...');
+                showPopup(cause, currentTime);
+            }
 
-        async function loadSystemScript(src) {
+            // Log additional details to the console
+            console.error('System Crash:', {
+                cause,
+                time: currentTime,
+                errorDetails,
+                userAgent: navigator.userAgent,
+                platform: navigator.platform
+            });
+        }
+
+        async function loadSystemScript(src, isAppScript = false) {
             try {
                 const response = await fetch(src);
                 if (!response.ok) {
@@ -59,7 +85,6 @@
                 const scriptContent = await response.text();
                 try {
                     eval(scriptContent);
-                    console.log(`${src} loaded successfully.`);
                 } catch (syntaxError) {
                     const lineNumber = syntaxError.lineNumber || (new Error().stack.match(/<anonymous>:(\d+):\d+/) || [])[1];
                     throw {
@@ -69,11 +94,7 @@
                     };
                 }
             } catch (error) {
-                if (typeof error === 'object' && error.src) {
-                    handleError(`Syntax error in ${error.src}`, error);
-                } else {
-                    handleError(error.message);
-                }
+                handleError(`Error in ${src}`, error, isAppScript, false);
             }
         }
 
@@ -85,7 +106,7 @@
                 console.log('All scripts loaded.');
                 initializeDesktop(); // Call after all scripts are loaded
             } catch (error) {
-                handleError(error.message);
+                handleError(error.message, null, true, true); // Consider critical if initialization fails
             }
         }
 
@@ -93,6 +114,7 @@
     </script>
 </body>
 </html>
+
 
 
     </script>
