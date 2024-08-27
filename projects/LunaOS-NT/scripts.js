@@ -86,6 +86,32 @@ const OS_API = {
 
         // Make the window draggable
         this.makeWindowDraggable(newWindow);
+        
+           saveFile: function(filePath, content) {
+        localStorage.setItem(filePath, content);
+        this.log(`File saved: ${filePath}`);
+    },
+
+    readFile: function(filePath) {
+        const content = localStorage.getItem(filePath);
+        if (content === null) {
+            throw new Error(`File not found: ${filePath}`);
+        }
+        return content;
+    },
+
+    deleteFile: function(filePath) {
+        localStorage.removeItem(filePath);
+        this.log(`File deleted: ${filePath}`);
+    },
+
+    listFiles: function() {
+        const files = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            files.push(localStorage.key(i));
+        }
+        return files;
+    },
     },
 
     // Method to close a window
