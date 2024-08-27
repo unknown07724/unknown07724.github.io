@@ -95,18 +95,6 @@ async function initializeOS() {
 window.onload = initializeOS;
 
 
-        async function initializeOS() {
-            try {
-                await loadSystemScript('/system/core/fileSystem.js');
-                await loadSystemScript('/system/core/windowManager.js');
-                await loadSystemScript('/system/core/desktop.js');
-                initializeDesktop(); // Initialize the desktop after all scripts are loaded
-            } catch (error) {
-                handleError(error);
-            }
-        }
-
-        window.onload = initializeOS;
     </script>
 </body>
 </html>
