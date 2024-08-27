@@ -98,3 +98,24 @@ body, html {
     padding: 10px;
     overflow: auto;
 }
+#error-message {
+    position: fixed; /* Fixed position to cover the entire viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Dark background with transparency */
+    color: #ff4c4c; /* Bright red color for text (adjust as needed) */
+    font-family: Arial, sans-serif; /* Font settings */
+    font-size: 1.5em; /* Font size */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 9999; /* Ensure the error message is on top */
+    overflow: auto; /* Handle overflow if content is too large */
+}
+
