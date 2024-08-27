@@ -24,4 +24,6 @@ function addAppIcon(name, appName, iconSrc) {
 }
 
 // Initialize desktop on page load
-window.onload = initializeDesktop;
+initializeDesktop();  // Call the function immediately
+window.onload = initializeDesktop;  // Still attach it to the event
+
