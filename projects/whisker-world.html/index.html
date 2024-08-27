@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whisker World</title>
+<style>
+/* Add some basic styling to our game container */
+#game-container {
+width: 800px;
+height: 600px;
+border: 1px solid black;
+background-color: #f0f0f0; /* Light gray background */
+}
+
+/* Style the cat character */
+.cat {
+width: 30px;
+height: 30px;
+background-color: #ff69b4; /* Pink color */
+border-radius: 50%;
+}
+
+/* Style the platforms */
+.platform {
+width: 100px;
+height: 20px;
+background-color: #333; /* Dark gray color */
+border-radius: 10px;
+}
+
+/* Style the spikes */
+.spike {
+width: 20px;
+height: 20px;
+background-color: #ff0000; /* Red color */
+border-radius: 50%;
+}
+
+/* Style the catnip power-ups */
+.catnip {
+width: 20px;
+height: 20px;
+background-color: #33cc33; /* Green color */
+border-radius: 50%;
+}
+
+/* Style the fish bone power-ups */
+.fishbone {
+width: 20px;
+height: 20px;
+background-color: #0066cc; /* Blue color */
+border-radius: 50%;
+}
+</style>
+</head>
+<body>
+<!-- Create a container for our game -->
+<div id="game-container"></div>
+
+<!-- Add the Phaser library -->
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.50.1/dist/phaser.js"></script>
+
+<!-- Add our game script -->
+<script>
+const game = new Phaser.Game({
+type: Phaser.CANVAS,
+parent: 'game-container',
+scene: {
+preload: preload,
+create: create,
+update: update
+}
+});
+
+let cat;
+let platforms;
+let spikes;
+let catnips;
+let fishbones;
+
+function preload() {
+this.load.image('cat', 'assets/cat.png');
+this.load.image('platform', 'assets/platform.png');
+this.load.image('spike', 'assets/spike.png');
+this.load.image('catnip', 'assets/catnip.png');
+this.load.image('fishbone', 'assets/fishbone.png');
+}
+
+function create() {
+// Create the cat character
+cat = this.add.sprite(100, 100, 'cat');
+cat.body = new Phaser.Physics.Arcade.Body(cat, 0, 0, 0, true);
+cat.scale.setTo(2, 2); // Scale the cat sprite
+cat.tint = 0xff69b4; // Set the cat's color to pink
+
+// Create the platforms
+platforms = this.add.group();
+platforms.create(100, 100, 'platform');
+platforms.create(300, 200, 'platform');
+platforms.create(500, 300, 'platform');
+
+// Create the spikes
+spikes = this.add.group();
+spikes.create(200, 150, 'spike');
+spikes.create(400, 250, 'spike');
+spikes.create(600, 350, 'spike');
+
+// Create the catnip power-ups
+catnips = this.add.group();
+catnips.create(250, 175, 'catnip');
+catnips.create(450, 275, 'catnip');
+catnips.create(650, 375, 'catnip');
+
+// Create the fish bone power-ups
+fishbones = this.add.group();
+fishbones.create(275, 200, 'fishbone');
+fishbones.create(475, 300, 'fishbone');
+fishbones.create(675, 400, 'fishbone');
+}
+
+function update(time, delta) {
+// Update the cat's movement
+cat.body.velocity.x = 0;
+if (this.input.keyboard.isDown(Phaser.Input.Keyboard.LEFT)) {
+cat.body.velocity.x = -100;
+} else if (this.input.keyboard.isDown(Phaser.Input.Keyboard.RIGHT)) {
+cat.body.velocity.x = 100;
+}
+
+if (this.input.keyboard.isDown(Phaser.Input.Keyboard.UP) && cat.body.onFloor()) {
+cat.body.velocity.y = -200;
+}
+}
+</script>
+</body>
+</html>
