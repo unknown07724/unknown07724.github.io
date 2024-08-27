@@ -7,12 +7,32 @@
 body {
 font-family: sans-serif;
 background-color: #f0f0f0;
-}
-.desktop {
-width: 100%;
+margin: 0;
 height: 100vh;
 display: flex;
-flex-wrap: wrap;
+flex-direction: column;
+}
+.taskbar {
+height: 30px;
+background-color: #333;
+color: #fff;
+padding: 10px;
+text-align: center;
+}
+.taskbar Button {
+background-color: #444;
+color: #fff;
+border: none;
+padding: 10px 20px;
+font-size: 16px;
+cursor: pointer;
+}
+.taskbar Button:hover {
+background-color: #555;
+}
+.desktop {
+flex: 1;
+display: flex;
 justify-content: center;
 align-items: center;
 }
@@ -37,6 +57,10 @@ background-color: #ccc;
 </style>
 </head>
 <body>
+<div class="taskbar">
+<button>Start</button>
+<button>Settings</button>
+</div>
 <div class="desktop">
 <!-- desktop icons will go here -->
 </div>
@@ -93,7 +117,7 @@ iconHTML = `
 }
 document.querySelector('.desktop').innerHTML += iconHTML;
 }
-
+[]
 // open app when clicked
 document.addEventListener('click', (event) => {
 if (event.target.classList.contains('app-icon')) {
@@ -101,8 +125,7 @@ let appName = event.target.querySelector('span').textContent + '.app';
 let appHTML = fileSystem.root.contents[0].contents.find((file) => file.name === appName).contents;
 let appWindow = window.open('', '_blank');
 appWindow.document.write(appHTML);
-  []
-appWindow.document.close();
+appWindow.document_close();
 }
 });
 </script>
