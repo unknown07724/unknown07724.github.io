@@ -8,35 +8,41 @@ body {
 font-family: sans-serif;
 background-color: #f0f0f0;
 margin: 0;
-height: 100vh;
-display: flex;
-flex-direction: column;
 }
 .taskbar {
+width: 100%;
 height: 30px;
 background-color: #333;
 color: #fff;
 padding: 10px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.taskbar-icon {
+width: 20px;
+height: 20px;
+margin: 10px;
+display: inline-block;
+background-color: #fff;
+border: 1px solid #ddd;
+border-radius: 5px;
+padding: 5px;
 text-align: center;
 }
-.taskbar Button {
-background-color: #444;
-color: #fff;
-border: none;
-padding: 10px 20px;
-font-size: 16px;
-cursor: pointer;
-}
-.taskbar Button:hover {
-background-color: #555;
+.taskbar-icon:hover {
+background-color: #f7f7f7;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .desktop {
-flex: 1;
+width: 100%;
+height: calc(100vh - 30px);
 display: flex;
 justify-content: center;
 align-items: center;
+flex-direction: column;
 }
-.icon {
+.shortcut {
 width: 50px;
 height: 50px;
 margin: 10px;
@@ -47,22 +53,26 @@ border-radius: 5px;
 padding: 10px;
 text-align: center;
 }
-.icon:hover {
+.shortcut:hover {
 background-color: #f7f7f7;
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .app-icon {
 background-color: #ccc;
 }
+.app-frame {
+width: 100%;
+height: 100%;
+border: none;
+}
 </style>
 </head>
 <body>
 <div class="taskbar">
-<button>Start</button>
-<button>Settings</button>
+<!-- taskbar icons will go here -->
 </div>
 <div class="desktop">
-<!-- desktop icons will go here -->
+<!-- shortcuts will go here -->
 </div>
 <script>
 let fileSystem = {
@@ -89,7 +99,7 @@ contents: '<html><body><h1>Calculator App</h1></body></html>'
 files: {}
 };
 
-let desktopIcons = [
+let shortcuts = [
 {
 id: 'calculator',
 name: 'Calculator.app',
@@ -97,35 +107,50 @@ icon: 'app_icon.png'
 }
 ];
 
-// load desktop icons and display them
-for (let i = 0; i < desktopIcons.length; i++) {
-let iconHTML = '';
-if (desktopIcons[i].name.endsWith('.app')) {
-iconHTML = `
-<div class="icon app-icon">
-<img src="app_icon.png" alt="${desktopIcons[i].name}">
-<span>${desktopIcons[i].name.replace('.app', '')}</span>
+// load taskbar icons and display them
+let taskbarIconsHTML = '';
+for (let i = 0; i < shortcuts.length; i++) {
+taskbarIconsHTML += `
+<div class="taskbar-icon">
+<img src="${shortcuts[i].icon}" alt="${shortcuts[i].name}">
+</div>
+`;
+}
+document.querySelector('.taskbar').innerHTML = taskbarIconsHTML;
+
+// load shortcuts and display them
+[]
+let shortcutsHTML = '';
+for (let i = 0; i < shortcuts.length; i++) {
+let shortcutHTML = '';
+if (shortcuts[i].name.endsWith('.app')) {
+shortcutHTML = `
+<div class="shortcut app-icon">
+<img src="app_icon.png" alt="${shortcuts[i].name}">
+<span>${shortcuts[i].name.replace('.app', '')}</span>
 </div>
 `;
 } else {
-iconHTML = `
-<div class="icon">
-<img src="${desktopIcons[i].icon}" alt="${desktopIcons[i].name}">
-<span>${desktopIcons[i].name}</span>
+shortcutHTML = `
+<div class="shortcut">
+<img src="${shortcuts[i].icon}" alt="${shortcuts[i].name}">
+<span>${shortcuts[i].name}</span>
 </div>
 `;
 }
-document.querySelector('.desktop').innerHTML += iconHTML;
+shortcutsHTML += shortcutHTML;
 }
-[]
+document.querySelector('.desktop').innerHTML = shortcutsHTML;
+
 // open app when clicked
 document.addEventListener('click', (event) => {
 if (event.target.classList.contains('app-icon')) {
 let appName = event.target.querySelector('span').textContent + '.app';
 let appHTML = fileSystem.root.contents[0].contents.find((file) => file.name === appName).contents;
-let appWindow = window.open('', '_blank');
-appWindow.document.write(appHTML);
-appWindow.document_close();
+let appFrame = document.createElement('iframe');
+appFrame.srcdoc = appHTML;
+appFrame.className = 'app-frame';
+document.body.appendChild(appFrame);
 }
 });
 </script>
