@@ -1,7 +1,5 @@
 // system/core/fileSystem.js
 
-// system/core/fileSystem.js
-
 const fileSystem = {
     '/': {
         'system/': {
@@ -20,17 +18,40 @@ const fileSystem = {
         'system/core/': {
             'desktop.js': `// desktop.js content`,
             'windowManager.js': `// windowManager.js content`,
-            'initialize.js': `// initialize.js content`,
             'fileSystem.js': `// fileSystem.js content`
         },
         'system/apps/': {
-            'textEditor.js': `// textEditor.js content`,
-            'fileManager.js': `// fileManager.js content`,
-            'terminal.js': `// terminal.js content`
-        },
-        'system/files/': {
-            'config.json': `{"theme": "dark", "language": "en"}`,
-            'userSettings.json': `{"volume": 80, "brightness": 70}`
+            'textEditor.html': `
+                <html>
+                    <body>
+                        <h1>Text Editor</h1>
+                        <textarea style="width: 100%; height: 90%;"></textarea>
+                    </body>
+                </html>
+            `,
+            'fileManager.html': `
+                <html>
+                    <body>
+                        <h1>File Manager</h1>
+                        <div id="directoryContents"></div>
+                        <script>
+                            // File manager logic can be added here
+                        </script>
+                    </body>
+                </html>
+            `,
+            'terminal.html': `
+                <html>
+                    <body>
+                        <h1>Terminal</h1>
+                        <div id="terminalOutput" style="background-color: black; color: white; height: 90%; overflow-y: auto;"></div>
+                        <input id="terminalInput" style="width: 100%;" onkeydown="handleTerminalInput(event)">
+                        <script>
+                            // Terminal logic can be added here
+                        </script>
+                    </body>
+                </html>
+            `
         }
     }
 };
@@ -49,29 +70,3 @@ function getFileContent(path) {
     }
     return current;
 }
-
-// Function to save file content
-function saveFileContent(path, content) {
-    const parts = path.split('/');
-    let current = fileSystem['/'];
-
-    for (let i = 1; i < parts.length - 1; i++) {
-        if (!current[parts[i]]) {
-            current[parts[i]] = {}; // Create directory if it doesn't exist
-        }
-        current = current[parts[i]];
-    }
-
-    current[parts[parts.length - 1]] = content;
-}
-
-// Function to list directory contents
-function listDirectory(path) {
-    const directory = getFileContent(path);
-    if (directory && typeof directory === 'object') {
-        return Object.keys(directory);
-    } else {
-        return null; // Not a directory
-    }
-}
-
