@@ -1,20 +1,22 @@
 // system/core/desktop.js
 
+// system/core/desktop.js
+
 function openApp(appName) {
-    let content;
-    switch(appName) {
-        case 'text-editor':
-            content = getTextEditorContent();
-            break;
-        case 'file-manager':
-            content = getFileManagerContent();
-            break;
-        case 'terminal':
-            content = getTerminalContent();
-            break;
-        default:
-            content = `<div>Unknown App</div>`;
+    let appPath = `/system/apps/${appName}.html`;
+    let appContent = getFileContent(appPath);
+    
+    if (appContent) {
+        createWindow(appName, `<iframe srcdoc="${escapeHTML(appContent)}" style="width: 100%; height: 100%; border: none;"></iframe>`);
+    } else {
+        createWindow(appName, `<div>App not found</div>`);
     }
-    createWindow(appName, content);
 }
 
+function escapeHTML(html) {
+    return html.replace(/&/g, '&amp;')
+               .replace(/</g, '&lt;')
+               .replace(/>/g, '&gt;')
+               .replace(/"/g, '&quot;')
+               .replace(/'/g, '&#039;');
+}
