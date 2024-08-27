@@ -7,9 +7,44 @@
     <title>Web OS</title>
 </head>
 <body>
-    <script src="/system/core/fileSystem.js"></script>
-    <script src="/system/core/windowManager.js"></script>
-    <script src="/system/core/desktop.js"></script>
+    <div id="desktop"></div>
+    <div id="error-message" style="display: none; color: red; background-color: black; padding: 20px;"></div>
+    
+    <script>
+        function handleError(cause) {
+            const errorMessage = document.getElementById('error-message');
+            const currentTime = new Date().toLocaleString();
+            errorMessage.innerHTML = `
+                <h1>System Crash</h1>
+                <p><strong>Cause:</strong> ${cause}</p>
+                <p><strong>Time:</strong> ${currentTime}</p>
+            `;
+            errorMessage.style.display = 'block';
+            document.getElementById('desktop').style.display = 'none';
+        }
+
+        function loadSystemScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = () => reject(`Failed to load ${src}`);
+                document.body.appendChild(script);
+            });
+        }
+
+        async function initializeOS() {
+            try {
+                await loadSystemScript('/system/core/fileSystem.js');
+                await loadSystemScript('/system/core/windowManager.js');
+                await loadSystemScript('/system/core/desktop.js');
+                initializeDesktop(); // Initialize the desktop after all scripts are loaded
+            } catch (error) {
+                handleError(error);
+            }
+        }
+
+        window.onload = initializeOS;
+    </script>
 </body>
 </html>
-
