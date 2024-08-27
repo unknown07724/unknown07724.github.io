@@ -8,91 +8,83 @@
 </head>
 <body>
     <div id="desktop"></div>
-    <div id="error-message" style="display: none; color: red; background-color: black; padding: 20px;"></div>
+    <div id="error-message" style="display: none;"></div>
     
     <script>
-        function handleError(cause) {
+        function handleError(cause, errorDetails = null) {
             const errorMessage = document.getElementById('error-message');
             const currentTime = new Date().toLocaleString();
-            errorMessage.innerHTML = `
+            let errorContent = `
                 <h1>System Crash</h1>
                 <p><strong>Cause:</strong> ${cause}</p>
                 <p><strong>Time:</strong> ${currentTime}</p>
             `;
-            errorMessage.style.display = 'block';
+
+            if (errorDetails) {
+                errorContent += `
+                    <p><strong>Error Details:</strong> ${errorDetails.message}</p>
+                    <p><strong>Line:</strong> ${errorDetails.line}</p>
+                `;
+            }
+
+            errorMessage.innerHTML = errorContent;
+            errorMessage.style.display = 'flex'; // Use 'flex' to apply full-screen styling
             document.getElementById('desktop').style.display = 'none';
+
+            // Log additional details to the console
+            console.error('System Crash:', {
+                cause,
+                time: currentTime,
+                errorDetails,
+                userAgent: navigator.userAgent,
+                platform: navigator.platform
+            });
         }
 
-     function handleError(cause, errorDetails = null) {
-    const errorMessage = document.getElementById('error-message');
-    const currentTime = new Date().toLocaleString();
-    let errorContent = `
-        <h1>System Crash</h1>
-        <p><strong>Cause:</strong> ${cause}</p>
-        <p><strong>Time:</strong> ${currentTime}</p>
-    `;
+        async function loadSystemScript(src) {
+            try {
+                const response = await fetch(src);
+                if (!response.ok) {
+                    throw new Error(`Failed to load ${src}`);
+                }
 
-    if (errorDetails) {
-        errorContent += `
-            <p><strong>Error Details:</strong> ${errorDetails.message}</p>
-            <p><strong>Line:</strong> ${errorDetails.line}</p>
-        `;
-    }
-
-    errorMessage.innerHTML = errorContent;
-    errorMessage.style.display = 'block';
-    document.getElementById('desktop').style.display = 'none';
-
-    // Log additional details to the console
-    console.error('System Crash:', {
-        cause,
-        time: currentTime,
-        errorDetails,
-        userAgent: navigator.userAgent,
-        platform: navigator.platform
-    });
-}
-
-async function loadSystemScript(src) {
-    try {
-        const response = await fetch(src);
-        if (!response.ok) {
-            throw new Error(`Failed to load ${src}`);
+                const scriptContent = await response.text();
+                try {
+                    eval(scriptContent);
+                    console.log(`${src} loaded successfully.`);
+                } catch (syntaxError) {
+                    const lineNumber = syntaxError.lineNumber || (new Error().stack.match(/<anonymous>:(\d+):\d+/) || [])[1];
+                    throw {
+                        message: syntaxError.message,
+                        line: lineNumber || 'unknown',
+                        src
+                    };
+                }
+            } catch (error) {
+                if (typeof error === 'object' && error.src) {
+                    handleError(`Syntax error in ${error.src}`, error);
+                } else {
+                    handleError(error.message);
+                }
+            }
         }
 
-        const scriptContent = await response.text();
-
-        try {
-            eval(scriptContent);
-        } catch (syntaxError) {
-            const lineNumber = syntaxError.lineNumber || (new Error().stack.match(/<anonymous>:(\d+):\d+/) || [])[1];
-            throw {
-                message: syntaxError.message,
-                line: lineNumber || 'unknown',
-                src
-            };
+        async function initializeOS() {
+            try {
+                await loadSystemScript('/system/core/fileSystem.js');
+                await loadSystemScript('/system/core/windowManager.js');
+                await loadSystemScript('/system/core/desktop.js');
+                console.log('All scripts loaded.');
+                initializeDesktop(); // Call after all scripts are loaded
+            } catch (error) {
+                handleError(error.message);
+            }
         }
-    } catch (error) {
-        if (typeof error === 'object' && error.src) {
-            handleError(`Syntax error in ${error.src}`, error);
-        } else {
-            handleError(error.message);
-        }
-    }
-}
 
-async function initializeOS() {
-    try {
-        await loadSystemScript('/system/core/fileSystem.js');
-        await loadSystemScript('/system/core/windowManager.js');
-        await loadSystemScript('/system/core/desktop.js');
-        initializeDesktop(); // Initialize the desktop after all scripts are loaded
-    } catch (error) {
-        handleError(error.message);
-    }
-}
-
-window.onload = initializeOS;
+        window.onload = initializeOS;
+    </script>
+</body>
+</html>
 
 
     </script>
