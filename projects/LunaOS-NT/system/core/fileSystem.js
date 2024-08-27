@@ -18,7 +18,19 @@ const fileSystem = {
         'system/core/': {
             'desktop.js': `// desktop.js content`,
             'windowManager.js': `// windowManager.js content`,
-            'fileSystem.js': `// fileSystem.js content`
+            'fileSystem.js': `function getFileContent(path) {
+    const parts = path.split('/');
+    let current = fileSystem['/'];
+
+    for (let i = 1; i < parts.length; i++) {
+        if (current[parts[i]]) {
+            current = current[parts[i]];
+        } else {
+            return null; // File or directory not found
+        }
+    }
+    return current;
+}`
         },
         'system/apps/': {
             'textEditor.html': `
