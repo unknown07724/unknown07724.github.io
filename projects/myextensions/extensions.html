@@ -1,0 +1,2827 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TurboWarp Extension Gallery</title>
+    <meta name="theme-color" content="#ff4c4c">
+    <meta name="description" content="The official place to find powerful unsandboxed extensions for TurboWarp.">
+    <style>
+      :root {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color-scheme: light dark;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color: #eee;
+          background: #111;
+        }
+        a {
+          color: #56b2ff;
+        }
+        a:visited {
+          color: #f192ff;
+        }
+        a:active {
+          color: red;
+        }
+        .invert-dark {
+          filter: invert(100%);
+        }
+      }
+
+      h1 {
+        margin: 16px 0;
+      }
+      h2, h3, p {
+        margin: 8px 0;
+      }
+
+      .section {
+        max-width: 928px;
+        margin: 24px auto;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: normal;
+        text-align: center;
+      }
+      .header svg {
+        width: 56px;
+        height: 56px;
+        flex-shrink: 0;
+        margin: 0 8px 0 0;
+      }
+      @media (max-width: 750px) {
+        .header h1 {
+          flex-direction: column;
+        }
+        .header svg {
+          margin: 0 0 8px 0;
+        }
+      }
+
+      .infobox, .development-tools {
+        padding: 8px;
+        margin: 8px 0;
+        border-radius: 8px;
+        background: rgba(0, 195, 255, 0.245);
+        border: 1px solid rgba(0, 187, 255, 0.604);
+      }
+      .infobox-warning {
+        background-color: rgba(255, 0, 0, 0.245);
+        border-color: rgba(255, 0, 0, 0.446);
+      }
+      .infobox-title {
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+
+      .development-tools {
+        background-color: rgba(200, 0, 255, 0.245);
+        border-color: rgba(234, 0, 255, 0.604);
+      }
+      .development-tools h2 {
+        font-size: 1em;
+      }
+
+      .extensions {
+        display: -ms-grid;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin: 16px -4px;
+      }
+      @media (max-width: 944px) {
+        .extensions {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 650px) {
+        .extensions {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .extension {
+        position: relative;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        margin: 4px;
+        overflow: hidden;
+        padding: 8px;
+      }
+      @media (prefers-color-scheme: dark) {
+        .extension {
+          border-color: #333;
+        }
+      }
+      .extension h3 {
+        font-size: 1.5em;
+      }
+      .extension > :last-child {
+        margin-bottom: 0;
+      }
+      .extension-banner {
+        position: relative;
+        margin: -8px -8px 0 -8px;
+      }
+      .extension-image {
+        display: block;
+        width: 100%;
+        /* TODO: see if there's another way to do this that works in older browsers too */
+        aspect-ratio: 2 / 1;
+      }
+
+      .extension-buttons {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        gap: 0.5rem;
+        opacity: 0;
+        transition: opacity .15s;
+        background: rgba(0, 0, 0, 0.5);
+        pointer-events: none;
+      }
+      .extension:hover .extension-buttons, .extension:focus-within .extension-buttons {
+        opacity: 1;
+        backdrop-filter: blur(0.6px);
+      }
+      .extension-buttons > * {
+        padding: 0.5rem;
+        background-color: #4c97ff;
+        border-radius: 0.5rem;
+        border: none;
+        font: inherit;
+        cursor: pointer;
+        color: white;
+        text-decoration: none;
+        pointer-events: auto;
+        transition: filter 0.15s;
+        filter: drop-shadow(0px 1px 3px #00000075);
+      }
+      .extension-buttons > *:hover {
+        filter: drop-shadow(0px 1px 7px black);
+        z-index: 1;
+      }
+      .extension-buttons *:active {
+        filter: brightness(0.85) drop-shadow(0px 1px 2px #00000075);
+      }
+      .extension-buttons *:disabled {
+        opacity: 0.5;
+      }
+      .extension-buttons .open {
+        background-color: #ff4c4c;
+        color: white;
+      }
+      .extension-buttons .docs {
+        background-color: #FFAB19;
+        color: white;
+      }
+      .extension-buttons .sample {
+        background-color: #40BF4A;
+        color: white;
+      }
+      .extension-buttons :disabled {
+        opacity: 0.5;
+      }
+
+      .sample-list {
+        display: none;
+        position: absolute;
+        left: 0.5rem;
+        right: 0.5rem;
+        width: calc(100% - 1rem);
+        margin-top: -1.5rem;
+        padding: 0.5rem;
+        box-sizing: border-box;
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, .3);
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .sample-list h3 {
+        font-size: 1rem;
+        margin: 0;
+      }
+      .extension:hover[data-samples-open="true"] .sample-list {
+        display: flex;
+      }
+      @media (prefers-color-scheme: dark) {
+        .sample-list {
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          background-color: #333;
+        }
+      }
+
+      footer {
+        opacity: 0.8;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      footer p {
+        margin: 0 0 8px 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="section header">
+      <h1>
+        <svg aria-hidden="true" viewBox="0 0 1024 1024">
+          <path d="m64 174.86735v641.13265c0 35.34622 28.653776 64 64 64h113.30332c9.32935 0 18.19416 4.07135 24.27337 11.14807l67.26992 78.30776c12.15843 14.15343 29.88806 22.29614 48.54676 22.29614h261.21326c18.6587 0 36.38832-8.14271 48.54676-22.29614l67.26992-78.30776c6.07921-7.07672 14.94402-11.14807 24.27337-11.14807h113.30332c35.34622 0 64-28.65378 64-64v-654.84694c0-35.34622-28.65378-64-64-64-0.38091 0-0.76182 0.0034-1.14268 0.0102l-767.99999 13.71429c-34.89522 0.62313-62.85733 29.08902-62.85733 63.9898z" fill="#cc3c3c" fill-rule="evenodd"/>
+          <path d="m64 96v672c0 35.34622 28.653776 64 64 64h128.17394c9.97413 0 19.37789 4.65076 25.43168 12.5776l51.18313 67.01917c12.1076 15.85368 30.9151 25.1552 50.86336 25.1552h256.69578c19.94826 0 38.75576-9.30152 50.86336-25.1552l51.18312-67.01917c6.0538-7.92684 15.45756-12.5776 25.43169-12.5776h128.17394c35.34622 0 64-28.65378 64-64v-672c0-35.346224-28.65378-64-64-64h-768c-35.346224 0-64 28.653776-64 64z" fill="#ff4c4c" fill-rule="evenodd"/>
+          <path d="m96 96v672c0 17.67311 14.32689 32 32 32h128.17394c19.94827 0 38.75577 9.30152 50.86337 25.1552l51.18312 67.01917c6.0538 7.92684 15.45755 12.5776 25.43168 12.5776h256.69578c9.97413 0 19.37788-4.65076 25.43168-12.5776l51.18312-67.01917c12.1076-15.85368 30.9151-25.1552 50.86337-25.1552h128.17394c17.67311 0 32-14.32689 32-32v-672c0-17.673112-14.32689-32-32-32h-768c-17.67311 0-32 14.326888-32 32zm-32 0c0-35.346224 28.653776-64 64-64h768c35.34622 0 64 28.653776 64 64v672c0 35.34622-28.65378 64-64 64h-128.17394c-9.97413 0-19.37789 4.65076-25.43169 12.5776l-51.18312 67.01917c-12.1076 15.85368-30.9151 25.1552-50.86336 25.1552h-256.69578c-19.94826 0-38.75576-9.30152-50.86336-25.1552l-51.18313-67.01917c-6.05379-7.92684-15.45755-12.5776-25.43168-12.5776h-128.17394c-35.346224 0-64-28.65378-64-64z" fill="#fff" fill-opacity=".2"/>
+          <g transform="matrix(4.1943736,0,0,4.1943736,229.13567,171.21359)" fill="none" stroke="#fff" stroke-width="56.4093">
+           <path d="m108.34581 31.577677c-0.79395 3.473563-1.38942 7.244861-1.7864 11.313892-0.0992 1.091691 0 2.481117 0.29773 4.168276 0.29773 1.984893 0.4466 3.374319 0.4466 4.168276 0 2.580361-1.68716 3.870542-5.06147 3.870542-2.18339 0-3.622435-0.64509-4.317148-1.935271-0.09925-2.183383-0.04962-5.160723 0.14887-8.93202 0.198487-4.46601 0.29773-7.44335 0.29773-8.93202-0.09924 0-0.248107-0.09924-0.4466-0.297734-9.229753 0.396979-17.91366 0.992447-26.05172 1.786404-0.198493 1.290181-0.198493 2.878095 0 4.763744l0.59546 5.359212c-0.396973 3.076585-0.59546 7.64184-0.59546 13.695765 0.297733 2.580361 0.4466 13.646143 0.4466 33.197344v10.867303c0 1.68716 0.24811 2.8781 0.74433 3.57281h9.22976c3.771293-0.49623 5.65694 1.09169 5.65694 4.76374 0 2.18339-1.042067 3.72168-3.1262 4.61488-1.290187 0.49623-3.572817 0.59547-6.84789 0.29774-1.984893-0.19849-4.317143-0.24812-6.99675-0.14887-3.672053 0.49622-8.138063 0.8932-13.39803 1.19093-5.359207 0.29774-8.634279-0.44659-9.825218-2.233-0.793957-1.19093-0.793957-2.43149 0-3.72168 1.389425-2.18338 5.011855-3.27507 10.867288-3.27507 3.076587 0 4.61488-0.84358 4.61488-2.53074 0-0.8932-0.04962-1.73678-0.14887-2.53074 0-2.48113 0.04962-4.66452 0.14887-6.550163 0.297733-5.359213 0.297733-12.901808 0-22.627784-0.39698-14.092743-0.248113-26.746439 0.4466-37.961086l-0.4466-0.446601c-3.076587 0.198489-8.832777 0.148867-17.268572-0.148867-0.396979 0-3.423941 0.198489-9.080887 0.595468 1.389425 9.527488 2.183383 16.325748 2.381872 20.394779l-0.297734 4.01941c-0.09924 1.48867-1.339803 2.233005-3.721676 2.233005-1.885649 0-3.473563-3.572808-4.763744-10.718425-0.595468-4.267521-1.190936-8.584664-1.786404-12.951429 0-0.694713-0.347356-1.885649-1.042069-3.572808-0.595468-1.786404-1.908676-4.750966-1.908676-5.644168 0-3.141175 2.901123-2.39465 6.67242-2.990118 0.297734 0 0.793957 0.04962 1.48867 0.148867 0.694713 0.09924 1.190936 0.148867 1.48867 0.148867h36.91902c9.130507-0.396979 17.96328-1.190936 26.49832-2.381872 0.595473-0.297734 1.488678-0.595468 2.679608-0.893202 2.08414-0.19849 3.87054 0.297733 5.35921 1.48867 1.48867 1.091691 1.9849 2.679606 1.48867 4.763744z" fill="none" stroke="#fff" stroke-width="56.4093"/>
+          </g>
+          <g transform="matrix(3.852509,0,0,3.852509,257.89982,219.83848)" fill="none" stroke="#ff4c4c" stroke-width="30.7075">
+           <path d="m110.38498 21.776581q-1.29661 5.672702-1.94492 12.317866-0.16208 1.782849 0.32415 4.538161 0.48623 3.241544 0.48623 4.538161 0 4.214007-5.51062 4.214007-3.5657 0-4.700239-2.107004-0.16208-3.565698 0.16208-9.72463 0.32415-7.293474 0.32415-9.724631-0.16207 0-0.48623-0.324155-15.073176 0.648309-28.3635 1.944927-0.324161 2.107003 0 5.186469l0.6483 5.834779q-0.6483 5.024392-0.6483 14.911102 0.48623 4.214006 0.48623 36.143214v11.831633q0 2.75531 0.81038 3.88985h10.048792q6.158927-0.81039 6.158927 5.18647 0 3.5657-3.403614 5.0244-2.107013 0.81039-7.455559 0.32416-3.241543-0.32416-7.617628-0.16208-5.996857 0.81038-14.586946 1.29661-8.75216 0.48624-10.69709-2.43115-1.296617-1.94493 0-4.05194 2.26908-3.56569 11.831631-3.56569 5.024396 0 5.024396-2.75532 0-1.45869-0.162081-2.75531 0-4.051935 0.162081-7.131398 0.48623-8.75217 0-24.635731-0.648311-23.014961 0.48623-41.329683l-0.48623-0.486231q-5.024396 0.324154-18.800953-0.162077-0.648309 0-9.886708 0.648308 2.26908 15.55941 2.593235 22.204574 0 0-0.324155 4.376085-0.162077 2.431158-4.05193 2.431158-3.079467 0-5.18647-11.669558-0.972463-6.969319-1.944926-14.100715 0-1.13454-1.134541-3.889852-0.972463-2.91739-0.972463-4.376084 0-4.05193 6.158933-5.024393 0.486232 0 1.620772 0.162077 1.13454 0.162078 1.620772 0.162078h16.856029q23.339116 0 23.339116 0 14.911096-0.648309 28.849729-2.593235 0.97247-0.486232 2.91739-0.972463 3.40363-0.324156 5.83478 1.620771 2.43116 1.782849 1.62077 5.18647z" fill="none" stroke="#ff4c4c" stroke-width="30.7075"/>
+          </g>
+          <g transform="matrix(4.1943736,0,0,4.1943736,228.25358,197.35677)" fill="#fff">
+           <path d="m108.34581 25.3789q-1.19093 5.210345-1.7864 11.313892-0.14887 1.637537 0.29773 4.168276 0.4466 2.97734 0.4466 4.168276 0 3.870542-5.06147 3.870542-3.275078 0-4.317148-1.935271-0.14887-3.275074 0.14887-8.93202 0.29773-6.699015 0.29773-8.93202-0.14886 0-0.4466-0.297734-13.84463 0.595468-26.05172 1.786404-0.29774 1.935271 0 4.763744l0.59546 5.359212q-0.59546 4.614877-0.59546 13.695765 0.4466 3.870542 0.4466 33.197344v10.86729q0 2.53074 0.74433 3.57281h9.22976q5.65694-0.74434 5.65694 4.76374 0 3.27508-3.1262 4.61488-1.93528 0.74434-6.84789 0.29774-2.97734-0.29774-6.99675-0.14887-5.50808 0.74433-13.39803 1.19093-8.03881 0.44661-9.825218-2.233-1.190936-1.7864 0-3.72168 2.084138-3.27507 10.867288-3.27507 4.61488 0 4.61488-2.53074 0-1.3398-0.14887-2.53074 0-3.72168 0.14887-6.55015 0.4466-8.03882 0-22.627784-0.59547-21.139115 0.4466-37.961086l-0.4466-0.446601q-4.61488 0.297734-17.268572-0.148867-0.595468 0-9.080887 0.595468 2.084138 14.291232 2.381872 20.394779 0 0-0.297734 4.01941-0.148867 2.233005-3.721676 2.233005-2.828473 0-4.763744-10.718425-0.893202-6.401281-1.786404-12.951429 0-1.042069-1.042069-3.572808-0.893202-2.679606-0.893202-4.019409 0-3.721675 5.656946-4.614877 0.446601 0 1.48867 0.148867t1.48867 0.148867h15.48217q21.43685 0 21.43685 0 13.69576-0.595468 26.49832-2.381872 0.89321-0.446601 2.679608-0.893202 3.12621-0.297735 5.35921 1.48867 2.23301 1.637537 1.48867 4.763744z" fill="#fff"/>
+          </g>
+        </svg>
+        <div>TurboWarp Extension Gallery</div>
+      </h1>
+
+      <p>Unlike custom extensions on other websites, these aren't limited by the extension sandbox, so they are a lot more powerful. All extensions are reviewed for safety.</p>
+      <p>
+        To use multiple of these extensions in TurboWarp, hover over the extension and press the button to copy its URL. Then go to the editor, open the extension chooser, then choose the "Custom Extension" option at the bottom, and enter the URL.
+      </p>
+
+      <div class="infobox infobox-warning">
+        <div class="infobox-title">These extensions are not compatible with Scratch.</div>
+        Projects that use these extensions can't be uploaded to the Scratch website.
+        They can, however, be used in <a href="https://packager.turbowarp.org/">the packager</a>.
+      </div>
+
+      <div class="infobox">
+        <div class="infobox-title">Some extensions may not work in TurboWarp Desktop.</div>
+        For compatibility, security, and offline support, each <a href="https://desktop.turbowarp.org/">TurboWarp Desktop</a> update contains an offline copy of these extensions from its release date, so some extensions may be outdated or missing.
+        Use the latest update for best results.
+      </div>
+    </div>
+
+    
+
+    <script>
+      document.addEventListener('click', function (e) {
+        var toCopy = e.target.getAttribute('data-copy');
+        if (toCopy) {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(toCopy);
+          } else {
+            var input = document.createElement('input');
+            input.value = toCopy;
+            input.style.top = '0';
+            input.style.left = '0';
+            input.style.position = 'fixed';
+            document.body.appendChild(input);
+            input.focus();
+            input.select();
+            try {
+              document.execCommand('copy');
+            } catch (e) {
+              console.error(e);
+            }
+            document.body.removeChild(input);
+            e.target.focus();
+          }
+        }
+
+        if (e.target.className.includes('sample-list-button')) {
+          var extension = e.target.closest('.extension');
+          extension.dataset.samplesOpen = extension.dataset.samplesOpen !== 'true';
+        }
+      });
+    </script>
+
+    <div class="section extensions-outer">
+      <div class="extensions">
+        
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/lab/text.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/lab/text.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/lab/text.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Animated Text</h2>
+            <p>
+              An easy way to display and animate text. Compatible with Scratch Lab&#39;s Animated Text experiment.
+              Created by LilyMakesThings.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/stretch.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/stretch.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/stretch.js">Open Extension</a>
+
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FStretch.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Stretch</h2>
+            <p>
+              Stretch sprites horizontally or vertically.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/gamepad.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/gamepad.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/gamepad.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Gamepad</h2>
+            <p>
+              Directly access gamepads instead of just mapping buttons to keys.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/box2d.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/box2d.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/box2d.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/box2d">Documentation</a>
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FBox2D.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Box2D Physics</h2>
+            <p>
+              Two dimensional physics.
+              
+              Originally created by <a href="https://scratch.mit.edu/users/griffpatch/">griffpatch</a>.
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/files.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/files.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/files.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Files</h2>
+            <p>
+              Read and download files.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/pointerlock.png" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/pointerlock.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/pointerlock.js">Open Extension</a>
+
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FMoving%20Around%20with%20Pointer%20Lock.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Pointerlock</h2>
+            <p>
+              Adds blocks for mouse locking. Mouse x &amp; y blocks will report the change since the previous frame while the pointer is locked. Replaces the pointerlock experiment.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/cursor.png" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/cursor.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/cursor.js">Open Extension</a>
+
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FTickle%20Me.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Mouse Cursor</h2>
+            <p>
+              Use custom cursors or hide the cursor. Also allows replacing the cursor with any costume image.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/runtime-options.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/runtime-options.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/runtime-options.js">Open Extension</a>
+
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FPen%20Plus.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Runtime Options</h2>
+            <p>
+              Get and modify turbo mode, framerate, interpolation, clone limit, stage size, and more.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/fetch.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/fetch.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/fetch.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Fetch</h2>
+            <p>
+              Make requests to the broader internet.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/text.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/text.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/text.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Text</h2>
+            <p>
+              Manipulate characters and text.
+              
+              Originally created by <a href="https://scratch.mit.edu/users/CST1229/">CST1229</a>.
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/local-storage.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/local-storage.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/local-storage.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/local-storage">Documentation</a>
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Local Storage</h2>
+            <p>
+              Store data persistently. Like cookies, but better.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/true-fantom/base.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/true-fantom/base.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/true-fantom/base.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Base</h2>
+            <p>
+              Convert numbers between bases.
+              Created by <a href="https://scratch.mit.edu/users/TrueFantom/">TrueFantom</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/bitwise.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/bitwise.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/bitwise.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/bitwise">Documentation</a>
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Bitwise</h2>
+            <p>
+              Blocks that operate on the binary representation of numbers in computers.
+              Created by <a href="https://scratch.mit.edu/users/TrueFantom/">TrueFantom</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Skyhigh173/bigint.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Skyhigh173/bigint.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Skyhigh173/bigint.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>BigInt</h2>
+            <p>
+              Math blocks that work on infinitely large integers (no decimals).
+              Created by Skyhigh173.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/utilities.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/utilities.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/utilities.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Utilities</h2>
+            <p>
+              A bunch of interesting blocks.
+              
+              Originally created by <a href="https://scratch.mit.edu/users/Sheep_maker/">Sheep_maker</a>.
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/sound.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/sound.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/sound.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Sound</h2>
+            <p>
+              Play sounds from URLs.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/Video.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/Video.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/Video.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Video</h2>
+            <p>
+              Play videos from URLs.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a> and SharkPool.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/iframe.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/iframe.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/iframe.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Iframe</h2>
+            <p>
+              Display webpages or HTML over the stage.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Clay/htmlEncode.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Clay/htmlEncode.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Clay/htmlEncode.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>HTML Encode</h2>
+            <p>
+              Escape untrusted text to safely include in HTML.
+              Created by ClaytonTDM.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Xeltalliv/clippingblending.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Xeltalliv/clippingblending.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Xeltalliv/clippingblending.js">Open Extension</a>
+
+                
+
+                
+                  <button class="sample sample-list-button">Sample Projects</button>
+                
+              </div>
+            </div>
+
+            
+              <div class="sample-list">
+                <h3>Clipping &amp; Blending Sample Projects:</h3>
+                
+                  <a class="sample-list-item" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FAdditive%20Fire.sb3">Additive Fire</a>
+                
+                  <a class="sample-list-item" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FClipping%20Sprites%20and%20Pen.sb3">Clipping Sprites and Pen</a>
+                
+              </div>
+            
+      
+            <h2>Clipping &amp; Blending</h2>
+            <p>
+              Clipping outside of a specified rectangular area and different color blending modes.
+              Created by <a href="https://scratch.mit.edu/users/Vadik1/">Vadik1</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/clipboard.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/clipboard.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/clipboard.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Clipboard</h2>
+            <p>
+              Read and write from the system clipboard.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/obviousAlexC/penPlus.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/obviousAlexC/penPlus.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/obviousAlexC/penPlus.js">Open Extension</a>
+
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FPen%20Plus.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Pen Plus V7</h2>
+            <p>
+              Advanced rendering capabilities.
+              Created by <a href="https://scratch.mit.edu/users/pinksheep2917/">ObviousAlexC</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/penplus.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/penplus.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/penplus.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Pen Plus V5 (Old)</h2>
+            <p>
+              Replaced by Pen Plus V7.
+              Created by <a href="https://scratch.mit.edu/users/pinksheep2917/">ObviousAlexC</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Xeltalliv/simple3D.png" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Xeltalliv/simple3D.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Xeltalliv/simple3D.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/Xeltalliv/simple3D">Documentation</a>
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FSimple3D%20template.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Simple 3D</h2>
+            <p>
+              Make GPU accelerated 3D projects easily.
+              Created by <a href="https://scratch.mit.edu/users/Vadik1/">Vadik1</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/Skins.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/Skins.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/Skins.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/Lily/Skins">Documentation</a>
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Skins</h2>
+            <p>
+              Have your sprites render as other images or costumes.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/obviousAlexC/SensingPlus.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/obviousAlexC/SensingPlus.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/obviousAlexC/SensingPlus.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Sensing Plus</h2>
+            <p>
+              An extension to the sensing category.
+              Created by <a href="https://scratch.mit.edu/users/pinksheep2917/">ObviousAlexC</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/CubesterYT/KeySimulation.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/CubesterYT/KeySimulation.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/CubesterYT/KeySimulation.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/CubesterYT/KeySimulation">Documentation</a>
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Key Simulation</h2>
+            <p>
+              Simulate key presses and mouse clicks.
+              Created by <a href="https://scratch.mit.edu/users/CubesterYT/">CubesterYT</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/ClonesPlus.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/ClonesPlus.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/ClonesPlus.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Clones Plus</h2>
+            <p>
+              Expansion of Scratch&#39;s clone features.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/LooksPlus.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/LooksPlus.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/LooksPlus.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Looks Plus</h2>
+            <p>
+              Expands upon the looks category, allowing you to show/hide, get costume data and edit SVG skins on sprites.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/MoreEvents.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/MoreEvents.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/MoreEvents.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>More Events</h2>
+            <p>
+              Start your scripts in new ways.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/ListTools.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/ListTools.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/ListTools.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>List Tools</h2>
+            <p>
+              An assortment of new ways to interact with lists.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/veggiecan/mobilekeyboard.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/veggiecan/mobilekeyboard.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/veggiecan/mobilekeyboard.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Mobile Keyboard</h2>
+            <p>
+              Show the keyboard on mobile devices and get the users input without showing any input modal.
+              Created by veggiecan0419.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/NexusKitten/moremotion.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/NexusKitten/moremotion.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/NexusKitten/moremotion.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>More Motion</h2>
+            <p>
+              More motion-related blocks.
+              Created by <a href="https://scratch.mit.edu/users/NamelessCat/">NamelessCat</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/CubesterYT/WindowControls.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/CubesterYT/WindowControls.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/CubesterYT/WindowControls.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/CubesterYT/WindowControls">Documentation</a>
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Window Controls</h2>
+            <p>
+              Move, resize, rename the window, enter fullscreen, get screen size, and more.
+              Created by <a href="https://scratch.mit.edu/users/CubesterYT/">CubesterYT</a>.
+              Originally created by BlueDome77.
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/veggiecan/browserfullscreen.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/veggiecan/browserfullscreen.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/veggiecan/browserfullscreen.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Browser Fullscreen</h2>
+            <p>
+              Enter and exit fullscreen mode.
+              Created by Veggiecan0419.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/shreder95ua/resolution.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/shreder95ua/resolution.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/shreder95ua/resolution.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Screen Resolution</h2>
+            <p>
+              Get the resolution of the primary screen.
+              Created by <a href="https://scratch.mit.edu/users/shreder95ua/">shreder95ua</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/XmerOriginals/closecontrol.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/XmerOriginals/closecontrol.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/XmerOriginals/closecontrol.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Ask Before Closing Tab</h2>
+            <p>
+              Show a prompt when someone tries to close the tab.
+              Created by <a href="https://scratch.mit.edu/users/XmerOriginals/">XmerOriginals</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/navigator.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/navigator.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/navigator.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Navigator</h2>
+            <p>
+              Details about the user&#39;s browser and operating system.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/battery.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/battery.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/battery.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Battery</h2>
+            <p>
+              Access information about the battery of phones or laptops. May not work on all devices and browsers.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/PwLDev/vibration.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/PwLDev/vibration.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/PwLDev/vibration.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Vibration</h2>
+            <p>
+              Control the device&#39;s vibration. Only works on Chrome for Android.
+              Created by <a href="https://scratch.mit.edu/users/PwLDev/">PwLDev</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/TheShovel/CustomStyles.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/TheShovel/CustomStyles.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/TheShovel/CustomStyles.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Custom Styles</h2>
+            <p>
+              Customize the appearance of variable monitors and prompts in your project.
+              Created by TheShovel.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/TheShovel/ColorPicker.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/TheShovel/ColorPicker.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/TheShovel/ColorPicker.js">Open Extension</a>
+
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FRecolor%20the%20Dango.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Color Picker</h2>
+            <p>
+              Access your system&#39;s color picker.
+              Created by TheShovel.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/NexusKitten/controlcontrols.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/NexusKitten/controlcontrols.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/NexusKitten/controlcontrols.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Control Controls</h2>
+            <p>
+              Show and hide the project&#39;s controls.
+              Created by <a href="https://scratch.mit.edu/users/NexusKitten/">NamelessCat</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/mdwalters/notifications.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/mdwalters/notifications.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/mdwalters/notifications.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Notifications</h2>
+            <p>
+              Display notifications.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/XeroName/Deltatime.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/XeroName/Deltatime.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/XeroName/Deltatime.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Delta Time</h2>
+            <p>
+              Precise delta timing blocks.
+              Created by <a href="https://scratch.mit.edu/users/plant2014/">XeroName</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/ar.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/ar.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/ar.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/ar">Documentation</a>
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FAR%20cube.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Augmented Reality</h2>
+            <p>
+              Shows image from camera and performs motion tracking, allowing 3D projects to correctly overlay virtual objects on real world.
+              Created by <a href="https://scratch.mit.edu/users/Vadik1/">Vadik1</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/encoding.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/encoding.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/encoding.js">Open Extension</a>
+
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FBase%2064.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Encoding</h2>
+            <p>
+              Encode and decode strings into their unicode numbers, base 64, or URLs.
+              Created by -SIPC-.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/SoundExpanded.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/SoundExpanded.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/SoundExpanded.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Sound Expanded</h2>
+            <p>
+              Adds more sound-related blocks.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/TempVariables2.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/TempVariables2.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/TempVariables2.js">Open Extension</a>
+
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FTemporary%20Variables%20-%20Thread%20vs.%20Runtime.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Temporary Variables</h2>
+            <p>
+              Create disposable runtime or thread variables.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/MoreTimers.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/MoreTimers.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/MoreTimers.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>More Timers</h2>
+            <p>
+              Control several timers at once.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/clouddata-ping.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/clouddata-ping.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/clouddata-ping.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Ping Cloud Data</h2>
+            <p>
+              Determine whether a cloud variable server is probably up.
+              
+              Originally created by TheShovel.
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/cloudlink.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/cloudlink.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/cloudlink.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Cloudlink</h2>
+            <p>
+              A powerful WebSocket extension for Scratch.
+              Created by MikeDEV.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/true-fantom/network.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/true-fantom/network.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/true-fantom/network.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Network</h2>
+            <p>
+              Various blocks for interacting with the network.
+              Created by <a href="https://scratch.mit.edu/users/TrueFantom/">TrueFantom</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/true-fantom/math.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/true-fantom/math.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/true-fantom/math.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Math</h2>
+            <p>
+              A lot of operators blocks, from exponentiation to trigonometric functions.
+              Created by <a href="https://scratch.mit.edu/users/TrueFantom/">TrueFantom</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/true-fantom/regexp.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/true-fantom/regexp.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/true-fantom/regexp.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>RegExp</h2>
+            <p>
+              Full interface for working with Regular Expressions.
+              Created by <a href="https://scratch.mit.edu/users/TrueFantom/">TrueFantom</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/true-fantom/couplers.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/true-fantom/couplers.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/true-fantom/couplers.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Couplers</h2>
+            <p>
+              A few adapter blocks.
+              Created by <a href="https://scratch.mit.edu/users/TrueFantom/">TrueFantom</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/AllMenus.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/AllMenus.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/AllMenus.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>All Menus</h2>
+            <p>
+              Special category with every menu from every Scratch category and extensions.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/HackedBlocks.png" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/HackedBlocks.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/HackedBlocks.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Hidden Block Collection</h2>
+            <p>
+              Various &#34;hacked blocks&#34; that work in Scratch but are not visible in the palette.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a> and pumpkinhasapatch.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/Cast.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/Cast.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/Cast.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Cast</h2>
+            <p>
+              Convert values between types.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/-SIPC-/time.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/-SIPC-/time.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/-SIPC-/time.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Time</h2>
+            <p>
+              Blocks for times, dates, and time zones.
+              Created by -SIPC- and <a href="https://scratch.mit.edu/users/DemonX5/">SharkPool</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/-SIPC-/consoles.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/-SIPC-/consoles.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/-SIPC-/consoles.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Consoles</h2>
+            <p>
+              Blocks that interact with the JavaScript console built in to your browser&#39;s developer tools.
+              Created by -SIPC-.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/ZXMushroom63/searchApi.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/ZXMushroom63/searchApi.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/ZXMushroom63/searchApi.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Search Params</h2>
+            <p>
+              Interact with URL search parameters: the part of the URL after a question mark.
+              Created by ZXMushroom63.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/TheShovel/ShovelUtils.png" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/TheShovel/ShovelUtils.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/TheShovel/ShovelUtils.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/TheShovel/ShovelUtils">Documentation</a>
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>ShovelUtils</h2>
+            <p>
+              A bunch of miscellaneous blocks.
+              Created by TheShovel.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/Assets.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/Assets.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/Assets.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Asset Manager</h2>
+            <p>
+              Add, remove, and get data from various types of assets.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/SharkPool/Font-Manager.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/SharkPool/Font-Manager.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/SharkPool/Font-Manager.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Font Manager</h2>
+            <p>
+              Add, delete, and manage fonts.
+              Created by SharkPool and <a href="https://scratch.mit.edu/users/0znzw/">0znzw</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/DNin/wake-lock.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/DNin/wake-lock.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/DNin/wake-lock.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/DNin/wake-lock">Documentation</a>
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Wake Lock</h2>
+            <p>
+              Prevent the computer from falling asleep.
+              Created by <a href="https://scratch.mit.edu/users/D-ScratchNinja/">D-ScratchNinja</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Skyhigh173/json.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Skyhigh173/json.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Skyhigh173/json.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>JSON</h2>
+            <p>
+              Handle JSON strings and arrays.
+              Created by Skyhigh173.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/mbw/xml.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/mbw/xml.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/mbw/xml.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>XML</h2>
+            <p>
+              Create and extract values from XML.
+              Created by <a href="https://scratch.mit.edu/users/mybearworld/">mybearworld</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/numerical-encoding-2.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/numerical-encoding-2.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/numerical-encoding-2.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Numerical Encoding V2</h2>
+            <p>
+              Encode strings as numbers for cloud variables. Not compatible with V1 due to using much more efficient format.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/unknown.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/cs2627883/numericalencoding.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/cs2627883/numericalencoding.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Numerical Encoding V1</h2>
+            <p>
+              Use V2 instead as it is more efficient. V1 only exists for compatibility reasons.
+              Created by <a href="https://scratch.mit.edu/users/cs2627883/">cs2627883</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/DT/cameracontrols.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/DT/cameracontrols.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/DT/cameracontrols.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Camera Controls (Very Buggy)</h2>
+            <p>
+              Move the visible part of the stage.
+              Created by DT.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/TheShovel/CanvasEffects.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/TheShovel/CanvasEffects.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/TheShovel/CanvasEffects.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Canvas Effects</h2>
+            <p>
+              Apply visual effects to the entire stage.
+              Created by TheShovel and <a href="https://scratch.mit.edu/users/DemonX5/">SharkPool</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Longboost/color_channels.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Longboost/color_channels.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Longboost/color_channels.js">Open Extension</a>
+
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FParty%20Time.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>RGB Channels</h2>
+            <p>
+              Only render or stamp certain RGB channels.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/CST1229/zip.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/CST1229/zip.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/CST1229/zip.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/CST1229/zip">Documentation</a>
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Zip</h2>
+            <p>
+              Create and edit .zip format files, including .sb3 files.
+              Created by <a href="https://scratch.mit.edu/users/CST1229/">CST1229</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/CST1229/images.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/CST1229/images.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/CST1229/images.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Images</h2>
+            <p>
+              Some blocks for working with images.
+              
+              Originally created by <a href="https://scratch.mit.edu/users/CST1229/">CST1229</a>.
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/TheShovel/LZ-String.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/TheShovel/LZ-String.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/TheShovel/LZ-String.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>LZ Compress</h2>
+            <p>
+              Compress and decompress text using lz-string.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/0832/rxFS2.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/0832/rxFS2.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/0832/rxFS2.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>rxFS</h2>
+            <p>
+              Blocks for interacting with a virtual in-memory filesystem.
+              Created by 0832.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/NexusKitten/sgrab.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/NexusKitten/sgrab.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/NexusKitten/sgrab.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>S-Grab</h2>
+            <p>
+              Get information about Scratch projects and Scratch users.
+              Created by <a href="https://scratch.mit.edu/users/NamelessCat/">NamelessCat</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/NOname-awa/graphics2d.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/NOname-awa/graphics2d.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/NOname-awa/graphics2d.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Graphics 2D</h2>
+            <p>
+              Blocks to compute lengths, angles, and areas in two dimensions.
+              Created by NOname-awa.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/NOname-awa/more-comparisons.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/NOname-awa/more-comparisons.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/NOname-awa/more-comparisons.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>More Comparisons</h2>
+            <p>
+              More comparison blocks.
+              Created by NOname-awa.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/JeremyGamer13/tween.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/JeremyGamer13/tween.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/JeremyGamer13/tween.js">Open Extension</a>
+
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FTweening.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Tween</h2>
+            <p>
+              Easing methods for smooth animations.
+              Created by <a href="https://scratch.mit.edu/users/JeremyGamer13/">JeremyGamer13</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/rixxyx.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/rixxyx.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/rixxyx.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>RixxyX</h2>
+            <p>
+              Various utility blocks.
+              Created by <a href="https://scratch.mit.edu/users/RixTheTyrunt/">RixTheTyrunt</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/lmsutils.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/lmsutils.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/lmsutils.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Lily&#39;s Toolbox</h2>
+            <p>
+              Previously called LMS Utilities.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/qxsck/data-analysis.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/qxsck/data-analysis.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/qxsck/data-analysis.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Data Analysis</h2>
+            <p>
+              Blocks to compute means, medians, maximums, minimums, variances, and modes.
+              Created by qxsck.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/qxsck/var-and-list.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/qxsck/var-and-list.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/qxsck/var-and-list.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Variable and list</h2>
+            <p>
+              More blocks related to variables and lists.
+              Created by qxsck.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/vercte/dictionaries.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/vercte/dictionaries.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/vercte/dictionaries.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Dictionaries</h2>
+            <p>
+              Use the power of dictionaries in your project.
+              Created by <a href="https://scratch.mit.edu/users/lolecksdeehaha/">Vercte</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/godslayerakp/http.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/godslayerakp/http.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/godslayerakp/http.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>HTTP</h2>
+            <p>
+              Comprehensive extension for interacting with external websites.
+              Created by <a href="https://scratch.mit.edu/users/RedMan13/">RedMan13</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/godslayerakp/ws.png" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/godslayerakp/ws.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/godslayerakp/ws.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/godslayerakp/ws">Documentation</a>
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FCloud%20Variables.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>WebSocket</h2>
+            <p>
+              Manually connect to WebSocket servers.
+              Created by <a href="https://scratch.mit.edu/users/RedMan13/">RedMan13</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/CommentBlocks.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/CommentBlocks.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/CommentBlocks.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Comment Blocks</h2>
+            <p>
+              Annotate your scripts.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/veggiecan/LongmanDictionary.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/veggiecan/LongmanDictionary.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/veggiecan/LongmanDictionary.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Longman Dictionary</h2>
+            <p>
+              Get the definitions of words from the Longman Dictionary in your projects.
+              Created by veggiecan0419.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/CubesterYT/TurboHook.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/CubesterYT/TurboHook.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/CubesterYT/TurboHook.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/CubesterYT/TurboHook">Documentation</a>
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>TurboHook</h2>
+            <p>
+              Allows you to use webhooks.
+              Created by <a href="https://scratch.mit.edu/users/CubesterYT/">CubesterYT</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Alestore/nfcwarp.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Alestore/nfcwarp.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Alestore/nfcwarp.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>NFCWarp</h2>
+            <p>
+              Allows reading data from NFC (NDEF) devices. Only works in Chrome on Android.
+              Created by <a href="https://scratch.mit.edu/users/aleb2005/">Alestore Games</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/unknown.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/steamworks.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/steamworks.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/steamworks">Documentation</a>
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Steamworks</h2>
+            <p>
+              Connect your project to Steamworks APIs.
+              
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/itchio.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/itchio.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/itchio.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>itch.io</h2>
+            <p>
+              Blocks that interact with the itch.io website. Unofficial.
+              Created by <a href="https://scratch.mit.edu/users/softed/">softed</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/gamejolt.png" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/gamejolt.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/gamejolt.js">Open Extension</a>
+
+                
+                  <a class="docs" href="https://extensions.turbowarp.org/gamejolt">Documentation</a>
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Game Jolt</h2>
+            <p>
+              Blocks that allow games to interact with the GameJolt API. Unofficial.
+              Created by <a href="https://scratch.mit.edu/users/softed/">softed</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/obviousAlexC/newgroundsIO.svg" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/obviousAlexC/newgroundsIO.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/obviousAlexC/newgroundsIO.js">Open Extension</a>
+
+                
+
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>Newgrounds</h2>
+            <p>
+              Blocks that allow games to interact with the Newgrounds API. Unofficial.
+              Created by <a href="https://scratch.mit.edu/users/pinksheep2917/">ObviousAlexC</a>.
+              
+            </p>
+          </div>
+        
+          <div class="extension">
+            <div class="extension-banner">
+              
+              <img loading="lazy" src="images/Lily/McUtils.png" class="extension-image">
+
+              <div class="extension-buttons">
+                <button class="copy" data-copy="https://extensions.turbowarp.org/Lily/McUtils.js">Copy URL</button>
+                <a class="open" href="https://turbowarp.org/editor?extension=https://extensions.turbowarp.org/Lily/McUtils.js">Open Extension</a>
+
+                
+
+                
+                  <a class="sample" href="https://turbowarp.org/editor?project_url=https://extensions.turbowarp.org/samples%2FAsk%20for%20the%20manager.sb3">Sample Project</a>
+                
+              </div>
+            </div>
+
+            
+      
+            <h2>McUtils</h2>
+            <p>
+              Helpful utilities for any fast food employee.
+              Created by <a href="https://scratch.mit.edu/users/LilyMakesThings/">LilyMakesThings</a>.
+              
+            </p>
+          </div>
+        
+      </div>
+    </div>
+
+    <footer class="section">
+      <p>TurboWarp is not affiliated with Scratch, the Scratch Team, or the Scratch Foundation.</p>
+      <div class="links">
+        <a href="https://github.com/TurboWarp/extensions/tree/master/images#readme">Image Attribution</a>
+        -
+        <a href="https://github.com/TurboWarp/extensions">GitHub</a>
+        -
+        <a href="https://docs.turbowarp.org/development/extensions/introduction">Developer Documentation</a>
+      </div>
+    </footer>
+  </body>
+</html>
