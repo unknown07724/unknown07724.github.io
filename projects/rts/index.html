@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTS Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background-color: #87CEEB; /* Sky blue for the ocean */
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set the canvas dimensions to full screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Game variables
+        const provinces = [];
+        const cities = [];
+        const nations = [];
+
+        // Utility function to draw a polygon (for provinces)
+        function drawPolygon(points, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+
+            for (let i = 1; i < points.length; i++) {
+                ctx.lineTo(points[i].x, points[i].y);
+            }
+
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Utility function to draw a rectangle (for cities)
+        function drawRect(x, y, width, height, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, width, height);
+        }
+
+        // Utility function to check if a point is inside a polygon
+        function isPointInPolygon(points, x, y) {
+            let inside = false;
+            for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+                const xi = points[i].x, yi = points[i].y;
+                const xj = points[j].x, yj = points[j].y;
+
+                const intersect = ((yi > y) !== (yj > y)) &&
+                    (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+                if (intersect) inside = !inside;
+            }
+            return inside;
+        }
+
+        // Initialize the game world with some example provinces, cities, and nations
+        function initGame() {
+            // Province 1
+            provinces.push({
+                points: [
+                    { x: 100, y: 100 },
+                    { x: 300, y: 100 },
+                    { x: 350, y: 250 },
+                    { x: 250, y: 350 },
+                    { x: 150, y: 300 },
+                    { x: 100, y: 200 }
+                ],
+                nation: "Nation1", color: "green"
+            });
+
+            // Province 2
+            provinces.push({
+                points: [
+                    { x: 400, y: 100 },
+                    { x: 600, y: 100 },
+                    { x: 650, y: 250 },
+                    { x: 550, y: 350 },
+                    { x: 450, y: 300 },
+                    { x: 400, y: 200 }
+                ],
+                nation: "Nation2", color: "blue"
+            });
+
+            // Cities
+            cities.push({
+                x: 200, y: 200, width: 20, height: 20, nation: "Nation1", color: "brown"
+            });
+
+            cities.push({
+                x: 500, y: 200, width: 20, height: 20, nation: "Nation2", color: "gray"
+            });
+
+            // Nations
+            nations.push({
+                name: "Nation1", color: "green", provinces: 1, cities: 1
+            });
+
+            nations.push({
+                name: "Nation2", color: "blue", provinces: 1, cities: 1
+            });
+        }
+
+        // Render loop to draw the game world
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw provinces
+            provinces.forEach(province => {
+                drawPolygon(province.points, province.color);
+            });
+
+            // Draw cities
+            cities.forEach(city => {
+                drawRect(city.x, city.y, city.width, city.height, city.color);
+            });
+
+            requestAnimationFrame(render);
+        }
+
+        // Handle user input
+        canvas.addEventListener('click', (e) => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            // Check if a province is clicked
+            provinces.forEach(province => {
+                if (isPointInPolygon(province.points, mouseX, mouseY)) {
+                    alert(`Province owned by ${province.nation}`);
+                }
+            });
+        });
+
+        function startGame() {
+            initGame();
+            render();
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
