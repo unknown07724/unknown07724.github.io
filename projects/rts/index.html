@@ -64,48 +64,48 @@
             return inside;
         }
 
-        // Initialize the game world with more provinces for each nation
+        // Initialize the game world with unique provinces and cities for each nation
         function initGame() {
             // Nation 1 Provinces
             provinces.push({
                 points: [
                     { x: 100, y: 100 },
-                    { x: 200, y: 100 },
-                    { x: 250, y: 200 },
-                    { x: 200, y: 300 },
-                    { x: 100, y: 250 }
+                    { x: 180, y: 100 },
+                    { x: 200, y: 180 },
+                    { x: 180, y: 260 },
+                    { x: 100, y: 240 }
                 ],
                 nation: "Nation1", color: "green"
             });
             provinces.push({
                 points: [
-                    { x: 200, y: 100 },
-                    { x: 300, y: 100 },
-                    { x: 350, y: 200 },
-                    { x: 300, y: 300 },
-                    { x: 200, y: 250 }
+                    { x: 180, y: 100 },
+                    { x: 280, y: 100 },
+                    { x: 300, y: 180 },
+                    { x: 280, y: 260 },
+                    { x: 180, y: 240 }
                 ],
-                nation: "Nation1", color: "lightgreen"
+                nation: "Nation1", color: "darkgreen"
             });
 
             // Nation 2 Provinces
             provinces.push({
                 points: [
                     { x: 400, y: 100 },
-                    { x: 500, y: 100 },
-                    { x: 550, y: 200 },
-                    { x: 500, y: 300 },
-                    { x: 400, y: 250 }
+                    { x: 470, y: 100 },
+                    { x: 490, y: 160 },
+                    { x: 470, y: 220 },
+                    { x: 400, y: 200 }
                 ],
                 nation: "Nation2", color: "blue"
             });
             provinces.push({
                 points: [
-                    { x: 500, y: 100 },
-                    { x: 600, y: 100 },
-                    { x: 650, y: 200 },
-                    { x: 600, y: 300 },
-                    { x: 500, y: 250 }
+                    { x: 470, y: 100 },
+                    { x: 570, y: 100 },
+                    { x: 590, y: 160 },
+                    { x: 570, y: 220 },
+                    { x: 470, y: 200 }
                 ],
                 nation: "Nation2", color: "lightblue"
             });
@@ -114,77 +114,77 @@
             provinces.push({
                 points: [
                     { x: 200, y: 400 },
-                    { x: 300, y: 400 },
-                    { x: 350, y: 500 },
-                    { x: 300, y: 600 },
-                    { x: 200, y: 550 }
+                    { x: 270, y: 400 },
+                    { x: 300, y: 450 },
+                    { x: 270, y: 500 },
+                    { x: 200, y: 480 }
                 ],
                 nation: "Nation3", color: "red"
             });
             provinces.push({
                 points: [
-                    { x: 300, y: 400 },
-                    { x: 400, y: 400 },
-                    { x: 450, y: 500 },
-                    { x: 400, y: 600 },
-                    { x: 300, y: 550 }
+                    { x: 270, y: 400 },
+                    { x: 340, y: 400 },
+                    { x: 370, y: 450 },
+                    { x: 340, y: 500 },
+                    { x: 270, y: 480 }
                 ],
-                nation: "Nation3", color: "lightcoral"
+                nation: "Nation3", color: "darkred"
             });
 
             // Nation 4 Provinces
             provinces.push({
                 points: [
                     { x: 500, y: 400 },
-                    { x: 600, y: 400 },
-                    { x: 650, y: 500 },
-                    { x: 600, y: 600 },
-                    { x: 500, y: 550 }
+                    { x: 570, y: 400 },
+                    { x: 600, y: 460 },
+                    { x: 570, y: 520 },
+                    { x: 500, y: 500 }
                 ],
                 nation: "Nation4", color: "yellow"
             });
             provinces.push({
                 points: [
-                    { x: 600, y: 400 },
-                    { x: 700, y: 400 },
-                    { x: 750, y: 500 },
-                    { x: 700, y: 600 },
-                    { x: 600, y: 550 }
+                    { x: 570, y: 400 },
+                    { x: 640, y: 400 },
+                    { x: 670, y: 460 },
+                    { x: 640, y: 520 },
+                    { x: 570, y: 500 }
                 ],
-                nation: "Nation4", color: "lightyellow"
+                nation: "Nation4", color: "gold"
             });
 
             // Cities
             cities.push({
-                x: 150, y: 200, width: 20, height: 20, nation: "Nation1", color: "brown"
+                x: 140, y: 160, width: 20, height: 20, nation: "Nation1", color: "brown"
             });
 
             cities.push({
-                x: 250, y: 200, width: 20, height: 20, nation: "Nation1", color: "brown"
+                x: 240, y: 160, width: 20, height: 20, nation: "Nation1", color: "brown"
             });
 
             cities.push({
-                x: 450, y: 200, width: 20, height: 20, nation: "Nation2", color: "gray"
+                x: 420, y: 160, width: 20, height: 20, nation: "Nation2", color: "gray"
             });
 
             cities.push({
-                x: 550, y: 200, width: 20, height: 20, nation: "Nation2", color: "gray"
+                x: 520, y: 160, width: 20, height: 20, nation: "Nation2", color: "gray"
             });
 
             cities.push({
-                x: 250, y: 500, width: 20, height: 20, nation: "Nation3", color: "orange"
+                x: 230, y: 450, width: 20, height: 20, nation: "Nation3", color: "orange"
             });
 
             cities.push({
-                x: 350, y: 500, width: 20, height: 20, nation: "Nation3", color: "orange"
+                x: 330, y: 450, width: 20, height: 20, nation: "Nation3", color: "orange"
             });
 
             cities.push({
-                x: 550, y: 500, width: 20, height: 20, nation: "Nation4", color: "purple"
+                x: 520, y: 460, width: 20, height: 20, nation: "Nation4", color: "purple"
             });
 
             cities.push({
-                x: 650, y: 500, width: 20, height: 20, nation: "Nation4", color: "purple"
+                x: 620, y: 460, width: 20, height: 20, nation: "Nation4", color: "purple"
             });
 
             // Nations
@@ -239,12 +239,6 @@
             initGame();
             render();
         }
-
-        startGame();
-    </script>
-</body>
-</html>
-
 
         startGame();
     </script>
