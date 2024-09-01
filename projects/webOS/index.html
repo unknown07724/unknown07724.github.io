@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebOS</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #desktop {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-size: cover;
+            background-position: center;
+        }
+        #taskbar {
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        #start-menu {
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        #clock {
+            font-weight: bold;
+            margin-left: auto;
+        }
+        #running-processes {
+            display: flex;
+            margin-left: 20px;
+        }
+        .process-item {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            margin-right: 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #icons {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .icon-row {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 10px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+        }
+        .icon img {
+            width: 50px;
+            height: 50px;
+        }
+        #windows {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 50px);
+            pointer-events: none;
+        }
+        .window {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            width: 300px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            pointer-events: auto;
+        }
+        .window-header {
+            background: #3498db;
+            color: white;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+        .window-content {
+            flex-grow: 1;
+            padding: 10px;
+            overflow: auto;
+        }
+        .close-btn {
+            cursor: pointer;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        #file-explorer {
+            display: flex;
+            flex-direction: column;
+        }
+        #file-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #file-list li {
+            cursor: pointer;
+            padding: 5px;
+        }
+        #file-list li:hover {
+            background-color: #f0f0f0;
+        }
+        #context-menu {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            padding: 5px 0;
+            z-index: 1000;
+        }
+        #context-menu div {
+            padding: 5px 20px;
+            cursor: pointer;
+        }
+        #context-menu div:hover {
+            background-color: #f0f0f0;
+        }
+        .folder {
+            font-weight: bold;
+        }
+        .system-file {
+            color: #888;
+        }
+        #start-menu-content {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            display: none;
+        }
+        #start-menu-content div {
+            padding: 5px;
+            cursor: pointer;
+        }
+        #start-menu-content div:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #3498db;
+            right: 0;
+            bottom: 0;
+            cursor: nwse-resize;
+        }
+        #task-manager table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #task-manager th, #task-manager td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #task-manager th {
+            background-color: #f2f2f2;
+        }
+        #calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+        #calculator button {
+            padding: 10px;
+            font-size: 18px;
+        }
+        #calculator input {
+            grid-column: span 4;
+            padding: 10px;
+            font-size: 18px;
+            text-align: right;
+        }
+        #snake-game, #minesweeper-game {
+            width: 300px;
+            height: 300px;
+            border: 1px solid #000;
+        }
+        #minesweeper-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(10, auto);
+            gap: 1px;
+            background-color: #bdbdbd;
+            border: 2px solid #7b7b7b;
+            padding: 2px;
+        }
+        .minesweeper-cell {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            background-color: #c0c0c0;
+            border: 2px outset #fff;
+            cursor: pointer;
+        }
+        .minesweeper-cell.revealed {
+            background-color: #fff;
+            border: 1px solid #7b7b7b;
+        }
+        .minesweeper-cell.mine {
+            background-color: #ff0000;
+        }
+        #paint-canvas {
+            border: 1px solid #000;
+        }
+        #paint-tools {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        #music-player audio {
+            width: 100%;
+        }
+        #music-playlist {
+            list-style-type: none;
+            padding: 0;
+        }
+        #music-playlist li {
+            cursor: pointer;
+            padding: 5px;
+        }
+        #music-playlist li:hover {
+            background-color: #f0f0f0;
+        }
+        #weather-widget {
+            text-align: center;
+        }
+        #weather-icon {
+            font-size: 48px;
+        }
+        #settings-app {
+            padding: 10px;
+        }
+        #settings-app label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        #settings-app input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        #settings-app button {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="desktop">
+        <div id="icons"></div>
+        <div id="windows"></div>
+        <div id="taskbar">
+            <div id="start-menu">Start</div>
+            <div id="running-processes"></div>
+            <div id="clock"></div>
+        </div>
+        <div id="start-menu-content">
+            <div onclick="openFileExplorer()">File Explorer</div>
+            <div onclick="openWebBrowser()">Web Browser</div>
+            <div onclick="openNotepad()">Notepad</div>
+            <div onclick="openTaskManager()">Task Manager</div>
+            <div onclick="openCalculator()">Calculator</div>
+            <div onclick="openSnake()">Snake</div>
+            <div onclick="openMinesweeper()">Minesweeper</div>
+            <div onclick="openPaint()">Paint</div>
+            <div onclick="openMusicPlayer()">Music Player</div>
+            <div onclick="openWeatherWidget()">Weather Widget</div>
+            <div onclick="openSettings()">Settings</div>
+        </div>
+    </div>
+
+    <div id="context-menu" style="display: none;">
+        <div onclick="createNewFile()">New File</div>
+        <div onclick="createNewFolder()">New Folder</div>
+        <div onclick="openSelectedItem()">Open</div>
+        <div onclick="deleteSelectedItem()">Delete</div>
+    </div>
+
+    <script>
+        let GG_ALL_GAME_CONFIG = {
+            startMenuText: "Start",
+            iconSize: 80,
+            windowWidth: 300,
+            windowHeight: 200,
+            iconsPerRow: 4,
+            defaultWallpaper: "https://source.unsplash.com/random/1920x1080?nature",
+            icons: [
+                {
+                    name: "My Computer",
+                    image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0yMSw4SDNWVuIj48L3BhdGg+PC9zdmc+",
+                    action: "openFileExplorer"
+                },
+                {
+                    name: "Web Browser",
+                    image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiwyQTEwLDEwIDAgMCwxIDIyLDEyQTEwLDEwIDAgMCwxIDEyLDIyQTEwLDEwIDAgMCwxIDIsMTJBMTAsMTAgMCAwLDEgMTIsMk0xLDEwLjI1TDUuNSwxNCxxOC43NSAxME0xNSwxMEgyMy4yNU0zLjY3LDY1IE0yMC4zMyw2NS40OUMzLjUgMTBWMTRMMCA5LjVMOSAxOEwxOCw5LjVaIj48L3BhdGg+PC9zdmc+",
+                    action: "openWebBrowser"
+                },
+                {
+                    name: "Notepad",
+                    image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xOSAzSDVjLTEuMTEgMC0yIC44OS0yIDJ2MTRjMCAxLjExLjg5IDIgMiAyaDE0YzEuMTEgMCAyLS44OSAyLTJWNWMwLTEuMTEtLjg5LTItMi0yem0tMiAxNkg3di0yaDEwdjJ6bTAtNEg3di0yaDEwdjJ6bTAtNEg3VjdoMTB2MnoiPjwvcGF0aD48L3N2Zz4=",
+                    action: "openNotepad"
+                },
+                {
+                    name: "Task Manager",
+                    image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0zLDNIMjFWNUgzVjNNMyxoMTJWMTBIM1Y4TTMsMTJIMjFWMTRIM1YxMk0zLDE2SDIxVjE4SDNWMTZNzLDIwSDIxVjIySDNWMjBaIj48L3BhdGg+PC9zdmc+",
+                    action: "openTaskManager"
+                },
+                {
+                    name: "Calculator",
+                    image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik03LDJIMTdBMiwyIDAgMCwxIDE5LDRWMjBBMiwyIDAgMCwxIDE3LDIySDdBMiwyIDAgMCwxIDUsMjBWNEEyLDIgMCAwLDEgNywyTTcsMUWxMC0xMEgxNFYxNEgxME0xNy41LDZILTBWOE0xNy41LDEwSDE2LjVWMTJIMTcuNVYxME0xMy41LDE2SDEyLjVWMThIMTMuNVYxNk0xMy41LDEwSDEyLjVWMTJIMTMuNVYxME05LjUsMTZIOC41VjE4SDkuNVYxNk05LjUsMTBIOC41VjEySDkuNVYxMFoiPjwvcGF0aD48L3N2Zz4=",
+                    action: "openCalculator"
+                },
+                {
+                    name: "Snake",
+                    image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMi4yNywzLjMxQzExLjk3LDMuNDMgMTEuNjksMy42NiAxMS41LDMuOTdMMTEuNDIsNC4wOUwxMS4zMSw0LjNoMi4yOGwwLjE3LTAuMjFsMC4wNS0wLjFDMTQuMDUsMy42OSAxNCwzLjM2IDEzLjcsM0MxMy40LDIuNjYgMTIuOTEsMi41IDEyLjQ2LDIuNkwxMi4yNywyLjY5VjMuMzFNMTYuMTIsMTYuMTJDMTUuNzEsMTUuNzEgMTUuMDgsMTUuNSAxNC40MiwxNS41SDkuNThDOC45MiwxNS41IDguMjksMTUuNzEgNy44OCwxNi4xMkM3LjQ2LDE2LjU0IDcuMjUsMTcuMTcgNy4yNSwxNy44M1YxOC42N0M3LjI1LDE5LjMzIDcuNDYsMTkuOTYgNy44OCwyMC4zOEM4LjI5LDIwLjc5IDguOTIsMjEgOS41OCwyMUgxNC40MkMxNS4wOCwyMSAxNS43MSwyMC43OSAxNi4xMiwyMC4zOEMxNi41NCwxOS45NiAxNi43NSwxOS4zMyAxNi43NSwxOC42N1YxNy44M0MxNi43NSwxNy4xNyAxNi41NCwxNi41NCAxNi4xMiwxNi4xMk05LDcuNzVWOS41SDExLjI1VjE4Ljg3QzExLjI1LDE5LjE5IDExLjUxLDE5LjQ1IDExLjgzLDE5LjQ1aDEuMzNjMC4zMywwIDAuNTgtMC4yNiAwLjU4LTAuNThWNy43NUg5WiIgLz48L3N2Zz4=",
+                    action: "openSnake"
+                },
+                {
+                    name: "Minesweeper",
+                    image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0yMyw0SDEzVjJINlYzSDNDMiw0IDIsNSAyLDZWMjBDMiwyMS4xIDIuOSwyMiA0LDIySDIwQzIxLjEsMjIgMjIsMjEuMSAyMiwyMFY2QzIyLDUuMjIgMjIsMS44IDIzLDRNNiw2SDIyVjE4SDZWNk03LDdWMTdIMjFWN0g3TTE2LDExVjE0SDEzVjExSDEwVjE0SDdWMTFIMTZaIiAvPjwvc3ZnPg==",
+                    action: "openMinesweeper"
+                },
+                {
+                    name: "Paint",
+                    image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xOSAzTDEzIDlMMTUgMTFMMjEgNVYzSDE5TTExIDE4QTMgMyAwIDAgMSA4IDE1QzggMTMuOSA4LjQgMTIuOSA5IDEyTDExIDE0VjE4WiIgLz48L3N2Zz4=",
+                    action: "openPaint"
+                },
+                {
+                    name: "Music Player",
+                    image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0yMSAxOFYxOUg3VjE4SDIxTTIxIDE2SDdWMTdIMjFWMTZNMjEgMjBINlYyMkgyMVYyME0xNiA5VjRIMTVWOUgxMy4zTDE2IDExLjdMMTguNyA5SDE2TTkgTDMuMjRWMTAuMDhDMi4wNyAxMC4wMyAyIDExLjExIDIgMTJDMiAxMy4wOSAyLjk0IDE0IDMuOTIgMTRDNC45NCAxNCA1Ljg5IDEzLjA5IDUuODkgMTJWNS41OUw5IDQuMjFWOUg4TDYgMTEgOCAxMyA5IDEzVjkiIC8+PC9zdmc+",
+                    action: "openMusicPlayer"
+                },
+                {
+                    name: "Weather Widget",
+                    image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik02LDZMMTAuMjEsMTkuMTVDMTAuMzksMTkuNjUgMTAuOTMsMjAgMTEuNSwyMEMxMi4wNywyMCAxMi42MSwxOS42NSAxMi43OSwxOS4xNUwxNyw2SDZNMTMsMTNWOEgxNEwxMiwxMy41TDEwLDhIMTFWMTNIMTNaIiAvPjwvc3ZnPg==",
+                    action: "openWeatherWidget"
+                },
+                {
+                    name: "Settings",
+                    image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiwxNUExMywyIDAgMCwwIDMuMjQsMTcuNzJMMi45MiwxOC4zOEMyLjI1LDE5LjAzIDEuOTQsMTkuODUgMiwyMC42NUMxLjE0LDIwLjMyIDAuNSwxOS41IDAuNSwxOC41QzAuNSwxNi44NCA0LjE1LDE1LjUgOC41LDE1LjVDOS44MywxNS41IDExLjA1LDE1LjY1IDEyLDE1Ljg5QTEzLDIgMCAwLDEgMjEuNSwxOC41SDIyVjIwSDIxLjVDMjEuNSwxOS42OCAyMS40NSwxOS4zNyAyMS4zNSwxOS4wN0MyMC4xNSwxNy4yIDE2LjI5LDE1LjkgMTIsMTVNMTIsMkExMCwxMCAwIDAsMCAxLDEyQzMuNjcsMTIgNi42NywxMy42NyA5LDE2LjA3VjE5QTEwLDExIDAgMCwxIDIxLDE2LjlWMTUuMDdDMjMuMzMsMTIuNjcgMjYuMzMsMTEgMjksMTFDMjksMTYgMjQsMjAgMTgsMjBBMTgsMTggMCAwLDEgNCwyMEM0LDIwLjY4IDQuMDgsMjEuMzUgNC4yNSwyMkg0QTEwLDEwIDAgMCwwIDE0LDIyQzIwLDIyIDE0LDIyIDE1LDIyQTEwLDEwIDAgMCwwIDIyLDEyQzIyLDYuNDggMTcuNTIsMiAxMiwyek0xOC41LDZDMTcuNjcsNiAxNyw2LjY3IDE3LDcuNUMxNyw4LjMzIDE3LjY3LDkgMTguNSw5QzE5LjMzLDkgMjAsOC4zMyAyMCw3LjVDMjAsNi42NyAxOS4zMyw2IDE4LjUsNnoiIC8+PC9zdmc+",
+                    action: "openSettings"
+                }
+            ]
+        };
+
+        let runningProcesses = [];
+        let fileSystem = {};
+        let currentPath = [];
+
+        // App API
+        const AppAPI = {
+            deleteFile: function(fileName) {
+                return deleteItem(fileName);
+            },
+            createFile: function(fileName, content) {
+                createFile(fileName, content);
+            },
+            editFile: function(fileName, content) {
+                return updateFile(fileName, content);
+            },
+            showAlert: function(message) {
+                alert(message);
+            },
+            endProcess: function(processTitle) {
+                endProcess(processTitle);
+            }
+        };
+
+        function initializeFileSystem() {
+            const storedFileSystem = localStorage.getItem('webOSFileSystem');
+            if (storedFileSystem) {
+                fileSystem = JSON.parse(storedFileSystem);
+            } else {
+                fileSystem = {
+                    'System': {
+                        type: 'folder',
+                        content: {
+                            'boot.sys': { type: 'system', content: 'System boot file' },
+                            'kernel.sys': { type: 'system', content: 'System kernel file' }
+                        }
+                    },
+                    'Users': {
+                        type: 'folder',
+                        content: {
+                            'Default': {
+                                type: 'folder',
+                                content: {
+                                    'Documents': { type: 'folder', content: {} },
+                                    'Desktop': { type: 'folder', content: {} },
+                                    'Downloads': { type: 'folder', content: {} },
+                                    'Music': { type: 'folder', content: {
+                                        'sample_song.mp3': { type: 'file', content: 'sample_song.mp3' }
+                                    }}
+                                }
+                            }
+                        }
+                    },
+                    'Boot': {
+                        type: 'folder',
+                        content: {}
+                    },
+                    'welcome.txt': { type: 'file', content: 'Welcome to WebOS File System!' },
+                    'notes.txt': { type: 'file', content: 'This is a sample note.' }
+                };
+                saveFileSystem();
+            }
+        }
+
+        function saveFileSystem() {
+            localStorage.setItem('webOSFileSystem', JSON.stringify(fileSystem));
+        }
+
+        function createFile(name, content) {
+            let current = getCurrentFolder();
+            current[name] = { type: 'file', content: content };
+            saveFileSystem();
+        }
+
+        function createFolder(name) {
+            let current = getCurrentFolder();
+            current[name] = { type: 'folder', content: {} };
+            saveFileSystem();
+        }
+
+        function readFile(name) {
+            let current = getCurrentFolder();
+            return current[name].content;
+        }
+
+        function updateFile(name, content) {
+            let current = getCurrentFolder();
+            if (current.hasOwnProperty(name) && current[name].type === 'file') {
+                current[name].content = content;
+                saveFileSystem();
+                return true;
+            }
+            return false;
+        }
+
+        function deleteItem(name) {
+            let current = getCurrentFolder();
+            if (current.hasOwnProperty(name) && current[name].type !== 'system') {
+                delete current[name];
+                saveFileSystem();
+                return true;
+            }
+            return false;
+        }
+
+        function getCurrentFolder() {
+            let current = fileSystem;
+            for (let folder of currentPath) {
+                current = current[folder].content;
+            }
+            return current;
+        }
+
+        function createIcons() {
+            const iconsContainer = document.getElementById('icons');
+            iconsContainer.innerHTML = '';
+            const iconsPerRow = GG_ALL_GAME_CONFIG.iconsPerRow;
+            
+            for (let i = 0; i < GG_ALL_GAME_CONFIG.icons.length; i += iconsPerRow) {
+                const row = document.createElement('div');
+                row.className = 'icon-row';
+                
+                for (let j = i; j < i + iconsPerRow && j < GG_ALL_GAME_CONFIG.icons.length; j++) {
+                    const icon = GG_ALL_GAME_CONFIG.icons[j];
+                    const iconElement = document.createElement('div');
+                    iconElement.className = 'icon';
+                    iconElement.onclick = () => {
+                        if (icon.action === "openFileExplorer") {
+                            openFileExplorer();
+                        } else if (icon.action === "openNotepad") {
+                            openNotepad();
+                        } else if (icon.action === "openWebBrowser") {
+                            openWebBrowser();
+                        } else if (icon.action === "openTaskManager") {
+                            openTaskManager();
+                        } else if (icon.action === "openCalculator") {
+                            openCalculator();
+                        } else if (icon.action === "openSnake") {
+                            openSnake();
+                        } else if (icon.action === "openMinesweeper") {
+                            openMinesweeper();
+                        } else if (icon.action === "openPaint") {
+                            openPaint();
+                        } else if (icon.action === "openMusicPlayer") {
+                            openMusicPlayer();
+                        } else if (icon.action === "openWeatherWidget") {
+                            openWeatherWidget();
+                        } else if (icon.action === "openSettings") {
+                            openSettings();
+                        }
+                    };
+                    iconElement.innerHTML = `
+                        <img src="${icon.image}" alt="${icon.name}">
+                        <div>${icon.name}</div>
+                    `;
+                    row.appendChild(iconElement);
+                }
+                
+                iconsContainer.appendChild(row);
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString();
+        }
+
+        function openWindow(title, content, isResizable = true) {
+            const windowsContainer = document.getElementById('windows');
+            const newWindow = document.createElement('div');
+            newWindow.className = 'window';
+            newWindow.style.left = Math.random() * (window.innerWidth - GG_ALL_GAME_CONFIG.windowWidth) + 'px';
+            newWindow.style.top = Math.random() * (window.innerHeight - GG_ALL_GAME_CONFIG.windowHeight - 50) + 'px';
+            
+            newWindow.innerHTML = `
+                <div class="window-header">
+                    <span>${title}</span>
+                    <span class="close-btn" onclick="closeWindow(this)">×</span>
+                </div>
+                <div class="window-content">
+                    ${content}
+                </div>
+                ${isResizable ? '<div class="resize-handle"></div>' : ''}
+            `;
+            
+            windowsContainer.appendChild(newWindow);
+            
+            // Make the window draggable
+            let isDragging = false;
+            let dragOffsetX, dragOffsetY;
+            
+            newWindow.querySelector('.window-header').addEventListener('mousedown', (e) => {
+                isDragging = true;
+                dragOffsetX = e.clientX - newWindow.offsetLeft;
+                dragOffsetY = e.clientY - newWindow.offsetTop;
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    newWindow.style.left = (e.clientX - dragOffsetX) + 'px';
+                    newWindow.style.top = (e.clientY - dragOffsetY) + 'px';
+                }
+            });
+            
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            if (isResizable) {
+                let isResizing = false;
+                const resizeHandle = newWindow.querySelector('.resize-handle');
+                
+                resizeHandle.addEventListener('mousedown', (e) => {
+                    isResizing = true;
+                    e.stopPropagation();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (isResizing) {
+                        const newWidth = e.clientX - newWindow.offsetLeft;
+                        const newHeight = e.clientY - newWindow.offsetTop;
+                        newWindow.style.width = newWidth + 'px';
+                        newWindow.style.height = newHeight + 'px';
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    isResizing = false;
+                });
+            }
+
+            addToRunningProcesses(title, newWindow);
+        }
+
+        function openFileExplorer() {
+            const content = `
+                <div id="file-explorer">
+                    <div id="current-path"></div>
+                    <ul id="file-list"></ul>
+                </div>
+            `;
+            openWindow('File Explorer', content);
+            updateFileList();
+        }
+
+        function updateFileList() {
+            const fileList = document.getElementById('file-list');
+            const currentPathElement = document.getElementById('current-path');
+            currentPathElement.textContent = '/' + currentPath.join('/');
+            fileList.innerHTML = '';
+            if (currentPath.length > 0) {
+                const li = document.createElement('li');
+                li.textContent = '..';
+                li.onclick = () => {
+                    currentPath.pop();
+                    updateFileList();
+                };
+                fileList.appendChild(li);
+            }
+            const currentFolder = getCurrentFolder();
+            for (const itemName in currentFolder) {
+                const item = currentFolder[itemName];
+                const li = document.createElement('li');
+                li.textContent = itemName;
+                if (item.type === 'folder') {
+                    li.classList.add('folder');
+                    li.onclick = () => {
+                        currentPath.push(itemName);
+                        updateFileList();
+                    };
+                } else {
+                    li.onclick = () => selectItem(itemName);
+                }
+                if (item.type === 'system') {
+                    li.classList.add('system-file');
+                }
+                fileList.appendChild(li);
+            }
+        }
+
+        function selectItem(itemName) {
+            const fileList = document.getElementById('file-list');
+            fileList.querySelectorAll('li').forEach(li => {
+                li.style.backgroundColor = '';
+            });
+            const selectedLi = Array.from(fileList.children).find(li => li.textContent === itemName);
+            if (selectedLi) {
+                selectedLi.style.backgroundColor = '#ddd';
+            }
+            fileList.dataset.selectedItem = itemName;
+        }
+
+        function openNotepad(fileName) {
+            if (!fileName) {
+                fileName = document.getElementById('file-list')?.dataset.selectedItem || 'Untitled';
+            }
+            let content = '';
+            if (fileName !== 'Untitled') {
+                content = readFile(fileName);
+            }
+            const notepadContent = `
+                <textarea id="notepad-content" style="width: 100%; height: 80%;">${content}</textarea>
+                <button onclick="saveNotepadContent('${fileName}')">Save</button>
+            `;
+            openWindow('Notepad - ' + fileName, notepadContent);
+        }
+
+        function saveNotepadContent(fileName) {
+            const content = document.getElementById('notepad-content').value;
+            updateFile(fileName, content);
+            alert('File saved successfully!');
+        }
+
+        function openWebBrowser(url = 'https://www.example.com') {
+            const browserContent = `
+                <div style="display: flex; margin-bottom: 10px;">
+                    <input type="text" id="url-input" style="flex-grow: 1;" value="${url}">
+                    <button onclick="navigateToUrl()">Go</button>
+                </div>
+                <iframe src="${url}" style="width: 100%; height: calc(100% - 40px); border: none;"></iframe>
+            `;
+            openWindow('Web Browser', browserContent);
+        }
+
+        function navigateToUrl() {
+            const urlInput = document.getElementById('url-input');
+            const iframe = urlInput.parentElement.nextElementSibling;
+            let url = urlInput.value;
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+            iframe.src = url;
+        }
+
+        function createNewFile() {
+            const fileName = prompt("Enter new file name:");
+            if (fileName) {
+                createFile(fileName, '');
+                updateFileList();
+                openNotepad(fileName);
+            }
+        }
+
+        function createNewFolder() {
+            const folderName = prompt("Enter new folder name:");
+            if (folderName) {
+                createFolder(folderName);
+                updateFileList();
+            }
+        }
+
+        function openSelectedItem() {
+            const itemName = document.getElementById('file-list').dataset.selectedItem;
+            if (itemName) {
+                const currentFolder = getCurrentFolder();
+                if (currentFolder[itemName].type === 'folder') {
+                    currentPath.push(itemName);
+                    updateFileList();
+                } else if (currentFolder[itemName].type === 'file') {
+                    openNotepad(itemName);
+                }
+            } else {
+                alert('Please select an item first.');
+            }
+        }
+
+        function deleteSelectedItem() {
+            const itemName = document.getElementById('file-list').dataset.selectedItem;
+            if (itemName) {
+                const currentFolder = getCurrentFolder();
+                if (currentFolder[itemName].type === 'system') {
+                    alert('Cannot delete system files.');
+                } else if (confirm(`Are you sure you want to delete ${itemName}?`)) {
+                    deleteItem(itemName);
+                    updateFileList();
+                    document.getElementById('file-list').dataset.selectedItem = '';
+                }
+            } else {
+                alert('Please select an item first.');
+            }
+        }
+
+        function closeWindow(closeBtn) {
+            const window = closeBtn.closest('.window');
+            const title = window.querySelector('.window-header span').textContent;
+            window.remove();
+            removeFromRunningProcesses(title);
+        }
+
+        function addToRunningProcesses(title, windowElement) {
+            runningProcesses.push({ title, windowElement });
+            updateTaskbar();
+        }
+
+        function removeFromRunningProcesses(title) {
+            runningProcesses = runningProcesses.filter(process => process.title !== title);
+            updateTaskbar();
+        }
+
+        function updateTaskbar() {
+            const processesContainer = document.getElementById('running-processes');
+            processesContainer.innerHTML = '';
+            runningProcesses.forEach(process => {
+                const processItem = document.createElement('div');
+                processItem.className = 'process-item';
+                processItem.textContent = process.title;
+                processItem.onclick = () => focusWindow(process.windowElement);
+                processesContainer.appendChild(processItem);
+            });
+        }
+
+        function focusWindow(windowElement) {
+            windowElement.style.zIndex = 1000;
+            document.querySelectorAll('.window').forEach(w => {
+                if (w !== windowElement) {
+                    w.style.zIndex = 1;
+                }
+            });
+        }
+
+        function openTaskManager() {
+            const content = `
+                <div id="task-manager">
+                    <h2>Running Processes</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Process Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="process-list">
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            openWindow('Task Manager', content);
+            updateTaskManager();
+        }
+
+        function updateTaskManager() {
+            const processList = document.getElementById('process-list');
+            if (processList) {
+                processList.innerHTML = '';
+                runningProcesses.forEach(process => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${process.title}</td>
+                        <td><button onclick="endProcess('${process.title}')">End Process</button></td>
+                    `;
+                    processList.appendChild(row);
+                });
+            }
+        }
+
+        function endProcess(title) {
+            const process = runningProcesses.find(p => p.title === title);
+            if (process) {
+                process.windowElement.remove();
+                removeFromRunningProcesses(title);
+                updateTaskManager();
+            }
+        }
+
+        function openCalculator() {
+            const content = `
+                <div id="calculator">
+                    <input type="text" id="calc-display" readonly>
+                    <button onclick="appendToDisplay('7')">7</button>
+                    <button onclick="appendToDisplay('8')">8</button>
+                    <button onclick="appendToDisplay('9')">9</button>
+                    <button onclick="appendToDisplay('+')">+</button>
+                    <button onclick="appendToDisplay('4')">4</button>
+                    <button onclick="appendToDisplay('5')">5</button>
+                    <button onclick="appendToDisplay('6')">6</button>
+                    <button onclick="appendToDisplay('-')">-</button>
+                    <button onclick="appendToDisplay('1')">1</button>
+                    <button onclick="appendToDisplay('2')">2</button>
+                    <button onclick="appendToDisplay('3')">3</button>
+                    <button onclick="appendToDisplay('*')">*</button>
+                    <button onclick="appendToDisplay('0')">0</button>
+                    <button onclick="appendToDisplay('.')">.</button>
+                    <button onclick="calculateResult()">=</button>
+                    <button onclick="appendToDisplay('/')">/</button>
+                    <button onclick="clearDisplay()">C</button>
+                </div>
+            `;
+            openWindow('Calculator', content);
+        }
+
+        function appendToDisplay(value) {
+            document.getElementById('calc-display').value += value;
+        }
+
+        function clearDisplay() {
+            document.getElementById('calc-display').value = '';
+        }
+
+        function calculateResult() {
+            const display = document.getElementById('calc-display');
+            try {
+                display.value = eval(display.value);
+            } catch (error) {
+                display.value = 'Error';
+            }
+        }
+
+        function openSnake() {
+            const content = `
+                <canvas id="snake-game" width="300" height="300"></canvas>
+                <div>Score: <span id="snake-score">0</span></div>
+                <button onclick="startSnakeGame()">Start Game</button>
+            `;
+            openWindow('Snake', content);
+        }
+
+        function startSnakeGame() {
+            const canvas = document.getElementById('snake-game');
+            const ctx = canvas.getContext('2d');
+            const scoreElement = document.getElementById('snake-score');
+
+            const gridSize = 10;
+            const tileCount = canvas.width / gridSize;
+
+            let snake = [
+                { x: 10, y: 10 },
+                { x: 9, y: 10 },
+                { x: 8, y: 10 }
+            ];
+            let food = { x: 15, y: 15 };
+            let dx = 1;
+            let dy = 0;
+            let score = 0;
+
+            function drawGame() {
+                clearCanvas();
+                moveSnake();
+                drawSnake();
+                drawFood();
+                checkCollision();
+                updateScore();
+            }
+
+            function clearCanvas() {
+                ctx.fillStyle = 'black';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            function moveSnake() {
+                const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+                snake.unshift(head);
+                if (head.x === food.x && head.y === food.y) {
+                    score++;
+                    generateFood();
+                } else {
+                    snake.pop();
+                }
+            }
+
+            function drawSnake() {
+                ctx.fillStyle = 'lime';
+                snake.forEach(segment => {
+                    ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 1, gridSize - 1);
+                });
+            }
+
+            function drawFood() {
+                ctx.fillStyle = 'red';
+                ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 1, gridSize - 1);
+            }
+
+            function generateFood() {
+                food.x = Math.floor(Math.random() * tileCount);
+                food.y = Math.floor(Math.random() * tileCount);
+            }
+
+            function checkCollision() {
+                const head = snake[0];
+                if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+                    gameOver();
+                }
+                for (let i = 1; i < snake.length; i++) {
+                    if (head.x === snake[i].x && head.y === snake[i].y) {
+                        gameOver();
+                    }
+                }
+            }
+
+            function updateScore() {
+                scoreElement.textContent = score;
+            }
+
+            function gameOver() {
+                clearInterval(gameInterval);
+                alert('Game Over! Your score: ' + score);
+            }
+
+            document.addEventListener('keydown', changeDirection);
+
+            function changeDirection(event) {
+                const LEFT_KEY = 37;
+                const RIGHT_KEY = 39;
+                const UP_KEY = 38;
+                const DOWN_KEY = 40;
+
+                const keyPressed = event.keyCode;
+                const goingUp = dy === -1;
+                const goingDown = dy === 1;
+                const goingRight = dx === 1;
+                const goingLeft = dx === -1;
+
+                if (keyPressed === LEFT_KEY && !goingRight) {
+                    dx = -1;
+                    dy = 0;
+                }
+                if (keyPressed === UP_KEY && !goingDown) {
+                    dx = 0;
+                    dy = -1;
+                }
+                if (keyPressed === RIGHT_KEY && !goingLeft) {
+                    dx = 1;
+                    dy = 0;
+                }
+                if (keyPressed === DOWN_KEY && !goingUp) {
+                    dx = 0;
+                    dy = 1;
+                }
+            }
+
+            const gameInterval = setInterval(drawGame, 100);
+        }
+
+        function openMinesweeper() {
+            const content = `
+                <div id="minesweeper-game" style="display: inline-block;">
+                    <div id="minesweeper-grid"></div>
+                    <div>Mines: <span id="mine-count">10</span></div>
+                    <button onclick="startMinesweeperGame()">New Game</button>
+                </div>
+            `;
+            openWindow('Minesweeper', content);
+            startMinesweeperGame();
+        }
+
+        function startMinesweeperGame() {
+            const grid = document.getElementById('minesweeper-grid');
+            const mineCountDisplay = document.getElementById('mine-count');
+            const size = 10;
+            const mineCount = 10;
+            let minesLeft = mineCount;
+            let board = [];
+
+            function createBoard() {
+                grid.innerHTML = '';
+                board = [];
+                minesLeft = mineCount;
+                mineCountDisplay.textContent = minesLeft;
+
+                // Create empty board
+                for (let i = 0; i < size; i++) {
+                    const row = document.createElement('div');
+                    row.className = 'minesweeper-row';
+                    board[i] = [];
+                    for (let j = 0; j < size; j++) {
+                        board[i][j] = {
+                            isMine: false,
+                            revealed: false,
+                            flagged: false,
+                            adjacentMines: 0
+                        };
+                        const cell = document.createElement('div');
+                        cell.className = 'minesweeper-cell';
+                        cell.dataset.row = i;
+                        cell.dataset.col = j;
+                        cell.addEventListener('click', () => revealCell(i, j));
+                        cell.addEventListener('contextmenu', (e) => {
+                            e.preventDefault();
+                            flagCell(i, j);
+                        });
+                        row.appendChild(cell);
+                    }
+                    grid.appendChild(row);
+                }
+
+                // Place mines
+                let minesPlaced = 0;
+                while (minesPlaced < mineCount) {
+                    const row = Math.floor(Math.random() * size);
+                    const col = Math.floor(Math.random() * size);
+                    if (!board[row][col].isMine) {
+                        board[row][col].isMine = true;
+                        minesPlaced++;
+                    }
+                }
+
+                // Calculate adjacent mines
+                for (let i = 0; i < size; i++) {
+                    for (let j = 0; j < size; j++) {
+                        if (!board[i][j].isMine) {
+                            board[i][j].adjacentMines = countAdjacentMines(i, j);
+                        }
+                    }
+                }
+            }
+
+            function countAdjacentMines(row, col) {
+                let count = 0;
+                for (let i = -1; i <= 1; i++) {
+                    for (let j = -1; j <= 1; j++) {
+                        const newRow = row + i;
+                        const newCol = col + j;
+                        if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size) {
+                            if (board[newRow][newCol].isMine) count++;
+                        }
+                    }
+                }
+                return count;
+            }
+
+            function revealCell(row, col) {
+                if (board[row][col].revealed || board[row][col].flagged) return;
+                board[row][col].revealed = true;
+                const cell = grid.children[row].children[col];
+                cell.classList.add('revealed');
+                if (board[row][col].isMine) {
+                    cell.classList.add('mine');
+                    cell.textContent = '💣';
+                    gameOver(false);
+                } else {
+                    if (board[row][col].adjacentMines > 0) {
+                        cell.textContent = board[row][col].adjacentMines;
+                    } else {
+                        // Reveal adjacent cells
+                        for (let i = -1; i <= 1; i++) {
+                            for (let j = -1; j <= 1; j++) {
+                                const newRow = row + i;
+                                const newCol = col + j;
+                                if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size) {
+                                    revealCell(newRow, newCol);
+                                }
+                            }
+                        }
+                    }
+                }
+                checkWin();
+            }
+
+            function flagCell(row, col) {
+                if (board[row][col].revealed) return;
+                board[row][col].flagged = !board[row][col].flagged;
+                const cell = grid.children[row].children[col];
+                if (board[row][col].flagged) {
+                    cell.textContent = '🚩';
+                    minesLeft--;
+                } else {
+                    cell.textContent = '';
+                    minesLeft++;
+                }
+                mineCountDisplay.textContent = minesLeft;
+                checkWin();
+            }
+
+            function checkWin() {
+                let win = true;
+                for (let i = 0; i < size; i++) {
+                    for (let j = 0; j < size; j++) {
+                        if (!board[i][j].isMine && !board[i][j].revealed) {
+                            win = false;
+                            break;
+                        }
+                    }
+                    if (!win) break;
+                }
+                if (win) gameOver(true);
+            }
+
+            function gameOver(win) {
+                for (let i = 0; i < size; i++) {
+                    for (let j = 0; j < size; j++) {
+                        const cell = grid.children[i].children[j];
+                        if (board[i][j].isMine) {
+                            cell.classList.add('mine');
+                            cell.textContent = '💣';
+                        }
+                    }
+                }
+                setTimeout(() => {
+                    alert(win ? 'You win!' : 'Game over!');
+                }, 100);
+            }
+
+            createBoard();
+        }
+
+        function openPaint() {
+            const content = `
+                <div id="paint-tools">
+                    <input type="color" id="color-picker" value="#000000">
+                    <input type="range" id="brush-size" min="1" max="20" value="5">
+                    <button onclick="clearCanvas()">Clear</button>
+                </div>
+                <canvas id="paint-canvas" width="500" height="300"></canvas>
+            `;
+            openWindow('Paint', content);
+            initializePaint();
+        }
+
+        function initializePaint() {
+            const canvas = document.getElementById('paint-canvas');
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            function startDrawing(e) {
+                isDrawing = true;
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.strokeStyle = document.getElementById('color-picker').value;
+                ctx.lineWidth = document.getElementById('brush-size').value;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+            }
+
+            window.clearCanvas = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            };
+        }
+
+        function openMusicPlayer() {
+            const content = `
+                <div id="music-player">
+                    <audio id="audio-player" controls></audio>
+                    <ul id="music-playlist"></ul>
+                </div>
+            `;
+            openWindow('Music Player', content);
+            loadMusicPlaylist();
+        }
+
+        function loadMusicPlaylist() {
+            const playlist = document.getElementById('music-playlist');
+            const audioPlayer = document.getElementById('audio-player');
+            const musicFolder = fileSystem.Users.content.Default.content.Music.content;
+
+            for (const songName in musicFolder) {
+                const li = document.createElement('li');
+                li.textContent = songName;
+                li.onclick = () => {
+                    audioPlayer.src = musicFolder[songName].content;
+                    audioPlayer.play();
+                };
+                playlist.appendChild(li);
+            }
+        }
+
+        function openWeatherWidget() {
+            const content = `
+                <div id="weather-widget">
+                    <div id="weather-icon">🌤️</div>
+                    <div id="temperature">20°C</div>
+                    <div id="description">Partly Cloudy</div>
+                    <div id="location">New York, NY</div>
+                </div>
+            `;
+            openWindow('Weather Widget', content);
+            updateWeather();
+        }
+
+        function updateWeather() {
+            // In a real application, this would fetch data from a weather API
+            const icons = ['☀️', '🌤️', '☁️', '🌧️', '⛈️', '❄️'];
+            const descriptions = ['Sunny', 'Partly Cloudy', 'Cloudy', 'Rainy', 'Thunderstorm', 'Snowy'];
+            const randomIndex = Math.floor(Math.random() * icons.length);
+
+            document.getElementById('weather-icon').textContent = icons[randomIndex];
+            document.getElementById('temperature').textContent = Math.floor(Math.random() * 30 + 5) + '°C';
+            document.getElementById('description').textContent = descriptions[randomIndex];
+        }
+
+        function openSettings() {
+            const content = `
+                <div id="settings-app">
+                    <h2>Settings</h2>
+                    <label for="wallpaper-url">Wallpaper URL:</label>
+                    <input type="text" id="wallpaper-url" value="${GG_ALL_GAME_CONFIG.defaultWallpaper}">
+                    <button onclick="changeWallpaper()">Change Wallpaper</button>
+                </div>
+            `;
+            openWindow('Settings', content);
+        }
+
+        function changeWallpaper() {
+            const wallpaperUrl = document.getElementById('wallpaper-url').value;
+            document.getElementById('desktop').style.backgroundImage = `url('${wallpaperUrl}')`;
+            GG_ALL_GAME_CONFIG.defaultWallpaper = wallpaperUrl;
+            localStorage.setItem('webOSWallpaper', wallpaperUrl);
+        }
+
+        // Start menu functionality
+        const startMenu = document.getElementById('start-menu');
+        const startMenuContent = document.getElementById('start-menu-content');
+        let startMenuOpen = false;
+
+        startMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+            startMenuOpen = !startMenuOpen;
+            startMenuContent.style.display = startMenuOpen ? 'block' : 'none';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!startMenu.contains(e.target) && !startMenuContent.contains(e.target)) {
+                startMenuOpen = false;
+                startMenuContent.style.display = 'none';
+            }
+        });
+
+        // Context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            const contextMenu = document.getElementById('context-menu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = e.pageX + 'px';
+            contextMenu.style.top = e.pageY + 'px';
+        });
+
+        document.addEventListener('click', function() {
+            document.getElementById('context-menu').style.display = 'none';
+        });
+
+        // Boot process
+        function bootSystem() {
+            if (fileSystem['Boot'] && fileSystem['Boot'].type === 'folder') {
+                const bootFolder = fileSystem['Boot'].content;
+                for (const fileName in bootFolder) {
+                    if (fileName.endsWith('.js') && bootFolder[fileName].type === 'file') {
+                        try {
+                            eval(bootFolder[fileName].content);
+                        } catch (error) {
+                            console.error(`Error executing boot file ${fileName}:`, error);
+                        }
+                    }
+                }
+            }
+            const savedWallpaper = localStorage.getItem('webOSWallpaper');
+            if (savedWallpaper) {
+                GG_ALL_GAME_CONFIG.defaultWallpaper = savedWallpaper;
+                document.getElementById('desktop').style.backgroundImage = `url('${savedWallpaper}')`;
+            } else {
+                document.getElementById('desktop').style.backgroundImage = `url('${GG_ALL_GAME_CONFIG.defaultWallpaper}')`;
+            }
+        }
+
+        // Initialize the desktop
+        initializeFileSystem();
+        createIcons();
+        updateClock();
+        setInterval(updateClock, 1000);
+        bootSystem();
+    </script>
+
+</body>
+</html>
