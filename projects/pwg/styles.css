@@ -1,0 +1,36 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+#game-container {
+    display: flex;
+    height: 100vh;
+}
+
+#map {
+    flex: 3;
+    background-image: url('map.png'); /* Use a map image of the Mediterranean */
+    background-size: cover;
+    position: relative;
+}
+
+#controls, #info-panel {
+    flex: 1;
+    padding: 10px;
+    background-color: #fff;
+    border-left: 1px solid #ccc;
+}
+
+.city {
+    position: absolute;
+    background-color: red;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+}
