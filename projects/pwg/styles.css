@@ -12,12 +12,14 @@ body {
     height: 100vh;
 }
 
+/* styles.css */
 #map {
     flex: 3;
-    background-image: url('map.png'); /* Use a map image of the Mediterranean */
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/First_Punic_War_264_BC_v3.png/1024px-First_Punic_War_264_BC_v3.png'); /* Use your downloaded map image */
     background-size: cover;
     position: relative;
 }
+
 
 #controls, #info-panel {
     flex: 1;
