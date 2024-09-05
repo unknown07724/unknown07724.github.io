@@ -4,7 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Page</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+.header {
+    background-color: #ff0000;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+/* Video Page Styles */
+.video-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.main-video {
+    margin-bottom: 20px;
+}
+
+.video-info h2 {
+    font-size: 22px;
+    margin-top: 10px;
+}
+
+.video-stats {
+    color: #777;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.video-description {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Comments Section */
+.comments-section {
+    margin-top: 30px;
+}
+
+.comments-section h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.comment {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+.comment-form textarea {
+    resize: none;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+.comment-form button {
+    align-self: flex-end;
+    padding: 10px 20px;
+    border: none;
+    background-color: #ff0000;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.comment-form button:hover {
+    background-color: #cc0000;
+}
+
+    </style>
 </head>
 <body>
     <div class="header">
