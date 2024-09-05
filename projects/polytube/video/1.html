@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Page</title>
+    <style>
+        /* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+.header {
+    background-color: #ff0000;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+/* Video Page Styles */
+.video-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.main-video {
+    margin-bottom: 20px;
+}
+
+.video-info h2 {
+    font-size: 22px;
+    margin-top: 10px;
+}
+
+.video-stats {
+    color: #777;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.video-description {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Comments Section */
+.comments-section {
+    margin-top: 30px;
+}
+
+.comments-section h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.comment {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+.comment-form textarea {
+    resize: none;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+.comment-form button {
+    align-self: flex-end;
+    padding: 10px 20px;
+    border: none;
+    background-color: #ff0000;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.comment-form button:hover {
+    background-color: #cc0000;
+}
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Video Page</h1>
+    </div>
+
+    <div class="video-container">
+        <div class="main-video">
+            <video controls width="100%">
+                <source src="cdn/test.webm" type="video/webm">
+                Your browser does not support the video tag.
+            </video>
+
+            <div class="video-info">
+                <h2>Polytopia in a nutshell</h2>
+                <p class="video-stats">1M views • 200K likes</p>
+                <p class="video-description">
+                    polytopia in a nutshell
+                </p>
+            </div>
+        </div>
+
+        <div class="comments-section">
+            <h3>Comments</h3>
+            <div class="comment">
+                <p><strong>John Doe:</strong> this is a dumb video</p>
+            </div>
+          <div class="comment">
+                <p><strong>xin xi player0001:</strong> imperius is stupid</p>
+            </div>
+           
+            <form class="comment-form">
+                <textarea placeholder="Add a public comment..." required></textarea>
+                <button type="submit">Comment</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
