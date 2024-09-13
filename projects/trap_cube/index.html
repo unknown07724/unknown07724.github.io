@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Cube Adventure</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      background-color: #000;
+    }
+
+    #gameCanvas {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #hud {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #fff;
+      font-size: 18px;
+      text-shadow: 2px 2px #000;
+    }
+
+    #lives {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      color: #ff0000;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    #redNumber {
+      position: absolute;
+      top: 40px;
+      left: 10px;
+      color: #ff0000;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <div id="hud">Score: <span id="score">0</span></div>
+  <div id="redNumber">1</div>
+  <div id="lives">1</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    let GG_ALL_GAME_CONFIG = {
+      cubeSize: 1, // Size of each cube in the game
+      worldSize: 20, // Size of the game world
+      playerSpeed: 0.1, // Speed of player movement
+      enemyCount: 5, // Number of enemy cubes in the first wave
+      collectibleCount: 10, // Number of collectible cubes
+      playerColor: 0x00ff00, // Color of the player cube
+      enemyColor: 0xff0000, // Color of enemy cubes
+      collectibleColor: 0xffff00, // Color of collectible cubes
+      gravity: -0.005, // Gravity force applied to the player
+      jumpForce: 0.15, // Force applied when the player jumps
+      groundLevel: 0, // Y-position of the ground
+      lives: 1, // Number of lives the player starts with
+      redNumber: 1, // Red number displayed under the score
+      enemySpeed: 0.03, // Speed of enemy movement towards the player
+      bulletSpeed: 0.5, // Speed of player's bullets
+      bulletColor: 0x0000ff, // Color of player's bullets
+      bulletSize: 0.2, // Size of player's bullets
+      shootCooldown: 500, // Cooldown time between shots in milliseconds
+      currentWave: 1, // Current wave number
+      enemyIncreasePerWave: 2 // Number of additional enemies per wave
+    };
+    let scene, camera, renderer, player;
+    let enemies = [];
+    let collectibles = [];
+    let bullets = [];
+    let score = 0;
+    let playerVelocity = new THREE.Vector3();
+    let isOnGround = false;
+    let lastShootTime = 0;
+    let raycaster = new THREE.Raycaster();
+    let mouse = new THREE.Vector2();
+
+    function init() {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      renderer = new THREE.WebGLRenderer({
+        canvas: document.getElementById('gameCanvas')
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      createPlayer();
+      createEnemies();
+      createCollectibles();
+      createGround();
+      camera.position.set(0, 10, 20);
+      camera.lookAt(player.position);
+      animate();
+      // Remove any existing game over screen
+      const existingGameOverScreen = document.getElementById('gameOverScreen');
+      if (existingGameOverScreen) {
+        existingGameOverScreen.remove();
+      }
+      // Add event listener for mouse movement
+      document.addEventListener('mousemove', onMouseMove, false);
+      // Add event listener for mouse click (shooting)
+      document.addEventListener('click', onMouseClick, false);
+    }
+
+    function createGround() {
+      const groundGeometry = new THREE.PlaneGeometry(GG_ALL_GAME_CONFIG.worldSize, GG_ALL_GAME_CONFIG.worldSize);
+      const groundMaterial = new THREE.MeshBasicMaterial({
+        color: 0x808080
+      });
+      const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.y = GG_ALL_GAME_CONFIG.groundLevel;
+      scene.add(ground);
+    }
+
+    function createCube(color) {
+      const geometry = new THREE.BoxGeometry(GG_ALL_GAME_CONFIG.cubeSize, GG_ALL_GAME_CONFIG.cubeSize, GG_ALL_GAME_CONFIG.cubeSize);
+      const material = new THREE.MeshBasicMaterial({
+        color: color
+      });
+      return new THREE.Mesh(geometry, material);
+    }
+
+    function createPlayer() {
+      player = createCube(GG_ALL_GAME_CONFIG.playerColor);
+      scene.add(player);
+    }
+
+    function createEnemies() {
+      for (let i = 0; i < GG_ALL_GAME_CONFIG.enemyCount; i++) {
+        const enemy = createCube(GG_ALL_GAME_CONFIG.enemyColor);
+        enemy.position.set(
+          Math.random() * GG_ALL_GAME_CONFIG.worldSize - GG_ALL_GAME_CONFIG.worldSize / 2,
+          0,
+          Math.random() * GG_ALL_GAME_CONFIG.worldSize - GG_ALL_GAME_CONFIG.worldSize / 2
+        );
+        scene.add(enemy);
+        enemies.push(enemy);
+      }
+    }
+
+    function createCollectibles() {
+      for (let i = 0; i < GG_ALL_GAME_CONFIG.collectibleCount; i++) {
+        const collectible = createCube(GG_ALL_GAME_CONFIG.collectibleColor);
+        collectible.position.set(
+          Math.random() * GG_ALL_GAME_CONFIG.worldSize - GG_ALL_GAME_CONFIG.worldSize / 2,
+          0,
+          Math.random() * GG_ALL_GAME_CONFIG.worldSize - GG_ALL_GAME_CONFIG.worldSize / 2
+        );
+        scene.add(collectible);
+        collectibles.push(collectible);
+      }
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      movePlayer();
+      moveEnemies();
+      moveBullets();
+      checkCollisions();
+      renderer.render(scene, camera);
+    }
+
+    function moveEnemies() {
+      enemies.forEach(enemy => {
+        const direction = new THREE.Vector3().subVectors(player.position, enemy.position).normalize();
+        enemy.position.add(direction.multiplyScalar(GG_ALL_GAME_CONFIG.enemySpeed));
+        enemy.position.y = GG_ALL_GAME_CONFIG.groundLevel; // Keep enemies on the ground
+      });
+    }
+
+    function movePlayer() {
+      // Apply gravity
+      playerVelocity.y += GG_ALL_GAME_CONFIG.gravity;
+      player.position.y += playerVelocity.y;
+      // Check if player is on ground
+      if (player.position.y <= GG_ALL_GAME_CONFIG.groundLevel) {
+        player.position.y = GG_ALL_GAME_CONFIG.groundLevel;
+        playerVelocity.y = 0;
+        isOnGround = true;
+      } else {
+        isOnGround = false;
+      }
+      // Move player with WASD keys
+      let moveDirection = new THREE.Vector3(0, 0, 0);
+      if (keys.KeyW) moveDirection.z -= 1;
+      if (keys.KeyS) moveDirection.z += 1;
+      if (keys.KeyA) moveDirection.x -= 1;
+      if (keys.KeyD) moveDirection.x += 1;
+      moveDirection.normalize().multiplyScalar(GG_ALL_GAME_CONFIG.playerSpeed);
+      player.position.add(moveDirection);
+      // Rotate player in the direction of movement
+      if (moveDirection.length() > 0) {
+        player.rotation.y = Math.atan2(-moveDirection.x, -moveDirection.z);
+      }
+      // Jump
+      if (keys.Space && isOnGround) {
+        playerVelocity.y = GG_ALL_GAME_CONFIG.jumpForce;
+      }
+      player.position.x = Math.max(Math.min(player.position.x, GG_ALL_GAME_CONFIG.worldSize / 2), -GG_ALL_GAME_CONFIG.worldSize / 2);
+      player.position.z = Math.max(Math.min(player.position.z, GG_ALL_GAME_CONFIG.worldSize / 2), -GG_ALL_GAME_CONFIG.worldSize / 2);
+      camera.position.x = player.position.x;
+      camera.position.y = player.position.y + 10;
+      camera.position.z = player.position.z + 20;
+      camera.lookAt(player.position);
+    }
+
+    function checkCollisions() {
+      collectibles.forEach((collectible, index) => {
+        if (player.position.distanceTo(collectible.position) < GG_ALL_GAME_CONFIG.cubeSize) {
+          scene.remove(collectible);
+          collectibles.splice(index, 1);
+          score++;
+          document.getElementById('score').textContent = score;
+        }
+      });
+      enemies.forEach((enemy, enemyIndex) => {
+        if (player.position.distanceTo(enemy.position) < GG_ALL_GAME_CONFIG.cubeSize) {
+          GG_ALL_GAME_CONFIG.lives--;
+          document.getElementById('lives').textContent = GG_ALL_GAME_CONFIG.lives;
+          if (GG_ALL_GAME_CONFIG.lives <= 0) {
+            showGameOverScreen('Game Over! Your score: ' + score);
+          } else {
+            // Respawn player
+            player.position.set(0, 0, 0);
+          }
+        }
+        // Check bullet collisions with enemies
+        bullets.forEach((bullet, bulletIndex) => {
+          if (bullet.position.distanceTo(enemy.position) < GG_ALL_GAME_CONFIG.cubeSize) {
+            scene.remove(enemy);
+            enemies.splice(enemyIndex, 1);
+            scene.remove(bullet);
+            bullets.splice(bulletIndex, 1);
+            score += 5;
+            document.getElementById('score').textContent = score;
+            // Check if all enemies are defeated
+            if (enemies.length === 0) {
+              startNextWave();
+            }
+          }
+        });
+      });
+    }
+
+    function startNextWave() {
+      GG_ALL_GAME_CONFIG.currentWave++;
+      GG_ALL_GAME_CONFIG.enemyCount += GG_ALL_GAME_CONFIG.enemyIncreasePerWave;
+      createEnemies();
+      console.log(`Wave ${GG_ALL_GAME_CONFIG.currentWave} started with ${GG_ALL_GAME_CONFIG.enemyCount} enemies!`);
+    }
+
+    function showGameOverScreen(message) {
+      const gameOverScreen = document.createElement('div');
+      gameOverScreen.id = 'gameOverScreen';
+      gameOverScreen.style.position = 'absolute';
+      gameOverScreen.style.top = '0';
+      gameOverScreen.style.left = '0';
+      gameOverScreen.style.width = '100%';
+      gameOverScreen.style.height = '100%';
+      gameOverScreen.style.display = 'flex';
+      gameOverScreen.style.justifyContent = 'center';
+      gameOverScreen.style.alignItems = 'center';
+      gameOverScreen.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+      gameOverScreen.style.color = '#fff';
+      gameOverScreen.style.fontSize = '24px';
+      gameOverScreen.style.fontFamily = 'Arial, sans-serif';
+      gameOverScreen.style.zIndex = '1000';
+      const messageElement = document.createElement('div');
+      messageElement.textContent = message;
+      gameOverScreen.appendChild(messageElement);
+      document.body.appendChild(gameOverScreen);
+    }
+
+    function resetGame() {
+      score = 0;
+      GG_ALL_GAME_CONFIG.lives = 1;
+      document.getElementById('score').textContent = score;
+      document.getElementById('lives').textContent = GG_ALL_GAME_CONFIG.lives;
+      document.getElementById('redNumber').textContent = GG_ALL_GAME_CONFIG.redNumber;
+      player.position.set(0, 0, 0);
+      enemies.forEach(enemy => scene.remove(enemy));
+      collectibles.forEach(collectible => scene.remove(collectible));
+      enemies = [];
+      collectibles = [];
+      createEnemies();
+      createCollectibles();
+    }
+
+    function createEnemies() {
+      for (let i = 0; i < GG_ALL_GAME_CONFIG.enemyCount; i++) {
+        const enemy = createCube(GG_ALL_GAME_CONFIG.enemyColor);
+        enemy.position.set(
+          Math.random() * GG_ALL_GAME_CONFIG.worldSize - GG_ALL_GAME_CONFIG.worldSize / 2,
+          GG_ALL_GAME_CONFIG.groundLevel,
+          Math.random() * GG_ALL_GAME_CONFIG.worldSize - GG_ALL_GAME_CONFIG.worldSize / 2
+        );
+        scene.add(enemy);
+        enemies.push(enemy);
+      }
+    }
+
+    function resetGame() {
+      score = 0;
+      GG_ALL_GAME_CONFIG.lives = 1;
+      GG_ALL_GAME_CONFIG.currentWave = 1;
+      GG_ALL_GAME_CONFIG.enemyCount = 5; // Reset to initial enemy count
+      document.getElementById('score').textContent = score;
+      document.getElementById('lives').textContent = GG_ALL_GAME_CONFIG.lives;
+      document.getElementById('redNumber').textContent = GG_ALL_GAME_CONFIG.redNumber;
+      player.position.set(0, 0, 0);
+      enemies.forEach(enemy => scene.remove(enemy));
+      collectibles.forEach(collectible => scene.remove(collectible));
+      enemies = [];
+      collectibles = [];
+      createEnemies();
+      createCollectibles();
+    }
+    // Function createBullet() has been moved and modified above
+    function moveBullets() {
+      bullets.forEach((bullet, index) => {
+        bullet.position.add(bullet.userData.direction.multiplyScalar(GG_ALL_GAME_CONFIG.bulletSpeed));
+        // Remove bullets that are out of bounds
+        if (
+          bullet.position.x < -GG_ALL_GAME_CONFIG.worldSize / 2 ||
+          bullet.position.x > GG_ALL_GAME_CONFIG.worldSize / 2 ||
+          bullet.position.z < -GG_ALL_GAME_CONFIG.worldSize / 2 ||
+          bullet.position.z > GG_ALL_GAME_CONFIG.worldSize / 2
+        ) {
+          scene.remove(bullet);
+          bullets.splice(index, 1);
+        }
+      });
+    }
+
+    function onMouseMove(event) {
+      // This function is no longer needed for bullet direction
+    }
+
+    function onMouseClick(event) {
+      const currentTime = Date.now();
+      if (currentTime - lastShootTime > GG_ALL_GAME_CONFIG.shootCooldown) {
+        createBullet();
+        lastShootTime = currentTime;
+      }
+    }
+
+    function createBullet() {
+      const bulletGeometry = new THREE.SphereGeometry(GG_ALL_GAME_CONFIG.bulletSize, 8, 8);
+      const bulletMaterial = new THREE.MeshBasicMaterial({
+        color: GG_ALL_GAME_CONFIG.bulletColor
+      });
+      const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
+      bullet.position.copy(player.position);
+      bullet.position.y += 0.5; // Adjust bullet spawn position
+      // Get the forward direction of the player
+      const direction = new THREE.Vector3(0, 0, -1);
+      direction.applyQuaternion(player.quaternion);
+      bullet.userData.direction = direction;
+      scene.add(bullet);
+      bullets.push(bullet);
+    }
+    let keys = {};
+    document.addEventListener('keydown', (e) => keys[e.code] = true);
+    document.addEventListener('keyup', (e) => keys[e.code] = false);
+    // Prevent spacebar from scrolling the page
+    window.addEventListener('keydown', function(e) {
+      if (e.code === 'Space' && e.target === document.body) {
+        e.preventDefault();
+      }
+    });
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    init();
+  </script>
+</body>
+
+</html>
