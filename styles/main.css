@@ -21,13 +21,13 @@
       font-family: sans-serif;
     }
  a:visited {
-  color: orange;
-}
+      color: orange;
+  }
 
     @media screen and (prefers-color-scheme: light) {
       body {
         background-color: white;
-        color: black;
+        color: #1a1625;
       }
     }
 
