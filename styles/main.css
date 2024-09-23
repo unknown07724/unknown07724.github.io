@@ -30,6 +30,9 @@
         color: #1a1625;
       }
     }
+   a:link {
+    color: white;
+  }
 
     .center {
       display: block;
