@@ -34,6 +34,9 @@
    a:link {
     color: white;
   }
+iframe{
+    display:none
+      }
 
     .center {
       display: block;
