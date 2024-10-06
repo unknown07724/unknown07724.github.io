@@ -1,0 +1,55 @@
+<html>
+<head>
+<title>Petorian Domain Name Registry</title>
+</head>
+<body>
+<h1>Petorian Domain Name Registry</h1>
+<form>
+<label for="domain">Domain Name:</label>
+<input type="text" id="domain" name="domain">
+<br>
+<label for="tld">Top-Level Domain:</label>
+<select id="tld" name="tld">
+<option value=".pet">.pet</option>
+<option value=".gov">.gov</option>
+<option value=".net">.net</option>
+</select>
+<br>
+<label for="name">Registrant Name:</label>
+<input type="text" id="name" name="name">
+<br>
+<label for="email">Registrant Email:</label>
+<input type="email" id="email" name="email">
+<br>
+<label for="message">Registrant Message:</label>
+<textarea id="message" name="message"></textarea>
+<br>
+<input type="submit" value="Register">
+</form>
+
+<script>
+const form = document.querySelector('form');
+const webhookUrl = 'https://discord.com/api/webhooks/1292326944247124129/_JiZRraR2D2AKIZ_K0pD1EAmW3Bn-SrE6NsbNZP7yPLfPr1pPT-REzOeDFlbKR9j7Z1O';
+
+form.addEventListener('submit', (e) => {
+e.preventDefault();
+const domain = document.getElementById('domain').value;
+const tld = document.getElementById('tld').value;
+const name = document.getElementById('name').value;
+const email = document.getElementById('email').value;
+const message = document.getElementById('message').value;
+const content = `New domain registration: ${domain}${tld} by ${name} (${email})
+${message}`;
+
+fetch(webhookUrl, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ content })
+})
+.then((response) => response.json())
+.then((data) => console.log(data))
+.catch((error) => console.error(error));
+});
+</script>
+</body>
+</html>
