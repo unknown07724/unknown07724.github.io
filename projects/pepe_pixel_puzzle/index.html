@@ -1,0 +1,143 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pepe's Pixel Puzzle</title>
+    <style>/* style.css */
+.game-container {
+    width: 400px;
+    height: 400px;
+    margin: 40px auto;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+}
+
+.game-board-cell {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+.game-controls {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#next-level-btn {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}</style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-board">
+            <!-- game board cells will be generated here -->
+        </div>
+        <div class="game-controls">
+            <button id="next-level-btn">Next Level</button>
+        </div>
+    </div>
+
+    <script>// script.js
+//...
+
+let wojakEnemies = [];
+let trollfaces = [];
+let kermits = [];
+let nukes = [];
+let portalOpen = false;
+
+function generateWojakEnemies(numEnemies) {
+for (let i = 0; i < numEnemies; i++) {
+let wojak = {
+x: Math.floor(Math.random() * 4),
+y: Math.floor(Math.random() * 4),
+direction: getRandomDirection()
+};
+wojakEnemies.push(wojak);
+}
+}
+
+function generateTrollfaces(numTrollfaces) {
+for (let i = 0; i < numTrollfaces; i++) {
+let trollface = {
+x: Math.floor(Math.random() * 4),
+y: Math.floor(Math.random() * 4)
+};
+trollfaces.push(trollface);
+}
+}
+
+function generateKermits(numKermits) {
+for (let i = 0; i < numKermits; i++) {
+let kermit = {
+x: Math.floor(Math.random() * 4),
+y: Math.floor(Math.random() * 4)
+};
+kermits.push(kermit);
+}
+}
+
+function generateNukes(numNukes) {
+for (let i = 0; i < numNukes; i++) {
+let nuke = {
+x: Math.floor(Math.random() * 4),
+y: Math.floor(Math.random() * 4)
+};
+nukes.push(nuke);
+}
+}
+
+function updateWojakEnemies() {
+wojakEnemies.forEach((wojak) => {
+let playerX = // get player's x coordinate
+let playerY = // get player's y coordinate
+
+if (wojak.x === playerX && Math.abs(wojak.y - playerY) === 1) {
+// wojak is above or below player
+wojak.direction = wojak.y > playerY? 'up' : 'down';
+} else if (wojak.y === playerY && Math.abs(wojak.x - playerX) === 1) {
+// wojak is left or right of player
+wojak.direction = wojak.x > playerX? 'left' : 'right';
+}
+
+moveWojak(wojak);
+});
+}
+
+function updateKermits() {
+kermits.forEach((kermit) => {
+// move kermit randomly
+let dx = Math.random() < 0.5? -1 : 1;
+let dy = Math.random() < 0.5? -1 : 1;
+kermit.x += dx;
+kermit.y += dy;
+
+// break through walls in kermit's path
+let wallX = Math.floor(kermit.x);
+let wallY = Math.floor(kermit.y);
+if (wallX >= 0 && wallX < 4 && wallY >= 0 && wallY < 4) {
+// remove wall at kermit's position
+walls[wallX][wallY] = false;
+}
+
+// check if player is in diagonal attack range
+let playerX = // get player's x coordinate
+let playerY = // get player's y coordinate</script>
+</body>
+</html>
