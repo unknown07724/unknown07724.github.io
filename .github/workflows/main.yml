@@ -1,0 +1,7 @@
+on:
+  workflow_dispatch:
+jobs:
+  my_job:
+    name: use windows 10
+    runs-on: windows-latest
+  
