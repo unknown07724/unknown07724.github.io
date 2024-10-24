@@ -20,10 +20,16 @@
       color: orange;
   }
  button:hover {
-      color: orange;
-      transition-duration: 0.4s;
+      color: white;
+      background-color: orange; /* Green */
       cursor: pointer;
   }
+button{
+      color: orange;
+      transition-duration: 0.4s;
+      background-color: white;
+      border: 2px solid orange;
+}
    a:link {
     color: white;
   }
