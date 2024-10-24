@@ -4,12 +4,7 @@
       color: white;
     }
 
-    p {
-      text-align: center;
-      font-family: sans-serif;
-    }
-
-    h2 {
+    p,h2,h1,h3,h4,h5 {
       text-align: center;
       font-family: sans-serif;
     }
@@ -24,7 +19,11 @@
  a:visited {
       color: orange;
   }
-
+ button:hover {
+      color: orange;
+      transition-duration: 0.4s;
+      cursor: pointer;
+  }
    a:link {
     color: white;
   }
