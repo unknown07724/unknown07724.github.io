@@ -19,6 +19,9 @@
  a:visited {
       color: orange;
   }
+ a:hover {
+      color: green;
+  }
  button:hover {
       color: white;
       background-color: orange; /* Green */
