@@ -1,13 +1,13 @@
 /* #282828 */ 
-    body {
-      background-color: #040273;
-      color: white;
-    }
+body {
+    background-color: #040273;
+    color: white;
+}
 
-    p,h2,h1,h3,h4,h5 {
-      text-align: center;
-      font-family: sans-serif;
-    }
+p,h2,h1,h3,h4,h5 {
+     text-align: center;
+     font-family: sans-serif;
+}
   summary {
       text-align: center;
       font-family: sans-serif;
