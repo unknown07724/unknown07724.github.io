@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Client</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="loginContainer">
+        <h2>Login with Token</h2>
+        <input type="password" id="tokenInput" placeholder="Enter your token">
+        <button id="loginButton">Login</button>
+    </div>
+
+    <div id="serverActionsContainer">
+        <h3>Server Actions</h3>
+        <div id="inviteSection">
+            <label for="inviteChannel">Invite Channel:</label>
+            <select id="inviteChannel"></select>
+            <button id="createInviteButton">Generate Invite Link</button>
+            <p id="inviteLinkDisplay"></p>
+        </div>
+
+        <div id="addBotSection">
+            <label for="botIdInput">Bot Client ID:</label>
+            <input type="text" id="botIdInput" placeholder="Enter Bot Client ID">
+            <button id="addBotButton">Generate Bot Invite Link</button>
+            <p id="botInviteLinkDisplay"></p>
+        </div>
+    </div>
+
+    <div id="messageManagementContainer">
+        <h3>Message Actions</h3>
+        <div id="messageActions">
+            <label for="messageIdInput">Message ID:</label>
+            <input type="text" id="messageIdInput" placeholder="Enter Message ID">
+            <button id="reactToMessageButton">React</button>
+            <button id="deleteMessageButton">Delete</button>
+            <button id="editMessageButton">Edit</button>
+            <button id="forwardMessageButton">Forward</button>
+        </div>
+
+        <div id="editMessageSection">
+            <label for="editMessageInput">Edit Message:</label>
+            <textarea id="editMessageInput" placeholder="Edit message here..."></textarea>
+            <button id="submitEditButton">Submit Edit</button>
+        </div>
+
+        <div id="forwardMessageSection">
+            <label for="forwardChannelSelect">Forward to Channel:</label>
+            <select id="forwardChannelSelect"></select>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
