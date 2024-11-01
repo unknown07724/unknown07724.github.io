@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #2C2F33;
+    color: white;
+}
+
+h2, h3 {
+    color: #7289DA;
+}
+
+input, select, textarea, button {
+    margin-top: 10px;
+    padding: 8px;
+    width: calc(100% - 20px);
+    border: 1px solid #7289DA;
+    border-radius: 5px;
+    background-color: #23272A;
+    color: white;
+}
+
+button {
+    background-color: #43B581;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #3BAF7F;
+}
+
+#inviteLinkDisplay, #botInviteLinkDisplay {
+    margin-top: 10px;
+    color: #43B581;
+    font-weight: bold;
+}
+
+#messageManagementContainer, #serverActionsContainer {
+    margin-top: 20px;
+}
+
+textarea {
+    height: 100px;
+}
