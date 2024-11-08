@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meme Gallery</title>
+  <style>
+    .meme-gallery { display: flex; flex-wrap: wrap; gap: 16px; }
+    .meme-card { border: 1px solid #ddd; padding: 8px; width: 200px; text-align: center; }
+    .meme-card img { max-width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <h1>Welcome to the Meme Gallery</h1>
+  <div id="meme-gallery" class="meme-gallery"></div>
+
+  <script>
+    // Fetch meme data from memes.json and display it
+    fetch('memes.json')
+      .then(response => response.json())
+      .then(memes => {
+        const gallery = document.getElementById('meme-gallery');
+        memes.forEach(meme => {
+          const memeCard = document.createElement('div');
+          memeCard.classList.add('meme-card');
+          
+          memeCard.innerHTML = `
+            <img src="${meme.image}" alt="${meme.title}">
+            <p><strong>Title:</strong> ${meme.title}</p>
+            <p><strong>Author:</strong> ${meme.author}</p>
+          `;
+          
+          gallery.appendChild(memeCard);
+        });
+      })
+      .catch(error => console.error('Error loading memes:', error));
+  </script>
+</body>
+</html>
