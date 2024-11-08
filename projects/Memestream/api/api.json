@@ -1,0 +1,13 @@
+[
+  {
+    "title": "Meme 1",
+    "author": "Author 1",
+    "image": "path/to/meme1.jpg"
+  },
+  {
+    "title": "Meme 2",
+    "author": "Author 2",
+    "image": "path/to/meme2.jpg"
+  }
+  // Add more memes as needed
+]
