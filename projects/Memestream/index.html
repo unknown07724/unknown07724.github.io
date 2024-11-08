@@ -16,7 +16,7 @@
 
   <script>
     // Fetch meme data from memes.json and display it
-    fetch('api/api.json')
+    fetch(`api/api.json?cacheBust=${new Date().getTime()}`)
       .then(response => response.json())
       .then(memes => {
         const gallery = document.getElementById('meme-gallery');
