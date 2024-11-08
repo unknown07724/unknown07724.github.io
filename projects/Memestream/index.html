@@ -16,7 +16,7 @@
 
   <script>
     // Fetch meme data from memes.json and display it
-    fetch('memes.json')
+    fetch('api/api.json')
       .then(response => response.json())
       .then(memes => {
         const gallery = document.getElementById('meme-gallery');
