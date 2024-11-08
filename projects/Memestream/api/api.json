@@ -2,11 +2,11 @@
   {
     "title": "Meme 1",
     "author": "Author 1",
-    "image": "memes/1.jpg"
+    "image": "memes/1.webp"
   },
   {
     "title": "Meme 2",
     "author": "Author 2",
-    "image": "memes/2.jpg"
+    "image": "memes/2.png"
   }
 ]
