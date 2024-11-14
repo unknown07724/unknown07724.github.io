@@ -7,6 +7,8 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
     #parts-list {
@@ -17,6 +19,7 @@
       padding: 10px;
       border-radius: 8px;
       max-width: 150px;
+      z-index: 10;
     }
 
     .part-item {
@@ -38,6 +41,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      z-index: 10;
     }
 
     #launchButton:disabled {
@@ -58,6 +62,7 @@
     let offsetY = 0;
     let spaceship = { x: 400, y: 300, speed: 0, parts: [], launched: false };
     let spaceshipParts = [];
+    let cameraOffset = { x: 0, y: 0 }; // Camera offset for following the spaceship
 
     // Load parts from external JSON file located in json/spaceshipParts.json
     async function loadSpaceshipParts() {
@@ -148,6 +153,10 @@
     function drawSpaceship() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // Adjust the canvas drawing to follow the spaceship
+      ctx.save();
+      ctx.translate(-cameraOffset.x, -cameraOffset.y);
+
       // Draw spaceship core
       ctx.fillStyle = "gray";
       ctx.fillRect(spaceship.x - 25, spaceship.y - 25, 50, 50);
@@ -187,18 +196,22 @@
           );
         }
       });
+
+      ctx.restore();
     }
 
     // Launch the spaceship and simulate movement
     function launchSpaceship() {
       spaceship.launched = true;
       document.getElementById("launchButton").disabled = true;
+      document.getElementById("parts-list").style.display = "none"; // Hide parts list
 
       // Simple launch movement simulation
       setInterval(() => {
         if (spaceship.launched) {
           spaceship.speed += 0.1; // Increase speed over time to simulate thrust
           spaceship.y -= spaceship.speed; // Move upward
+          cameraOffset.y = spaceship.y - canvas.height / 2; // Adjust camera to follow spaceship
           simulateAtmosphereAndHeat(); // Simulate heat buildup
           drawSpaceship(); // Redraw spaceship
         }
