@@ -37,10 +37,10 @@
     let spaceship = { x: 400, y: 300, speed: 0, parts: [] };
     let spaceshipParts = [];
 
-    // Load parts from external JSON file
+    // Load parts from external JSON file located in json/spaceshipParts.json
     async function loadSpaceshipParts() {
       try {
-        const response = await fetch("spaceshipParts.json");
+        const response = await fetch("json/spaceshipParts.json");
         spaceshipParts = await response.json();
         loadImagesForParts();
         displayAvailableParts();
