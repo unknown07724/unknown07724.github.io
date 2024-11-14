@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>space simulator - frogs</title>
+  <title>Spaceship Builder with Burning Up</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -60,7 +60,7 @@
     let selectedPart = null;
     let offsetX = 0;
     let offsetY = 0;
-    let spaceship = { x: 400, y: 300, speed: 0, parts: [], launched: false };
+    let spaceship = { x: canvas.width / 2, y: canvas.height / 2, speed: 0, parts: [], launched: false };
     let spaceshipParts = [];
     let cameraOffset = { x: 0, y: 0 }; // Camera offset for following the spaceship
 
@@ -107,8 +107,8 @@
       if (spaceship.launched) return; // Prevent dragging after launch
 
       selectedPart = { ...part };
-      offsetX = event.clientX - spaceship.x;
-      offsetY = event.clientY - spaceship.y;
+      offsetX = event.clientX - (spaceship.x + selectedPart.x);
+      offsetY = event.clientY - (spaceship.y + selectedPart.y);
 
       document.addEventListener("mousemove", dragPart);
       document.addEventListener("mouseup", placePart);
@@ -116,8 +116,8 @@
 
     function dragPart(event) {
       if (selectedPart) {
-        selectedPart.x = event.clientX - offsetX;
-        selectedPart.y = event.clientY - offsetY;
+        selectedPart.x = event.clientX - offsetX - spaceship.x;
+        selectedPart.y = event.clientY - offsetY - spaceship.y;
         drawSpaceship();
       }
     }
