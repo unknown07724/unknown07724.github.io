@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spaceship Builder with Burning Up</title>
+  <style>
+    #parts-list {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 150px;
+    }
+    .part-item {
+      margin: 5px;
+      padding: 8px;
+      background-color: #ddd;
+      cursor: grab;
+      text-align: center;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div id="parts-list"></div>
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    let selectedPart = null;
+    let offsetX = 0;
+    let offsetY = 0;
+    let spaceship = { x: 400, y: 300, speed: 0, parts: [] };
+    let spaceshipParts = [];
+
+    // Load parts from external JSON file
+    async function loadSpaceshipParts() {
+      try {
+        const response = await fetch("spaceshipParts.json");
+        spaceshipParts = await response.json();
+        loadImagesForParts();
+        displayAvailableParts();
+      } catch (error) {
+        console.error("Failed to load spaceship parts:", error);
+      }
+    }
+
+    // Load images for parts if an image path or DataURL is provided
+    function loadImagesForParts() {
+      spaceshipParts.forEach(part => {
+        if (part.image) {
+          const img = new Image();
+          img.src = part.image;
+          part.imgElement = img; // Store loaded image element in the part object
+        }
+        part.heat = 0; // Initialize part's heat level
+        part.durability = 100; // Initialize part durability
+      });
+    }
+
+    function displayAvailableParts() {
+      const partsList = document.getElementById("parts-list");
+      partsList.innerHTML = "";
+
+      spaceshipParts.forEach(part => {
+        const partElement = document.createElement("div");
+        partElement.className = "part-item";
+        partElement.innerText = part.name;
+        partElement.style.backgroundColor = part.color;
+        partElement.addEventListener("mousedown", (e) => startDrag(part, e));
+        partsList.appendChild(partElement);
+      });
+    }
+
+    function startDrag(part, event) {
+      selectedPart = { ...part };
+      offsetX = event.clientX - spaceship.x;
+      offsetY = event.clientY - spaceship.y;
+
+      document.addEventListener("mousemove", dragPart);
+      document.addEventListener("mouseup", placePart);
+    }
+
+    function dragPart(event) {
+      if (selectedPart) {
+        selectedPart.x = event.clientX - offsetX;
+        selectedPart.y = event.clientY - offsetY;
+        drawSpaceship();
+      }
+    }
+
+    function placePart() {
+      if (selectedPart) {
+        spaceship.parts.push(selectedPart);
+        selectedPart = null;
+
+        document.removeEventListener("mousemove", dragPart);
+        document.removeEventListener("mouseup", placePart);
+        drawSpaceship();
+      }
+    }
+
+    // Simulate atmosphere and heat generation
+    function simulateAtmosphereAndHeat() {
+      spaceship.parts.forEach(part => {
+        // Calculate heat based on speed and atmospheric density
+        const atmosphereDensity = 0.5; // Simulated atmosphere density
+        const speed = spaceship.speed;
+        
+        part.heat += speed * atmosphereDensity * 0.01; // Increase heat based on speed
+        if (part.heat > part.heatTolerance) {
+          part.durability -= 1; // Reduce durability if overheating
+          if (part.durability <= 0) {
+            part.burnedUp = true;
+          }
+        }
+      });
+    }
+
+    // Draw the spaceship and parts, including burning effect
+    function drawSpaceship() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw spaceship core
+      ctx.fillStyle = "gray";
+      ctx.fillRect(spaceship.x - 25, spaceship.y - 25, 50, 50);
+
+      // Draw each part in custom position
+      spaceship.parts.forEach(part => {
+        if (part.burnedUp) {
+          return; // Skip rendering burned-up parts
+        }
+
+        if (part.imgElement) {
+          ctx.drawImage(
+            part.imgElement,
+            spaceship.x + part.x - part.size.width / 2,
+            spaceship.y + part.y - part.size.height / 2,
+            part.size.width,
+            part.size.height
+          );
+        } else {
+          ctx.fillStyle = part.color;
+          ctx.fillRect(
+            spaceship.x + part.x - part.size.width / 2,
+            spaceship.y + part.y - part.size.height / 2,
+            part.size.width,
+            part.size.height
+          );
+        }
+
+        // Draw burning effect if part is overheating
+        if (part.heat > part.heatTolerance) {
+          ctx.fillStyle = "rgba(255, 69, 0, 0.5)"; // Orange glow
+          ctx.fillRect(
+            spaceship.x + part.x - part.size.width / 2,
+            spaceship.y + part.y - part.size.height / 2,
+            part.size.width,
+            part.size.height
+          );
+        }
+      });
+    }
+
+    // Game loop to handle animation and heat simulation
+    function gameLoop() {
+      simulateAtmosphereAndHeat();
+      drawSpaceship();
+      requestAnimationFrame(gameLoop);
+    }
+
+    loadSpaceshipParts();
+    gameLoop(); // Start the game loop
+  </script>
+</body>
+</html>
