@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spaceship Builder with Burning Up</title>
+  <title>space simulator - frogs</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
     #parts-list {
       position: absolute;
       top: 10px;
@@ -14,6 +18,7 @@
       border-radius: 8px;
       max-width: 150px;
     }
+
     .part-item {
       margin: 5px;
       padding: 8px;
@@ -22,10 +27,27 @@
       text-align: center;
       border-radius: 4px;
     }
+
+    #launchButton {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #launchButton:disabled {
+      background-color: #ccc;
+    }
   </style>
 </head>
 <body>
   <div id="parts-list"></div>
+  <button id="launchButton">Launch</button>
   <canvas id="gameCanvas" width="800" height="600"></canvas>
 
   <script>
@@ -34,7 +56,7 @@
     let selectedPart = null;
     let offsetX = 0;
     let offsetY = 0;
-    let spaceship = { x: 400, y: 300, speed: 0, parts: [] };
+    let spaceship = { x: 400, y: 300, speed: 0, parts: [], launched: false };
     let spaceshipParts = [];
 
     // Load parts from external JSON file located in json/spaceshipParts.json
@@ -77,6 +99,8 @@
     }
 
     function startDrag(part, event) {
+      if (spaceship.launched) return; // Prevent dragging after launch
+
       selectedPart = { ...part };
       offsetX = event.clientX - spaceship.x;
       offsetY = event.clientY - spaceship.y;
@@ -107,7 +131,6 @@
     // Simulate atmosphere and heat generation
     function simulateAtmosphereAndHeat() {
       spaceship.parts.forEach(part => {
-        // Calculate heat based on speed and atmospheric density
         const atmosphereDensity = 0.5; // Simulated atmosphere density
         const speed = spaceship.speed;
         
@@ -166,15 +189,27 @@
       });
     }
 
-    // Game loop to handle animation and heat simulation
-    function gameLoop() {
-      simulateAtmosphereAndHeat();
-      drawSpaceship();
-      requestAnimationFrame(gameLoop);
+    // Launch the spaceship and simulate movement
+    function launchSpaceship() {
+      spaceship.launched = true;
+      document.getElementById("launchButton").disabled = true;
+
+      // Simple launch movement simulation
+      setInterval(() => {
+        if (spaceship.launched) {
+          spaceship.speed += 0.1; // Increase speed over time to simulate thrust
+          spaceship.y -= spaceship.speed; // Move upward
+          simulateAtmosphereAndHeat(); // Simulate heat buildup
+          drawSpaceship(); // Redraw spaceship
+        }
+      }, 16); // ~60 FPS
     }
 
+    // Event listener for the launch button
+    document.getElementById("launchButton").addEventListener("click", launchSpaceship);
+
     loadSpaceshipParts();
-    gameLoop(); // Start the game loop
+    drawSpaceship(); // Start with an empty spaceship
   </script>
 </body>
 </html>
