@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spaceship Builder with Burning Up</title>
+  <title>Spaceship Builder</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -60,6 +60,7 @@
     let selectedPart = null;
     let offsetX = 0;
     let offsetY = 0;
+    const gridSize = 50; // Define the grid size for snapping
     let spaceship = { x: canvas.width / 2, y: canvas.height / 2, speed: 0, parts: [], launched: false };
     let spaceshipParts = [];
     let cameraOffset = { x: 0, y: 0 }; // Camera offset for following the spaceship
@@ -118,8 +119,15 @@
       if (selectedPart) {
         selectedPart.x = event.clientX - offsetX - spaceship.x;
         selectedPart.y = event.clientY - offsetY - spaceship.y;
+        snapToGrid(selectedPart); // Snap part to grid
         drawSpaceship();
       }
+    }
+
+    // Snap the part to the grid
+    function snapToGrid(part) {
+      part.x = Math.round(part.x / gridSize) * gridSize;
+      part.y = Math.round(part.y / gridSize) * gridSize;
     }
 
     function placePart() {
