@@ -1,0 +1,141 @@
+[
+  {
+    "name": "Basic Hull",
+    "type": "hull",
+    "mass": 50,
+    "size": { "width": 50, "height": 100 },
+    "color": "#888888"
+  },
+  {
+    "name": "Advanced Hull",
+    "type": "hull",
+    "mass": 80,
+    "size": { "width": 60, "height": 120 },
+    "color": "#555555",
+    "durability": 200
+  },
+  {
+    "name": "Standard Engine",
+    "type": "engine",
+    "mass": 20,
+    "size": { "width": 30, "height": 50 },
+    "thrust": 5,
+    "fuelConsumption": 1,
+    "color": "#ff5733"
+  },
+  {
+    "name": "High-Thrust Engine",
+    "type": "engine",
+    "mass": 35,
+    "size": { "width": 35, "height": 60 },
+    "thrust": 10,
+    "fuelConsumption": 2,
+    "color": "#ff4500"
+  },
+  {
+    "name": "Fuel Tank",
+    "type": "fuel",
+    "mass": 40,
+    "size": { "width": 30, "height": 70 },
+    "fuelCapacity": 100,
+    "color": "#0066cc"
+  },
+  {
+    "name": "Large Fuel Tank",
+    "type": "fuel",
+    "mass": 80,
+    "size": { "width": 50, "height": 90 },
+    "fuelCapacity": 200,
+    "color": "#004080"
+  },
+  {
+    "name": "Solar Panel",
+    "type": "power",
+    "mass": 10,
+    "size": { "width": 60, "height": 20 },
+    "powerOutput": 5,
+    "color": "#009900",
+    "deployable": true
+  },
+  {
+    "name": "Battery Pack",
+    "type": "power",
+    "mass": 15,
+    "size": { "width": 20, "height": 40 },
+    "powerStorage": 50,
+    "color": "#333333"
+  },
+  {
+    "name": "Control Module",
+    "type": "control",
+    "mass": 25,
+    "size": { "width": 40, "height": 40 },
+    "color": "#808080",
+    "commandCapacity": 1
+  },
+  {
+    "name": "Advanced Control Module",
+    "type": "control",
+    "mass": 35,
+    "size": { "width": 45, "height": 45 },
+    "color": "#606060",
+    "commandCapacity": 2,
+    "navigationSystem": "GPS"
+  },
+  {
+    "name": "Landing Gear",
+    "type": "gear",
+    "mass": 10,
+    "size": { "width": 20, "height": 20 },
+    "color": "#333333",
+    "retractable": true
+  },
+  {
+    "name": "Heat Shield",
+    "type": "protection",
+    "mass": 30,
+    "size": { "width": 60, "height": 10 },
+    "color": "#663300",
+    "temperatureResistance": 1500
+  },
+  {
+    "name": "Docking Port",
+    "type": "connector",
+    "mass": 15,
+    "size": { "width": 20, "height": 20 },
+    "color": "#404040",
+    "compatibleWith": ["connector"]
+  },
+  {
+    "name": "Communications Antenna",
+    "type": "communication",
+    "mass": 5,
+    "size": { "width": 10, "height": 60 },
+    "signalRange": 1000,
+    "color": "#ffcc00"
+  },
+  {
+    "name": "Science Module",
+    "type": "research",
+    "mass": 20,
+    "size": { "width": 35, "height": 35 },
+    "dataCapacity": 50,
+    "color": "#0073e6"
+  },
+  {
+    "name": "Small Storage Bay",
+    "type": "storage",
+    "mass": 10,
+    "size": { "width": 30, "height": 30 },
+    "storageCapacity": 25,
+    "color": "#8b4513"
+  },
+  {
+    "name": "Large Storage Bay",
+    "type": "storage",
+    "mass": 25,
+    "size": { "width": 50, "height": 50 },
+    "storageCapacity": 100,
+    "color": "#654321"
+  }
+]
