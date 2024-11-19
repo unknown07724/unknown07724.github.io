@@ -1,4 +1,26 @@
-"projects":[
+"old-system":[
   {"Name":"Unknown07724", "Bio":"I exist,male,uhh. nothing else","ID":1},
   {"Name":"Localdrone", "Bio":"...","ID":2},
 ]
+{
+  "users": [
+    {
+      "ID": "1",
+      "Username": "Unknown07724",
+      "Bio": "I exist,male,uhh. nothing else",
+      "GitHub": "https://github.com/unknown07724",
+      "Discord": "unknown_07724",
+      "YouTube": "https://youtube.com/c/unknown07724",
+      "JoinedDate": "2024-07-22T00:00:00Z"
+    }
+     {
+      "ID": "2",
+      "Username": "Unknown07724",
+      "Bio": "I exist,male,uhh. nothing else",
+      "GitHub": "https://github.com/unknown07724",
+      "Discord": "unknown_07724",
+      "YouTube": "https://youtube.com/c/unknown07724",
+      "JoinedDate": "2024-07-22T00:00:00Z"
+    }
+  ]
+}
