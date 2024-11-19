@@ -1,4 +1,4 @@
-const BASE_URL = "https://unknown07724.github.io/api";
+const BASE_URL = "https://unknown07724.github.io/api"; 
 
 /**
  * Fetches the main.json file from a specified subfolder.
@@ -17,31 +17,37 @@ async function getMainJson(folder) {
 }
 
 /**
- * Fetches all projects and formats their names and authors.
- * @returns {Promise<Array<Object>>} - An array of project objects, each with a name and author.
+ * Fetches all projects and formats their details with creator instead of ID for uniqueness.
+ * @returns {Promise<Array<Object>>} - An array of project objects, each with creator and author.
  */
 async function getProjects() {
     const projectsData = await getMainJson("projects");
     if (projectsData) {
         return projectsData.map(project => ({
-            name: project.name,
+            creator: project.creator, // Use creator for the project to avoid name clashes
             author: project.author
         }));
     }
 }
 
 /**
- * Fetches all authors and formats their details.
- * @returns {Promise<Array<Object>>} - An array of author objects, each with Name, Bio, and ID.
+ * Fetches all authors and formats their details based on selected properties.
+ * @param {Array<string>} properties - The list of properties to include for each author (e.g., ["ID", "Username", "JoinedDate"]).
+ * @returns {Promise<Array<Object>>} - An array of author objects with the selected properties.
  */
-async function getAuthors() {
+async function getAuthors(properties = ["ID", "Username", "JoinedDate"]) {
     const authorsData = await getMainJson("users");
     if (authorsData) {
-        return authorsData.map(author => ({
-            name: author.Name,
-            bio: author.Bio,
-            id: author.ID
-        }));
+        return authorsData.map(author => {
+            const filteredAuthor = {};
+            // Add only the requested properties to the author object
+            properties.forEach(property => {
+                if (author.hasOwnProperty(property)) {
+                    filteredAuthor[property] = author[property];
+                }
+            });
+            return filteredAuthor;
+        });
     }
 }
 
@@ -63,22 +69,33 @@ async function getRootMainJson() {
 
 // Usage Examples
 
-// Fetch and display all projects
+// Fetch and display all projects with creator instead of ID
 getProjects().then(projects => {
     if (projects) {
         projects.forEach(project => {
-            console.log(`Project Name: ${project.name}, Author: ${project.author}`);
+            console.log(`Project Creator: ${project.creator}, Author: ${project.author}`);
         });
     } else {
         console.log("No projects found.");
     }
 });
 
-// Fetch and display all authors
-getAuthors().then(authors => {
+// Fetch and display authors with specific properties (e.g., ID, Username)
+getAuthors(["ID", "Username"]).then(authors => {
     if (authors) {
         authors.forEach(author => {
-            console.log(`Author: ${author.name}, Bio: ${author.bio}, ID: ${author.id}`);
+            console.log(`Author ID: ${author.ID}, Username: ${author.Username}`);
+        });
+    } else {
+        console.log("No authors found.");
+    }
+});
+
+// Fetch and display authors with all properties (ID, Username, JoinedDate)
+getAuthors(["ID", "Username", "JoinedDate"]).then(authors => {
+    if (authors) {
+        authors.forEach(author => {
+            console.log(`Author ID: ${author.ID}, Username: ${author.Username}, Joined Date: ${author.JoinedDate}`);
         });
     } else {
         console.log("No authors found.");
@@ -94,3 +111,4 @@ getLanguages().then(languages => {
 getRootMainJson().then(rootData => {
     console.log("Root API data:", rootData);
 });
+
