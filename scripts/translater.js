@@ -20,7 +20,7 @@ if (navigator.langauge == "pl-PL") {
 }
 
 if (navigator.langauge == "uk-UA") {
-   window.location.replace("/pl/");
+   window.location.replace("/uk/");
 } else {
  
 }
