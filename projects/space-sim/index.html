@@ -101,7 +101,7 @@
         // Draw the planet itself
         ctx.beginPath();
         ctx.arc(body.x - camera.x, body.y - camera.y, body.radius, 0, Math.PI * 2);
-        ctx.fillStyle = body.color || "#0000FF";
+        ctx.fillStyle = body.color || "#0000FF"; // Default blue color for planets
         ctx.fill();
         ctx.stroke();
       });
