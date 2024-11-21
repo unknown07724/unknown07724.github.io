@@ -18,19 +18,10 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const G = 0.0001;
+    const G = 0.0001; // Gravitational constant
     let celestialBodies = [];
     let spaceship = { x: 500, y: 500, radius: 20, mass: 100, color: 'white', vx: 0, vy: 0 };
     let camera = { x: spaceship.x, y: spaceship.y, width: canvas.width, height: canvas.height };
-
-    // For debugging, add a simple circle to check rendering
-    function debugRendering() {
-      ctx.beginPath();
-      ctx.arc(500, 500, 50, 0, Math.PI * 2);
-      ctx.fillStyle = "red"; // Red circle to verify rendering
-      ctx.fill();
-      ctx.stroke();
-    }
 
     // Load data (in a real case, this would come from a JSON file)
     async function loadGameData() {
@@ -56,9 +47,19 @@
       return force;
     }
 
+    // Camera follow logic
+    function updateCamera() {
+      // Camera follows the spaceship
+      camera.x = spaceship.x - canvas.width / 2;
+      camera.y = spaceship.y - canvas.height / 2;
+    }
+
     // Game loop to render and update game state
     function gameLoop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas each frame
+
+      // Update camera to follow the spaceship
+      updateCamera();
 
       // Draw celestial bodies
       celestialBodies.forEach(body => {
@@ -76,7 +77,7 @@
       ctx.fill();
       ctx.stroke();
 
-      // Update spaceship position based on gravity (example logic)
+      // Apply gravity from celestial bodies to spaceship
       celestialBodies.forEach(body => {
         const force = calculateGravity(spaceship, body);
         const angle = Math.atan2(body.y - spaceship.y, body.x - spaceship.x);
@@ -89,7 +90,11 @@
       });
 
       // Debug: Draw a basic circle to check if rendering works
-      debugRendering();
+      ctx.beginPath();
+      ctx.arc(500 - camera.x, 500 - camera.y, 50, 0, Math.PI * 2); // Adjusting for camera offset
+      ctx.fillStyle = "red"; // Red circle to verify rendering
+      ctx.fill();
+      ctx.stroke();
 
       requestAnimationFrame(gameLoop); // Repeat the game loop
     }
@@ -99,3 +104,4 @@
   </script>
 </body>
 </html>
+
