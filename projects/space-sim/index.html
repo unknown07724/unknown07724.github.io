@@ -3,192 +3,149 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spaceship Builder</title>
+  <title>Spaceship Gravity Simulation</title>
   <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-    }
-    canvas {
-      display: block;
-    }
-    .ui {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 10;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 10px;
-      border-radius: 8px;
-      font-family: Arial, sans-serif;
-    }
-    .ui h3 {
-      margin: 0 0 10px;
-    }
-    .ui button {
-      margin: 5px 0;
-      padding: 8px 12px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .parts-list {
-      max-height: 200px;
-      overflow-y: auto;
-      margin: 10px 0;
-    }
-    .part {
-      cursor: grab;
-      padding: 5px;
-      margin: 5px 0;
-      border: 1px solid white;
-      background: rgba(255, 255, 255, 0.1);
-    }
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; background-color: #000; }
+    .button-container { position: absolute; top: 10px; left: 10px; z-index: 10; }
+    .button { padding: 10px; margin: 5px; background-color: #fff; cursor: pointer; display: flex; align-items: center; }
+    .part-image { width: 30px; height: 30px; object-fit: contain; margin-right: 10px; }
   </style>
 </head>
 <body>
   <canvas id="gameCanvas"></canvas>
-  <div class="ui" id="ui">
-    <h3>Spaceship Builder</h3>
-    <div class="parts-list" id="partsList"></div>
-    <button id="launchButton">Launch</button>
-    <button id="resetButton">Reset</button>
+  <div class="button-container" id="partButtons">
+    <!-- Buttons will be populated here -->
   </div>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    const ctx = !gl ? canvas.getContext('2d') : null;
-    const isWebGL = !!gl;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    let spaceship = {
-      x: canvas.width / 2,
-      y: canvas.height / 2,
-      parts: [],
-      launched: false
-    };
+    const G = 0.0001;
+    let celestialBodies = [];
+    let spaceship = { x: 500, y: 500, radius: 20, mass: 100, color: 'white', parts: [], vx: 0, vy: 0 };
+    let parts = [];
+    let camera = { x: spaceship.x, y: spaceship.y, width: canvas.width, height: canvas.height };
 
-    const gridSize = 50;
-    const parts = [
-      { name: 'Engine', color: 'red', size: 50 },
-      { name: 'Wing', color: 'blue', size: 50 },
-      { name: 'Cockpit', color: 'green', size: 50 }
-    ];
-    let selectedPart = null;
-    let offsetX = 0, offsetY = 0;
+    // Load planets and parts data
+    async function loadGameData() {
+      const planetsResponse = await fetch('json/planets.json');
+      const partsResponse = await fetch('json/parts.json');
 
-    // UI Elements
-    const partsList = document.getElementById('partsList');
-    const launchButton = document.getElementById('launchButton');
-    const resetButton = document.getElementById('resetButton');
+      celestialBodies = await planetsResponse.json();
+      parts = await partsResponse.json();
 
-    // Resize canvas
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      createPartButtons();
+      gameLoop();
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
 
-    // Populate parts list
-    function loadParts() {
-      partsList.innerHTML = '';
+    // Create part selection buttons with images
+    function createPartButtons() {
+      const partButtonsContainer = document.getElementById('partButtons');
       parts.forEach(part => {
-        const partElement = document.createElement('div');
-        partElement.className = 'part';
-        partElement.innerText = part.name;
-        partElement.draggable = true;
-        partElement.addEventListener('dragstart', () => {
-          selectedPart = { ...part, x: 0, y: 0 };
-        });
-        partsList.appendChild(partElement);
+        const button = document.createElement('button');
+        button.className = 'button';
+        
+        const img = document.createElement('img');
+        img.src = part.image;  // Using the image path from the part JSON
+        img.alt = part.name;
+        img.className = 'part-image';
+        
+        button.appendChild(img);
+        button.appendChild(document.createTextNode(` ${part.name}`));
+
+        button.onclick = () => addPartToSpaceship(part);
+        partButtonsContainer.appendChild(button);
       });
     }
 
-    loadParts();
-
-    // Snap to grid
-    function snapToGrid(value) {
-      return Math.round(value / gridSize) * gridSize;
+    // Add selected part to the spaceship
+    function addPartToSpaceship(part) {
+      spaceship.parts.push(part);
+      spaceship.mass += part.mass; // Increase mass based on the part's mass
+      updateSpaceshipRadius(); // Optionally update radius based on mass
     }
 
-    // Rendering
-    function render() {
-      if (isWebGL) {
-        renderWebGL();
-      } else {
-        renderCanvas();
-      }
+    // Update spaceship radius (optional logic)
+    function updateSpaceshipRadius() {
+      spaceship.radius = Math.sqrt(spaceship.mass / Math.PI); // Example logic for size based on mass
     }
 
-    function renderCanvas() {
+    // Gravitational calculations
+    function calculateGravity(body1, body2) {
+      const dx = body2.x - body1.x;
+      const dy = body2.y - body1.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const force = (G * body1.mass * body2.mass) / (distance * distance);
+      return force;
+    }
+
+    // Game loop
+    function gameLoop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw spaceship core
-      ctx.fillStyle = 'gray';
-      ctx.fillRect(spaceship.x - 25, spaceship.y - 25, 50, 50);
+      // Adjust camera position based on spaceship position
+      camera.x = spaceship.x - camera.width / 2;
+      camera.y = spaceship.y - camera.height / 2;
 
-      // Draw parts
-      spaceship.parts.forEach(part => {
-        ctx.fillStyle = part.color;
-        ctx.fillRect(
-          spaceship.x + part.x - part.size / 2,
-          spaceship.y + part.y - part.size / 2,
-          part.size,
-          part.size
-        );
-      });
-    }
-
-    function renderWebGL() {
-      // Placeholder for WebGL rendering logic
-      gl.clearColor(0.0, 0.0, 0.0, 1.0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      // Add your WebGL rendering logic here
-    }
-
-    // Drag and drop logic
-    canvas.addEventListener('dragover', (e) => e.preventDefault());
-
-    canvas.addEventListener('drop', (e) => {
-      if (selectedPart) {
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        selectedPart.x = snapToGrid(x - spaceship.x);
-        selectedPart.y = snapToGrid(y - spaceship.y);
-
-        spaceship.parts.push(selectedPart);
-        selectedPart = null;
-        render();
-      }
-    });
-
-    // Launch spaceship
-    launchButton.addEventListener('click', () => {
-      spaceship.launched = true;
-      let speed = 2;
-      const interval = setInterval(() => {
-        if (!spaceship.launched) {
-          clearInterval(interval);
+      // Draw celestial bodies (planets, etc.)
+      celestialBodies.forEach(body => {
+        // Draw atmosphere if visible
+        if (isBodyVisible(body)) {
+          drawAtmosphere(body);
         }
-        spaceship.y -= speed;
-        render();
-      }, 16);
 
-      // Hide parts list
-      document.getElementById('ui').style.display = 'none';
-    });
+        // Draw the planet itself
+        ctx.beginPath();
+        ctx.arc(body.x - camera.x, body.y - camera.y, body.radius, 0, Math.PI * 2);
+        ctx.fillStyle = body.color || "#0000FF";
+        ctx.fill();
+        ctx.stroke();
+      });
 
-    // Reset spaceship
-    resetButton.addEventListener('click', () => {
-      spaceship = { x: canvas.width / 2, y: canvas.height / 2, parts: [], launched: false };
-      document.getElementById('ui').style.display = 'block';
-      render();
-    });
+      // Draw spaceship
+      ctx.beginPath();
+      ctx.arc(spaceship.x - camera.x, spaceship.y - camera.y, spaceship.radius, 0, Math.PI * 2);
+      ctx.fillStyle = spaceship.color;
+      ctx.fill();
+      ctx.stroke();
 
-    render();
+      celestialBodies.forEach(body => {
+        const force = calculateGravity(spaceship, body);
+        const angle = Math.atan2(body.y - spaceship.y, body.x - spaceship.x);
+        spaceship.vx += force * Math.cos(angle) / spaceship.mass;
+        spaceship.vy += force * Math.sin(angle) / spaceship.mass;
+
+        // Move spaceship
+        spaceship.x += spaceship.vx;
+        spaceship.y += spaceship.vy;
+      });
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Check if celestial body is visible in the camera's view
+    function isBodyVisible(body) {
+      const dx = body.x - spaceship.x;
+      const dy = body.y - spaceship.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      // Make the body visible if it's within a certain distance from the spaceship and within camera bounds
+      return distance < camera.width / 2;
+    }
+
+    // Draw atmosphere around the body if visible
+    function drawAtmosphere(body) {
+      ctx.beginPath();
+      ctx.arc(body.x - camera.x, body.y - camera.y, body.radius + 50, 0, Math.PI * 2); // Radius of atmosphere
+      ctx.fillStyle = "rgba(0, 0, 255, 0.3)"; // Light blue, semi-transparent for atmosphere effect
+      ctx.fill();
+    }
+
+    loadGameData();
   </script>
 </body>
 </html>
