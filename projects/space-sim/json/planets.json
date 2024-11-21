@@ -1,0 +1,111 @@
+[
+  {
+  "name": "Sun",
+  "x": 0,
+  "y": 0,
+  "radius": 150,
+  "atmosphereRadius": 300,
+  "color": "yellow",
+  "atmosphereColor": "rgba(255,223,0,0.5)"
+}
+
+  {
+    "name": "Earth",
+    "x": 400,
+    "y": 300,
+    "radius": 50,
+    "atmosphereRadius": 70,
+    "color": "blue",
+    "atmosphereColor": "rgba(135,206,250,0.5)"
+  },
+  {
+    "name": "Mars",
+    "x": 700,
+    "y": 500,
+    "radius": 40,
+    "atmosphereRadius": 60,
+    "color": "red",
+    "atmosphereColor": "rgba(255,69,0,0.4)"
+  },
+  {
+    "name": "Venus",
+    "x": 900,
+    "y": 250,
+    "radius": 45,
+    "atmosphereRadius": 65,
+    "color": "yellow",
+    "atmosphereColor": "rgba(255,223,0,0.4)"
+  },
+  {
+    "name": "Jupiter",
+    "x": 1300,
+    "y": 400,
+    "radius": 20,
+    "atmosphereRadius": 200,
+    "color": "brown",
+    "atmosphereColor": "rgba(218,165,32,0.3)"
+  },
+  {
+    "name": "Saturn",
+    "x": 1700,
+    "y": 600,
+    "radius": 25,
+    "atmosphereRadius": 190,
+    "color": "goldenrod",
+    "atmosphereColor": "rgba(240,230,140,0.3)"
+  },
+  {
+    "name": "Uranus",
+    "x": 2000,
+    "y": 200,
+    "radius": 30,
+    "atmosphereRadius": 160,
+    "color": "cyan",
+    "atmosphereColor": "rgba(0,255,255,0.3)"
+  },
+  {
+    "name": "Neptune",
+    "x": 2200,
+    "y": 500,
+    "radius": 35,
+    "atmosphereRadius": 170,
+    "color": "blue",
+    "atmosphereColor": "rgba(0,0,255,0.3)"
+  },
+  {
+    "name": "Pluto",
+    "x": 2500,
+    "y": 100,
+    "radius": 10,
+    "atmosphereRadius": 20,
+    "color": "grey",
+    "atmosphereColor": "rgba(169,169,169,0.2)"
+  },
+  {
+    "name": "Charon",
+    "x": 2550,
+    "y": 130,
+    "radius": 8,
+    "atmosphereRadius": 15,
+    "color": "darkgrey",
+    "atmosphereColor": "rgba(105,105,105,0.2)"
+  },
+  {
+    "name": "Titan",
+    "x": 1650,
+    "y": 620,
+    "radius": 12,
+    "atmosphereRadius": 30,
+    "color": "orange",
+    "atmosphereColor": "rgba(255,165,0,0.2)"
+  },
+  {
+    "name": "Europa",
+    "x": 1350,
+    "y": 420,
+    "radius": 8,
+    "atmosphereRadius": 15,
+    "color": "white",
+    "atmosphereColor": "rgba(240,248,255,0.2)"
+  }
+]
