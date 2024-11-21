@@ -6,231 +6,189 @@
   <title>Spaceship Builder</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
+      overflow: hidden;
     }
-
-    #parts-list {
+    canvas {
+      display: block;
+    }
+    .ui {
       position: absolute;
       top: 10px;
       left: 10px;
-      background: #f0f0f0;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
       padding: 10px;
       border-radius: 8px;
-      max-width: 150px;
-      z-index: 10;
+      font-family: Arial, sans-serif;
     }
-
-    .part-item {
-      margin: 5px;
-      padding: 8px;
-      background-color: #ddd;
-      cursor: grab;
-      text-align: center;
-      border-radius: 4px;
+    .ui h3 {
+      margin: 0 0 10px;
     }
-
-    #launchButton {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
+    .ui button {
+      margin: 5px 0;
+      padding: 8px 12px;
+      font-size: 14px;
       cursor: pointer;
-      z-index: 10;
     }
-
-    #launchButton:disabled {
-      background-color: #ccc;
+    .parts-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin: 10px 0;
+    }
+    .part {
+      cursor: grab;
+      padding: 5px;
+      margin: 5px 0;
+      border: 1px solid white;
+      background: rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
 <body>
-  <div id="parts-list"></div>
-  <button id="launchButton">Launch</button>
-  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  <canvas id="gameCanvas"></canvas>
+  <div class="ui" id="ui">
+    <h3>Spaceship Builder</h3>
+    <div class="parts-list" id="partsList"></div>
+    <button id="launchButton">Launch</button>
+    <button id="resetButton">Reset</button>
+  </div>
 
   <script>
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
+    const canvas = document.getElementById('gameCanvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const ctx = !gl ? canvas.getContext('2d') : null;
+    const isWebGL = !!gl;
+
+    let spaceship = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      parts: [],
+      launched: false
+    };
+
+    const gridSize = 50;
+    const parts = [
+      { name: 'Engine', color: 'red', size: 50 },
+      { name: 'Wing', color: 'blue', size: 50 },
+      { name: 'Cockpit', color: 'green', size: 50 }
+    ];
     let selectedPart = null;
-    let offsetX = 0;
-    let offsetY = 0;
-    const gridSize = 50; // Define the grid size for snapping
-    let spaceship = { x: canvas.width / 2, y: canvas.height / 2, speed: 0, parts: [], launched: false };
-    let spaceshipParts = [];
-    let cameraOffset = { x: 0, y: 0 }; // Camera offset for following the spaceship
+    let offsetX = 0, offsetY = 0;
 
-    // Load parts from external JSON file located in json/spaceshipParts.json
-    async function loadSpaceshipParts() {
-      try {
-        const response = await fetch("json/spaceshipParts.json");
-        spaceshipParts = await response.json();
-        loadImagesForParts();
-        displayAvailableParts();
-      } catch (error) {
-        console.error("Failed to load spaceship parts:", error);
-      }
+    // UI Elements
+    const partsList = document.getElementById('partsList');
+    const launchButton = document.getElementById('launchButton');
+    const resetButton = document.getElementById('resetButton');
+
+    // Resize canvas
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-    // Load images for parts if an image path or DataURL is provided
-    function loadImagesForParts() {
-      spaceshipParts.forEach(part => {
-        if (part.image) {
-          const img = new Image();
-          img.src = part.image;
-          part.imgElement = img; // Store loaded image element in the part object
-        }
-        part.heat = 0; // Initialize part's heat level
-        part.durability = 100; // Initialize part durability
-      });
-    }
-
-    function displayAvailableParts() {
-      const partsList = document.getElementById("parts-list");
-      partsList.innerHTML = "";
-
-      spaceshipParts.forEach(part => {
-        const partElement = document.createElement("div");
-        partElement.className = "part-item";
+    // Populate parts list
+    function loadParts() {
+      partsList.innerHTML = '';
+      parts.forEach(part => {
+        const partElement = document.createElement('div');
+        partElement.className = 'part';
         partElement.innerText = part.name;
-        partElement.style.backgroundColor = part.color;
-        partElement.addEventListener("mousedown", (e) => startDrag(part, e));
+        partElement.draggable = true;
+        partElement.addEventListener('dragstart', () => {
+          selectedPart = { ...part, x: 0, y: 0 };
+        });
         partsList.appendChild(partElement);
       });
     }
 
-    function startDrag(part, event) {
-      if (spaceship.launched) return; // Prevent dragging after launch
+    loadParts();
 
-      selectedPart = { ...part };
-      offsetX = event.clientX - (spaceship.x + selectedPart.x);
-      offsetY = event.clientY - (spaceship.y + selectedPart.y);
-
-      document.addEventListener("mousemove", dragPart);
-      document.addEventListener("mouseup", placePart);
+    // Snap to grid
+    function snapToGrid(value) {
+      return Math.round(value / gridSize) * gridSize;
     }
 
-    function dragPart(event) {
-      if (selectedPart) {
-        selectedPart.x = event.clientX - offsetX - spaceship.x;
-        selectedPart.y = event.clientY - offsetY - spaceship.y;
-        snapToGrid(selectedPart); // Snap part to grid
-        drawSpaceship();
+    // Rendering
+    function render() {
+      if (isWebGL) {
+        renderWebGL();
+      } else {
+        renderCanvas();
       }
     }
 
-    // Snap the part to the grid
-    function snapToGrid(part) {
-      part.x = Math.round(part.x / gridSize) * gridSize;
-      part.y = Math.round(part.y / gridSize) * gridSize;
-    }
-
-    function placePart() {
-      if (selectedPart) {
-        spaceship.parts.push(selectedPart);
-        selectedPart = null;
-
-        document.removeEventListener("mousemove", dragPart);
-        document.removeEventListener("mouseup", placePart);
-        drawSpaceship();
-      }
-    }
-
-    // Simulate atmosphere and heat generation
-    function simulateAtmosphereAndHeat() {
-      spaceship.parts.forEach(part => {
-        const atmosphereDensity = 0.5; // Simulated atmosphere density
-        const speed = spaceship.speed;
-        
-        part.heat += speed * atmosphereDensity * 0.01; // Increase heat based on speed
-        if (part.heat > part.heatTolerance) {
-          part.durability -= 1; // Reduce durability if overheating
-          if (part.durability <= 0) {
-            part.burnedUp = true;
-          }
-        }
-      });
-    }
-
-    // Draw the spaceship and parts, including burning effect
-    function drawSpaceship() {
+    function renderCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Adjust the canvas drawing to follow the spaceship
-      ctx.save();
-      ctx.translate(-cameraOffset.x, -cameraOffset.y);
-
       // Draw spaceship core
-      ctx.fillStyle = "gray";
+      ctx.fillStyle = 'gray';
       ctx.fillRect(spaceship.x - 25, spaceship.y - 25, 50, 50);
 
-      // Draw each part in custom position
+      // Draw parts
       spaceship.parts.forEach(part => {
-        if (part.burnedUp) {
-          return; // Skip rendering burned-up parts
-        }
-
-        if (part.imgElement) {
-          ctx.drawImage(
-            part.imgElement,
-            spaceship.x + part.x - part.size.width / 2,
-            spaceship.y + part.y - part.size.height / 2,
-            part.size.width,
-            part.size.height
-          );
-        } else {
-          ctx.fillStyle = part.color;
-          ctx.fillRect(
-            spaceship.x + part.x - part.size.width / 2,
-            spaceship.y + part.y - part.size.height / 2,
-            part.size.width,
-            part.size.height
-          );
-        }
-
-        // Draw burning effect if part is overheating
-        if (part.heat > part.heatTolerance) {
-          ctx.fillStyle = "rgba(255, 69, 0, 0.5)"; // Orange glow
-          ctx.fillRect(
-            spaceship.x + part.x - part.size.width / 2,
-            spaceship.y + part.y - part.size.height / 2,
-            part.size.width,
-            part.size.height
-          );
-        }
+        ctx.fillStyle = part.color;
+        ctx.fillRect(
+          spaceship.x + part.x - part.size / 2,
+          spaceship.y + part.y - part.size / 2,
+          part.size,
+          part.size
+        );
       });
-
-      ctx.restore();
     }
 
-    // Launch the spaceship and simulate movement
-    function launchSpaceship() {
+    function renderWebGL() {
+      // Placeholder for WebGL rendering logic
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      // Add your WebGL rendering logic here
+    }
+
+    // Drag and drop logic
+    canvas.addEventListener('dragover', (e) => e.preventDefault());
+
+    canvas.addEventListener('drop', (e) => {
+      if (selectedPart) {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        selectedPart.x = snapToGrid(x - spaceship.x);
+        selectedPart.y = snapToGrid(y - spaceship.y);
+
+        spaceship.parts.push(selectedPart);
+        selectedPart = null;
+        render();
+      }
+    });
+
+    // Launch spaceship
+    launchButton.addEventListener('click', () => {
       spaceship.launched = true;
-      document.getElementById("launchButton").disabled = true;
-      document.getElementById("parts-list").style.display = "none"; // Hide parts list
-
-      // Simple launch movement simulation
-      setInterval(() => {
-        if (spaceship.launched) {
-          spaceship.speed += 0.1; // Increase speed over time to simulate thrust
-          spaceship.y -= spaceship.speed; // Move upward
-          cameraOffset.y = spaceship.y - canvas.height / 2; // Adjust camera to follow spaceship
-          simulateAtmosphereAndHeat(); // Simulate heat buildup
-          drawSpaceship(); // Redraw spaceship
+      let speed = 2;
+      const interval = setInterval(() => {
+        if (!spaceship.launched) {
+          clearInterval(interval);
         }
-      }, 16); // ~60 FPS
-    }
+        spaceship.y -= speed;
+        render();
+      }, 16);
 
-    // Event listener for the launch button
-    document.getElementById("launchButton").addEventListener("click", launchSpaceship);
+      // Hide parts list
+      document.getElementById('ui').style.display = 'none';
+    });
 
-    loadSpaceshipParts();
-    drawSpaceship(); // Start with an empty spaceship
+    // Reset spaceship
+    resetButton.addEventListener('click', () => {
+      spaceship = { x: canvas.width / 2, y: canvas.height / 2, parts: [], launched: false };
+      document.getElementById('ui').style.display = 'block';
+      render();
+    });
+
+    render();
   </script>
 </body>
 </html>
