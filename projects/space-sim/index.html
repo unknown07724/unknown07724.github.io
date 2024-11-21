@@ -7,16 +7,10 @@
   <style>
     body { margin: 0; overflow: hidden; }
     canvas { display: block; background-color: #000; }
-    .button-container { position: absolute; top: 10px; left: 10px; z-index: 10; }
-    .button { padding: 10px; margin: 5px; background-color: #fff; cursor: pointer; display: flex; align-items: center; }
-    .part-image { width: 30px; height: 30px; object-fit: contain; margin-right: 10px; }
   </style>
 </head>
 <body>
   <canvas id="gameCanvas"></canvas>
-  <div class="button-container" id="partButtons">
-    <!-- Buttons will be populated here -->
-  </div>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -26,52 +20,31 @@
 
     const G = 0.0001;
     let celestialBodies = [];
-    let spaceship = { x: 500, y: 500, radius: 20, mass: 100, color: 'white', parts: [], vx: 0, vy: 0 };
-    let parts = [];
+    let spaceship = { x: 500, y: 500, radius: 20, mass: 100, color: 'white', vx: 0, vy: 0 };
     let camera = { x: spaceship.x, y: spaceship.y, width: canvas.width, height: canvas.height };
 
-    // Load planets and parts data
+    // For debugging, add a simple circle to check rendering
+    function debugRendering() {
+      ctx.beginPath();
+      ctx.arc(500, 500, 50, 0, Math.PI * 2);
+      ctx.fillStyle = "red"; // Red circle to verify rendering
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    // Load data (in a real case, this would come from a JSON file)
     async function loadGameData() {
-      const planetsResponse = await fetch('json/planets.json');
-      const partsResponse = await fetch('json/parts.json');
+      // Simple check: Log the canvas size and the body data to see if it works
+      console.log('Canvas Width:', canvas.width);
+      console.log('Canvas Height:', canvas.height);
 
-      celestialBodies = await planetsResponse.json();
-      parts = await partsResponse.json();
+      // Example celestial body data
+      celestialBodies = [
+        { x: 600, y: 600, radius: 40, color: 'blue', mass: 2000 }, // Example planet
+        { x: 1200, y: 800, radius: 30, color: 'green', mass: 1000 } // Another planet
+      ];
 
-      createPartButtons();
-      gameLoop();
-    }
-
-    // Create part selection buttons with images
-    function createPartButtons() {
-      const partButtonsContainer = document.getElementById('partButtons');
-      parts.forEach(part => {
-        const button = document.createElement('button');
-        button.className = 'button';
-        
-        const img = document.createElement('img');
-        img.src = part.image;  // Using the image path from the part JSON
-        img.alt = part.name;
-        img.className = 'part-image';
-        
-        button.appendChild(img);
-        button.appendChild(document.createTextNode(` ${part.name}`));
-
-        button.onclick = () => addPartToSpaceship(part);
-        partButtonsContainer.appendChild(button);
-      });
-    }
-
-    // Add selected part to the spaceship
-    function addPartToSpaceship(part) {
-      spaceship.parts.push(part);
-      spaceship.mass += part.mass; // Increase mass based on the part's mass
-      updateSpaceshipRadius(); // Optionally update radius based on mass
-    }
-
-    // Update spaceship radius (optional logic)
-    function updateSpaceshipRadius() {
-      spaceship.radius = Math.sqrt(spaceship.mass / Math.PI); // Example logic for size based on mass
+      gameLoop(); // Start the game loop after loading data
     }
 
     // Gravitational calculations
@@ -83,22 +56,12 @@
       return force;
     }
 
-    // Game loop
+    // Game loop to render and update game state
     function gameLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas each frame
 
-      // Adjust camera position based on spaceship position
-      camera.x = spaceship.x - camera.width / 2;
-      camera.y = spaceship.y - camera.height / 2;
-
-      // Draw celestial bodies (planets, etc.)
+      // Draw celestial bodies
       celestialBodies.forEach(body => {
-        // Draw atmosphere if visible
-        if (isBodyVisible(body)) {
-          drawAtmosphere(body);
-        }
-
-        // Draw the planet itself
         ctx.beginPath();
         ctx.arc(body.x - camera.x, body.y - camera.y, body.radius, 0, Math.PI * 2);
         ctx.fillStyle = body.color || "#0000FF"; // Default blue color for planets
@@ -113,6 +76,7 @@
       ctx.fill();
       ctx.stroke();
 
+      // Update spaceship position based on gravity (example logic)
       celestialBodies.forEach(body => {
         const force = calculateGravity(spaceship, body);
         const angle = Math.atan2(body.y - spaceship.y, body.x - spaceship.x);
@@ -124,27 +88,13 @@
         spaceship.y += spaceship.vy;
       });
 
-      requestAnimationFrame(gameLoop);
+      // Debug: Draw a basic circle to check if rendering works
+      debugRendering();
+
+      requestAnimationFrame(gameLoop); // Repeat the game loop
     }
 
-    // Check if celestial body is visible in the camera's view
-    function isBodyVisible(body) {
-      const dx = body.x - spaceship.x;
-      const dy = body.y - spaceship.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      // Make the body visible if it's within a certain distance from the spaceship and within camera bounds
-      return distance < camera.width / 2;
-    }
-
-    // Draw atmosphere around the body if visible
-    function drawAtmosphere(body) {
-      ctx.beginPath();
-      ctx.arc(body.x - camera.x, body.y - camera.y, body.radius + 50, 0, Math.PI * 2); // Radius of atmosphere
-      ctx.fillStyle = "rgba(0, 0, 255, 0.3)"; // Light blue, semi-transparent for atmosphere effect
-      ctx.fill();
-    }
-
+    // Initial call to load game data and start loop
     loadGameData();
   </script>
 </body>
