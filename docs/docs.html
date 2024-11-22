@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Documentation Viewer</title>
+  <title>Markdown Documentation Viewer</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
       padding: 0;
     }
     #sidebar {
-      width: 200px;
+      width: 250px;
       position: fixed;
       height: 100%;
       background: #f8f9fa;
@@ -32,7 +32,7 @@
       color: #007BFF;
     }
     #content {
-      margin-left: 220px;
+      margin-left: 260px;
       padding: 20px;
     }
     pre, code {
@@ -43,47 +43,86 @@
       display: block;
       overflow-x: auto;
     }
+    .alert {
+      padding: 15px;
+      margin-bottom: 10px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+    }
+    .alert-info {
+      color: #0c5460;
+      background-color: #d1ecf1;
+      border-color: #bee5eb;
+    }
+    .alert-warning {
+      color: #856404;
+      background-color: #fff3cd;
+      border-color: #ffeeba;
+    }
+    .alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
   </style>
 </head>
 <body>
   <div id="sidebar">
     <a href="#" data-file="introduction/1.md">Introduction</a>
-    <a href="#" data-file="introduction/2.md"">Setup</a>
-    <a href="#" data-file="introduction/3.md"">Usage</a>
+    <a href="#" data-file="introduction/2.md">CSS junk</a>
+    <a href="#" data-file="introduction/3.md">your first project</a>
   </div>
   <div id="content">
     <h1>Documentation Viewer</h1>
-    <p>Select a topic from the sidebar to view the content.</p>
+    <p>Select a topic from the sidebar to load its content.</p>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const sidebar = document.getElementById('sidebar');
-      const content = document.getElementById('content');
+    // Markdown rendering function
+    async function loadMarkdown(file) {
+      try {
+        const response = await fetch(file);
+        if (!response.ok) throw new Error('File not found');
+        const markdown = await response.text();
 
-      sidebar.addEventListener('click', (e) => {
-        if (e.target.tagName === 'A') {
-          e.preventDefault();
-          const file = e.target.getAttribute('data-file');
-          loadMarkdown(file);
-        }
-      });
+        // Use a Markdown parser (like marked.js) to convert Markdown to HTML
+        const html = marked.parse(markdown);
 
-      function loadMarkdown(file) {
-        fetch(file)
-          .then(response => {
-            if (!response.ok) throw new Error(`Error fetching ${file}`);
-            return response.text();
-          })
-          .then(markdown => {
-            content.innerHTML = marked.parse(markdown);
-          })
-          .catch(error => {
-            content.innerHTML = `<p>Error loading file: ${error.message}</p>`;
-          });
+        // Replace content and add custom handling for alerts
+        const contentDiv = document.getElementById('content');
+        contentDiv.innerHTML = html;
+
+        // Custom rendering for alerts
+        contentDiv.querySelectorAll('p').forEach(p => {
+          if (p.textContent.startsWith('!info ')) {
+            p.className = 'alert alert-info';
+            p.textContent = p.textContent.replace('!info ', '');
+          } else if (p.textContent.startsWith('!warning ')) {
+            p.className = 'alert alert-warning';
+            p.textContent = p.textContent.replace('!warning ', '');
+          } else if (p.textContent.startsWith('!danger ')) {
+            p.className = 'alert alert-danger';
+            p.textContent = p.textContent.replace('!danger ', '');
+          }
+        });
+
+      } catch (error) {
+        console.error('Error loading Markdown file:', error);
+        document.getElementById('content').innerHTML = '<p>Error loading content.</p>';
       }
+    }
+
+    // Event listeners for sidebar links
+    document.querySelectorAll('#sidebar a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const file = e.target.getAttribute('data-file');
+        loadMarkdown(file);
+      });
     });
   </script>
+
+  <!-- Include marked.js for Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>
 </html>
