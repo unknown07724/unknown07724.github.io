@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    #sidebar {
+      width: 200px;
+      position: fixed;
+      height: 100%;
+      background: #f8f9fa;
+      overflow-y: auto;
+      padding: 10px;
+      border-right: 1px solid #ddd;
+    }
+    #sidebar a {
+      display: block;
+      padding: 10px;
+      margin: 5px 0;
+      text-decoration: none;
+      color: #333;
+    }
+    #sidebar a:hover {
+      background: #e9ecef;
+      color: #007BFF;
+    }
+    #content {
+      margin-left: 220px;
+      padding: 20px;
+    }
+    pre, code {
+      background: #f4f4f4;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      display: block;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar">
+    <a href="#" data-file="introduction/1.md">Introduction</a>
+    <a href="#" data-file="introduction/2.md"">Setup</a>
+    <a href="#" data-file="introduction/3.md"">Usage</a>
+  </div>
+  <div id="content">
+    <h1>Documentation Viewer</h1>
+    <p>Select a topic from the sidebar to view the content.</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidebar = document.getElementById('sidebar');
+      const content = document.getElementById('content');
+
+      sidebar.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+          e.preventDefault();
+          const file = e.target.getAttribute('data-file');
+          loadMarkdown(file);
+        }
+      });
+
+      function loadMarkdown(file) {
+        fetch(file)
+          .then(response => {
+            if (!response.ok) throw new Error(`Error fetching ${file}`);
+            return response.text();
+          })
+          .then(markdown => {
+            content.innerHTML = marked.parse(markdown);
+          })
+          .catch(error => {
+            content.innerHTML = `<p>Error loading file: ${error.message}</p>`;
+          });
+      }
+    });
+  </script>
+</body>
+</html>
