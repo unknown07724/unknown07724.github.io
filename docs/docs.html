@@ -88,23 +88,20 @@
       // Use a Markdown parser (like marked.js) to convert Markdown to HTML
       const html = marked.parse(markdown);
 
-      // Replace content and add custom handling for alerts
+      // Replace content and add custom handling for alert-like tags
       const contentDiv = document.getElementById('content');
       contentDiv.innerHTML = html;
 
-      // Custom rendering for alerts
+      // Custom rendering for alert tags
       contentDiv.querySelectorAll('p').forEach(p => {
-        const text = p.textContent.trim().toLowerCase();
+        const text = p.textContent.trim();
 
-        if (text.startsWith('!info ')) {
-          p.className = 'alert alert-info';
-          p.textContent = p.textContent.replace(/!info\s*/i, '');
-        } else if (text.startsWith('!warning ')) {
-          p.className = 'alert alert-warning';
-          p.textContent = p.textContent.replace(/!warning\s*/i, '');
-        } else if (text.startsWith('!danger ')) {
-          p.className = 'alert alert-danger';
-          p.textContent = p.textContent.replace(/!danger\s*/i, '');
+        if (text.startsWith('[!CAUTION]')) {
+          p.className = 'alert alert-warning'; // Yellow alert
+          p.textContent = text.replace(/\[!CAUTION\]\s*/i, '');
+        } else if (text.startsWith('[!NOTE]')) {
+          p.className = 'alert alert-info'; // Blue alert
+          p.textContent = text.replace(/\[!NOTE\]\s*/i, '');
         }
       });
 
@@ -123,6 +120,7 @@
     });
   });
 </script>
+
 
   <!-- Include marked.js for Markdown parsing -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
