@@ -77,50 +77,52 @@
     <p>Select a topic from the sidebar to load its content.</p>
   </div>
 
-  <script>
-    // Markdown rendering function
-    async function loadMarkdown(file) {
-      try {
-        const response = await fetch(file);
-        if (!response.ok) throw new Error('File not found');
-        const markdown = await response.text();
+<script>
+  // Markdown rendering function
+  async function loadMarkdown(file) {
+    try {
+      const response = await fetch(file);
+      if (!response.ok) throw new Error('File not found');
+      const markdown = await response.text();
 
-        // Use a Markdown parser (like marked.js) to convert Markdown to HTML
-        const html = marked.parse(markdown);
+      // Use a Markdown parser (like marked.js) to convert Markdown to HTML
+      const html = marked.parse(markdown);
 
-        // Replace content and add custom handling for alerts
-        const contentDiv = document.getElementById('content');
-        contentDiv.innerHTML = html;
+      // Replace content and add custom handling for alerts
+      const contentDiv = document.getElementById('content');
+      contentDiv.innerHTML = html;
 
-        // Custom rendering for alerts
-        contentDiv.querySelectorAll('p').forEach(p => {
-          if (p.textContent.startsWith('!info ')) {
-            p.className = 'alert alert-info';
-            p.textContent = p.textContent.replace('!info ', '');
-          } else if (p.textContent.startsWith('!warning ')) {
-            p.className = 'alert alert-warning';
-            p.textContent = p.textContent.replace('!warning ', '');
-          } else if (p.textContent.startsWith('!danger ')) {
-            p.className = 'alert alert-danger';
-            p.textContent = p.textContent.replace('!danger ', '');
-          }
-        });
+      // Custom rendering for alerts
+      contentDiv.querySelectorAll('p').forEach(p => {
+        const text = p.textContent.trim().toLowerCase();
 
-      } catch (error) {
-        console.error('Error loading Markdown file:', error);
-        document.getElementById('content').innerHTML = '<p>Error loading content.</p>';
-      }
-    }
-
-    // Event listeners for sidebar links
-    document.querySelectorAll('#sidebar a').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const file = e.target.getAttribute('data-file');
-        loadMarkdown(file);
+        if (text.startsWith('!info ')) {
+          p.className = 'alert alert-info';
+          p.textContent = p.textContent.replace(/!info\s*/i, '');
+        } else if (text.startsWith('!warning ')) {
+          p.className = 'alert alert-warning';
+          p.textContent = p.textContent.replace(/!warning\s*/i, '');
+        } else if (text.startsWith('!danger ')) {
+          p.className = 'alert alert-danger';
+          p.textContent = p.textContent.replace(/!danger\s*/i, '');
+        }
       });
+
+    } catch (error) {
+      console.error('Error loading Markdown file:', error);
+      document.getElementById('content').innerHTML = '<p>Error loading content.</p>';
+    }
+  }
+
+  // Event listeners for sidebar links
+  document.querySelectorAll('#sidebar a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const file = e.target.getAttribute('data-file');
+      loadMarkdown(file);
     });
-  </script>
+  });
+</script>
 
   <!-- Include marked.js for Markdown parsing -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
