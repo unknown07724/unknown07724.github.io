@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantumOS</title>
+  <style>
+    /* General and Taskbar Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #1e1e1e;
+      color: white;
+    }
+    #bootScreen, #loginScreen, #desktop { display: none; width: 100%; height: 100vh; }
+    #bootScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; background: black; }
+    #loginScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f0f0f0; color: black; }
+    #desktop { display: flex; flex-direction: column; }
+    #taskbar {
+      background: #333;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
+    #workspace { position: relative; flex: 1; overflow: hidden; }
+    .window {
+      position: absolute;
+      background: white;
+      color: black;
+      border: 2px solid black;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      resize: both;
+      overflow: hidden;
+      z-index: 10;
+    }
+    .window .title-bar {
+      background: #555;
+      color: white;
+      padding: 5px;
+      cursor: move;
+      display: flex;
+      justify-content: space-between;
+    }
+    .window iframe { width: 100%; height: calc(100% - 30px); }
+
+    /* App Store Styles */
+    .app-store {
+      padding: 10px;
+    }
+    .app {
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 10px;
+    }
+    .app button {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Boot Screen -->
+  <div id="bootScreen">
+    <h1>Web OS</h1>
+    <p>Loading...</p>
+    <progress max="100" value="0" id="bootProgress"></progress>
+  </div>
+
+  <!-- Login Screen -->
+  <div id="loginScreen">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <label for="username">Username:</label>
+      <input type="text" id="username" required>
+      <label for="password">Password:</label>
+      <input type="password" id="password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <!-- Desktop -->
+  <div id="desktop">
+    <!-- Taskbar -->
+    <div id="taskbar">
+      <button id="startButton">Start</button>
+      <button id="appStoreButton">App Store</button>
+      <div id="runningPrograms"></div>
+    </div>
+
+    <!-- Workspace -->
+    <div id="workspace"></div>
+  </div>
+
+  <script>
+    // Boot System
+    let bootProgress = 0;
+    const bootScreen = document.getElementById('bootScreen');
+    const loginScreen = document.getElementById('loginScreen');
+    const desktop = document.getElementById('desktop');
+    const workspace = document.getElementById('workspace');
+    const bootInterval = setInterval(() => {
+      bootProgress += 10;
+      document.getElementById('bootProgress').value = bootProgress;
+      if (bootProgress >= 100) {
+        clearInterval(bootInterval);
+        bootScreen.style.display = 'none';
+        loginScreen.style.display = 'flex';
+      }
+    }, 500);
+
+    // User Accounts
+    const user = { name: null };
+    const accounts = { admin: { password: 'admin123' }, user1: { password: 'password123' } };
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      if (accounts[username]?.password === password) {
+        user.name = username;
+        loginScreen.style.display = 'none';
+        desktop.style.display = 'flex';
+      } else {
+        alert('Invalid credentials');
+      }
+    });
+
+    // App Store Data
+    const appStoreData = [
+      { id: 'browser', name: 'Browser', description: 'Surf the web.' },
+      { id: 'textEditor', name: 'Text Editor', description: 'Edit text files.' }
+    ];
+
+    const installedApps = {};
+
+    // API for Apps
+    const API = {
+      getUser: () => user.name,
+      getFiles: () => localStorage.getItem('files') ? JSON.parse(localStorage.getItem('files')) : [],
+      saveFile: (name, content) => {
+        const files = API.getFiles();
+        files.push({ name, content });
+        localStorage.setItem('files', JSON.stringify(files));
+      }
+    };
+
+    // App Management
+    const apps = {
+      browser: 'data:text/html,<h1>Browser App</h1>',
+      textEditor: 'data:text/html,<textarea style="width:100%;height:100%;"></textarea>'
+    };
+
+    function openApp(appId) {
+      const appUrl = installedApps[appId] || apps[appId];
+      if (!appUrl) return alert('App not installed!');
+
+      const windowDiv = document.createElement('div');
+      windowDiv.className = 'window';
+      windowDiv.style.width = '400px';
+      windowDiv.style.height = '300px';
+      windowDiv.style.left = `${50 + Math.random() * 100}px`;
+      windowDiv.style.top = `${50 + Math.random() * 100}px`;
+
+      const titleBar = document.createElement('div');
+      titleBar.className = 'title-bar';
+      titleBar.innerHTML = `<span>${appId} (${new Date().getTime()})</span><button onclick="this.parentElement.parentElement.remove()">X</button>`;
+      titleBar.addEventListener('mousedown', dragStart);
+
+      const iframe = document.createElement('iframe');
+      iframe.src = appUrl;
+
+      windowDiv.appendChild(titleBar);
+      windowDiv.appendChild(iframe);
+      workspace.appendChild(windowDiv);
+
+      function dragStart(e) {
+        const rect = windowDiv.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
+
+        function dragMove(e) {
+          windowDiv.style.left = `${e.clientX - offsetX}px`;
+          windowDiv.style.top = `${e.clientY - offsetY}px`;
+        }
+
+        function dragEnd() {
+          document.removeEventListener('mousemove', dragMove);
+          document.removeEventListener('mouseup', dragEnd);
+        }
+
+        document.addEventListener('mousemove', dragMove);
+        document.addEventListener('mouseup', dragEnd);
+      }
+    }
+
+    // Render App Store
+    function openAppStore() {
+      const appStoreHtml = appStoreData.map(app => `
+        <div class="app">
+          <h3>${app.name}</h3>
+          <p>${app.description}</p>
+          <button onclick="installApp('${app.id}')">Install</button>
+        </div>
+      `).join('');
+      const appStoreWindow = document.createElement('div');
+      appStoreWindow.className = 'window';
+      appStoreWindow.style.width = '400px';
+      appStoreWindow.style.height = '300px';
+      appStoreWindow.style.left = `${50 + Math.random() * 100}px`;
+      appStoreWindow.style.top = `${50 + Math.random() * 100}px`;
+
+      const titleBar = document.createElement('div');
+      titleBar.className = 'title-bar';
+      titleBar.innerHTML = `<span>App Store</span><button onclick="this.parentElement.parentElement.remove()">X</button>`;
+      appStoreWindow.innerHTML = `<div class="app-store">${appStoreHtml}</div>`;
+      appStoreWindow.appendChild(titleBar);
+
+      workspace.appendChild(appStoreWindow);
+    }
+
+    function installApp(appId) {
+      const app = appStoreData.find(app => app.id === appId);
+      if (!app) return alert('App not found!');
+      installedApps[appId] = apps[appId];
+      alert(`${app.name} installed!`);
+    }
+
+    document.getElementById('appStoreButton').addEventListener('click', openAppStore);
+  </script>
+</body>
+</html>
