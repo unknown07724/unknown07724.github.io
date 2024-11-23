@@ -10,9 +10,10 @@
 
     <!-- Menu -->
     <div class="menu">
-        <a href="mixture://newtab" id="newTabLink">New Tab</a>
         <a href="mixture://settings">Settings</a>
         <a href="mixture://extensions">Extensions</a>
+        <a href="mixture://history" id="historyLink">History</a>
+        <a href="mixture://downloads" id="downloadsLink">Downloads</a>
     </div>
 
     <!-- Tabs -->
@@ -24,6 +25,22 @@
     <div id="tabContent" class="tab-content">
         <h1>Welcome to Mixture Browser</h1>
         <p>Start by opening a new tab or entering a URL.</p>
+    </div>
+
+    <!-- History Section -->
+    <div id="historySection" class="history-section">
+        <h2>History</h2>
+        <ul id="historyList">
+            <!-- History items will be appended here -->
+        </ul>
+    </div>
+
+    <!-- Downloads Section -->
+    <div id="downloadsSection" class="downloads-section">
+        <h2>Downloads</h2>
+        <ul id="downloadsList">
+            <!-- Download items will be appended here -->
+        </ul>
     </div>
 
     <!-- External JS file -->
