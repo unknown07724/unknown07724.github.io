@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumOS</title>
+  <title>Web OS with Start Menu</title>
   <style>
     /* General and Taskbar Styles */
     body {
@@ -23,8 +23,27 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 10px;
+      position: relative;
     }
     #workspace { position: relative; flex: 1; overflow: hidden; }
+    #startMenu {
+      display: none;
+      position: absolute;
+      bottom: 40px;
+      left: 0;
+      background: #444;
+      color: white;
+      border: 1px solid black;
+      width: 200px;
+      z-index: 1000;
+    }
+    #startMenu ul { list-style: none; margin: 0; padding: 0; }
+    #startMenu li {
+      padding: 10px;
+      border-bottom: 1px solid #333;
+      cursor: pointer;
+    }
+    #startMenu li:hover { background: #555; }
     .window {
       position: absolute;
       background: white;
@@ -85,6 +104,12 @@
       <button id="startButton">Start</button>
       <button id="appStoreButton">App Store</button>
       <div id="runningPrograms"></div>
+      <div id="startMenu">
+        <ul>
+          <li onclick="openApp('browser')">Browser</li>
+          <li onclick="openApp('textEditor')">Text Editor</li>
+        </ul>
+      </div>
     </div>
 
     <!-- Workspace -->
@@ -125,34 +150,22 @@
       }
     });
 
+    // Start Menu Toggle
+    const startButton = document.getElementById('startButton');
+    const startMenu = document.getElementById('startMenu');
+    startButton.addEventListener('click', () => {
+      startMenu.style.display = startMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
     // App Store Data
-    const appStoreData = [
-      { id: 'browser', name: 'Browser', description: 'Surf the web.' },
-      { id: 'textEditor', name: 'Text Editor', description: 'Edit text files.' }
-    ];
-
-    const installedApps = {};
-
-    // API for Apps
-    const API = {
-      getUser: () => user.name,
-      getFiles: () => localStorage.getItem('files') ? JSON.parse(localStorage.getItem('files')) : [],
-      saveFile: (name, content) => {
-        const files = API.getFiles();
-        files.push({ name, content });
-        localStorage.setItem('files', JSON.stringify(files));
-      }
-    };
-
-    // App Management
     const apps = {
       browser: 'data:text/html,<h1>Browser App</h1>',
       textEditor: 'data:text/html,<textarea style="width:100%;height:100%;"></textarea>'
     };
 
     function openApp(appId) {
-      const appUrl = installedApps[appId] || apps[appId];
-      if (!appUrl) return alert('App not installed!');
+      const appUrl = apps[appId];
+      if (!appUrl) return alert('App not found!');
 
       const windowDiv = document.createElement('div');
       windowDiv.className = 'window';
@@ -163,7 +176,7 @@
 
       const titleBar = document.createElement('div');
       titleBar.className = 'title-bar';
-      titleBar.innerHTML = `<span>${appId} (${new Date().getTime()})</span><button onclick="this.parentElement.parentElement.remove()">X</button>`;
+      titleBar.innerHTML = `<span>${appId}</span><button onclick="this.parentElement.parentElement.remove()">X</button>`;
       titleBar.addEventListener('mousedown', dragStart);
 
       const iframe = document.createElement('iframe');
@@ -193,37 +206,12 @@
       }
     }
 
-    // Render App Store
-    function openAppStore() {
-      const appStoreHtml = appStoreData.map(app => `
-        <div class="app">
-          <h3>${app.name}</h3>
-          <p>${app.description}</p>
-          <button onclick="installApp('${app.id}')">Install</button>
-        </div>
-      `).join('');
-      const appStoreWindow = document.createElement('div');
-      appStoreWindow.className = 'window';
-      appStoreWindow.style.width = '400px';
-      appStoreWindow.style.height = '300px';
-      appStoreWindow.style.left = `${50 + Math.random() * 100}px`;
-      appStoreWindow.style.top = `${50 + Math.random() * 100}px`;
+    // App Store Button
+    document.getElementById('appStoreButton').addEventListener('click', () => openApp('appStore'));
+  </script>
+</body>
+</html>
 
-      const titleBar = document.createElement('div');
-      titleBar.className = 'title-bar';
-      titleBar.innerHTML = `<span>App Store</span><button onclick="this.parentElement.parentElement.remove()">X</button>`;
-      appStoreWindow.innerHTML = `<div class="app-store">${appStoreHtml}</div>`;
-      appStoreWindow.appendChild(titleBar);
-
-      workspace.appendChild(appStoreWindow);
-    }
-
-    function installApp(appId) {
-      const app = appStoreData.find(app => app.id === appId);
-      if (!app) return alert('App not found!');
-      installedApps[appId] = apps[appId];
-      alert(`${app.name} installed!`);
-    }
 
     document.getElementById('appStoreButton').addEventListener('click', openAppStore);
   </script>
