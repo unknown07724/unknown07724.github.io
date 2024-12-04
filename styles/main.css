@@ -17,6 +17,10 @@ details {
   border-radius: 3px;
 }
 
+ul{
+  text-align: center;
+  display: inline-block;
+}
  a:visited {
       color: orange;
   }
