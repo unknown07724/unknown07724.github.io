@@ -4,9 +4,26 @@
     "author": "Author 1",
     "image": "memes/1.webp"
   },
+   {
+    "title": "Meme 1",
+    "author": "Author 1",
+    "image": "memes/1.webp"
+  },
+   {
+    "title": "Meme 1",
+    "author": "Author 1",
+    "image": "memes/4.jpeg"
+  },
+  {
+     {
+    "title": "Meme 1",
+    "author": "Author 1",
+    "image": "memes/3.jpeg"
+  },
+
   {
     "title": "Meme 2",
     "author": "Author 2",
-    "image": "memes/2.png"
+    "image": "memes/5.gif"
   }
 ]
