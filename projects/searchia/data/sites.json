@@ -11,6 +11,12 @@
     "keywords": ["example", "Domain", "Example", "domain"],
     "description": "A placeholder site used for demonstration purposes."
   },
+  {
+    "name": "Searchia",
+    "url": "https://unknown07724.github.io/projects/searchia/",
+    "keywords": ["Search", "Searchia"],
+    "description": "A placeholder site used for demonstration purposes."
+  },
    {
     "name": "Wikipedia",
     "url": "https://www.wikipedia.org/",
@@ -33,13 +39,19 @@
     "name": "Scratch - MIT",
     "url": "https://scratch.mit.edu",
     "keywords": ["Scratch","MIT"],
-    "description":
+    "description": ""
   },
    {
     "name": "Turbowarp",
     "url": "https://turbowarp.org",
     "keywords": ["Turbowarp","Scratch"],
     "description": "TurboWarp is a Scratch mod with a compiler to run projects faster, dark mode for your eyes, a bunch of addons to improve the editor, and more."
+  },
+  {
+    "name": "Google",
+    "url": "https://Google.com",
+    "keywords": ["Google","Search"],
+    "description": "Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for."
   },
   {
     "name": "Frogs",
