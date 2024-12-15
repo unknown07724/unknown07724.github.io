@@ -2,21 +2,25 @@
   {
     "name": "Example Domain",
     "url": "https://example.com",
-    "keywords": ["example", "Domain", "Example", "domain"]
+    "keywords": ["example", "Domain", "Example", "domain"],
+    "description": "A placeholder site used for demonstration purposes."
   },
   {
     "name": "Youtube",
     "url": "https://youtube.com",
-    "keywords": ["video", "sharing", "camera phone", "video phone", "free", "upload", "Youtube"]
+    "keywords": ["video", "sharing", "camera phone", "video phone", "free", "upload", "Youtube"],
+    "description": "Share your videos with friends, family, and the world."
   },
   {
     "name": "Reddit - Dive into anything",
     "url": "https://reddit.com",
-    "keywords": ["Reddit"]
+    "keywords": ["Reddit"],
+    "description": "Reddit is a network of communities where people can dive into their interests, hobbies and passions. There's a community for whatever you're interested in"
   },
   {
     "name": "Frogs",
     "url": "https://unknown07724.github.io",
-    "keywords": ["Memes", "Unknown07724", "site"]
+    "keywords": ["Memes", "Unknown07724", "site"],
+    "description": "memes and other garbage like projects."
   }
 ]
