@@ -19,9 +19,10 @@
   </form>
   <div id="results"></div>
   <script>// JavaScript search engine
+// JavaScript search engine
 async function loadSites() {
   try {
-    const response = await fetch('data/sites.json'); // Load local file within the project
+    const response = await fetch('data/sites.json');
     const sites = await response.json();
     return sites;
   } catch (error) {
@@ -53,7 +54,8 @@ function displayResults(results) {
     resultElement.className = 'result';
     resultElement.innerHTML = `
       <h3><a href="${site.url}" target="_blank">${site.name}</a></h3>
-      <p>Keywords: ${site.keywords.join(', ')}</p>
+      <p>${site.url}</p>
+      <p>${site.description}</p>
     `;
     resultsContainer.appendChild(resultElement);
   });
