@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON Search Engine</title>
+  <title>Searchia</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     .result { margin-bottom: 20px; }
@@ -12,7 +12,7 @@
   </style>
 </head>
 <body>
-  <h1>JSON Search Engine</h1>
+  <h1>Searchia</h1>
   <form id="searchForm">
     <input type="text" id="searchInput" placeholder="Enter keywords" required>
     <button type="submit">Search</button>
@@ -21,7 +21,7 @@
   <script>// JavaScript search engine
 async function loadSites() {
   try {
-    const response = await fetch('/data/sites.json'); // Load local file within the project
+    const response = await fetch('data/sites.json'); // Load local file within the project
     const sites = await response.json();
     return sites;
   } catch (error) {
