@@ -1,15 +1,22 @@
-{
+[
+  {
     "name": "Example Domain",
     "url": "https://example.com",
-    "keywords": ["example", "Domain","Example","domain"]
+    "keywords": ["example", "Domain", "Example", "domain"]
   },
   {
     "name": "Youtube",
     "url": "https://youtube.com",
-    "keywords": ["video", "sharing", "camera phone", "video phone", "free", "upload","Youtube"]
-  }
+    "keywords": ["video", "sharing", "camera phone", "video phone", "free", "upload", "Youtube"]
+  },
+  {
+    "name": "Reddit - Dive into anything",
+    "url": "https://reddit.com",
+    "keywords": ["Reddit"]
+  },
   {
     "name": "Frogs",
     "url": "https://unknown07724.github.io",
-    "keywords": ["Memes", "Unknown07724","site"]
+    "keywords": ["Memes", "Unknown07724", "site"]
   }
+]
