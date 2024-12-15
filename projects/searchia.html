@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Search Engine</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .result { margin-bottom: 20px; }
+    .result h3 { margin: 0; }
+    .result p { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <h1>JSON Search Engine</h1>
+  <form id="searchForm">
+    <input type="text" id="searchInput" placeholder="Enter keywords" required>
+    <button type="submit">Search</button>
+  </form>
+  <div id="results"></div>
+  <script>// JavaScript search engine
+async function loadSites() {
+  try {
+    const response = await fetch('/data/sites.json'); // Load local file within the project
+    const sites = await response.json();
+    return sites;
+  } catch (error) {
+    console.error('Error loading sites:', error);
+    return [];
+  }
+}
+
+function searchSites(query, sites) {
+  const results = sites.filter(site => 
+    site.keywords.some(keyword => 
+      keyword.toLowerCase().includes(query.toLowerCase())
+    )
+  );
+  return results;
+}
+
+function displayResults(results) {
+  const resultsContainer = document.getElementById('results');
+  resultsContainer.innerHTML = '';
+
+  if (results.length === 0) {
+    resultsContainer.innerHTML = '<p>No results found.</p>';
+    return;
+  }
+
+  results.forEach(site => {
+    const resultElement = document.createElement('div');
+    resultElement.className = 'result';
+    resultElement.innerHTML = `
+      <h3><a href="${site.url}" target="_blank">${site.name}</a></h3>
+      <p>Keywords: ${site.keywords.join(', ')}</p>
+    `;
+    resultsContainer.appendChild(resultElement);
+  });
+}
+
+// Hooking everything up
+document.getElementById('searchForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const query = document.getElementById('searchInput').value;
+
+  const sites = await loadSites();
+  const results = searchSites(query, sites);
+  displayResults(results);
+});
+</script>
+</body>
+</html>
