@@ -5,6 +5,18 @@
     "keywords": ["example", "Domain", "Example", "domain"],
     "description": "A placeholder site used for demonstration purposes."
   },
+   {
+    "name": "Example Domain",
+    "url": "https://example.org",
+    "keywords": ["example", "Domain", "Example", "domain"],
+    "description": "A placeholder site used for demonstration purposes."
+  },
+   {
+    "name": "Wikipedia",
+    "url": "https://www.wikipedia.org/",
+    "keywords": ["Wikipedia", "Wiki","Wikimedia"],
+    "description": "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and hosted by the Wikimedia Foundation."
+  },
   {
     "name": "Youtube",
     "url": "https://youtube.com",
@@ -16,6 +28,18 @@
     "url": "https://reddit.com",
     "keywords": ["Reddit"],
     "description": "Reddit is a network of communities where people can dive into their interests, hobbies and passions. There's a community for whatever you're interested in"
+  },
+   {
+    "name": "Scratch - MIT",
+    "url": "https://scratch.mit.edu",
+    "keywords": ["Scratch","MIT"],
+    "description":
+  },
+   {
+    "name": "Turbowarp",
+    "url": "https://turbowarp.org",
+    "keywords": ["Turbowarp","Scratch"],
+    "description": "TurboWarp is a Scratch mod with a compiler to run projects faster, dark mode for your eyes, a bunch of addons to improve the editor, and more."
   },
   {
     "name": "Frogs",
