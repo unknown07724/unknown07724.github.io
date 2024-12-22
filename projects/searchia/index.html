@@ -20,9 +20,10 @@
   <div id="results"></div>
   <script>// JavaScript search engine
 // JavaScript search engine
+// JavaScript search engine
 async function loadSites() {
   try {
-    const response = await fetch('data/sites.json');
+    const response = await fetch('./data/sites.json'); // Load local file within the project
     const sites = await response.json();
     return sites;
   } catch (error) {
@@ -31,12 +32,14 @@ async function loadSites() {
   }
 }
 
-function searchSites(query, sites) {
-  const results = sites.filter(site => 
-    site.keywords.some(keyword => 
+function searchSites(query, sites, safeSearch) {
+  const results = sites.filter(site => {
+    const matchesQuery = site.keywords.some(keyword => 
       keyword.toLowerCase().includes(query.toLowerCase())
-    )
-  );
+    );
+    const passesSafeSearch = !safeSearch || !site.sensitive;
+    return matchesQuery && passesSafeSearch;
+  });
   return results;
 }
 
@@ -45,7 +48,7 @@ function displayResults(results) {
   resultsContainer.innerHTML = '';
 
   if (results.length === 0) {
-    resultsContainer.innerHTML = '<p>Your search did not match any documents.</p>';
+    resultsContainer.innerHTML = '<p>No results found.</p>';
     return;
   }
 
@@ -53,8 +56,10 @@ function displayResults(results) {
     const resultElement = document.createElement('div');
     resultElement.className = 'result';
     resultElement.innerHTML = `
-      <h3><a href="${site.url}" target="_blank">${site.name}</a></h3>
-      <p>${site.url}</p>
+      <h3>
+        <img src="${site.favicon}" alt="Favicon" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+        <a href="${site.url}" target="_blank">${site.name}</a>
+      </h3>
       <p>${site.description}</p>
     `;
     resultsContainer.appendChild(resultElement);
@@ -66,11 +71,13 @@ document.getElementById('searchForm').addEventListener('submit', async (event) =
   event.preventDefault();
 
   const query = document.getElementById('searchInput').value;
+  const safeSearch = document.getElementById('safeSearchToggle').checked;
 
   const sites = await loadSites();
-  const results = searchSites(query, sites);
+  const results = searchSites(query, sites, safeSearch);
   displayResults(results);
 });
+
 </script>
 </body>
 </html>
