@@ -90,9 +90,9 @@ The negotiations were tense, with the Countryballs pushing for greater autonomy 
 
 As the new government was formed, the Countryballs began to rebuild and reorganize the prison. They created new rules and regulations, and even established their own internal hierarchy. Franceball and Germanyball, still respected and admired by their friend's success, were appointed as advisors to the new government.
 
-But not everyone was happy with the new order. A Memer known only as "China_Stole-theChip69420", began to secretly plot against the new government. They saw the uprising as a betrayal, and vowed to take back control of the prison by any means necessary.
+But not everyone was happy with the new order. A Troll known only as "China_Stole-theChips69420", began to secretly plot against the new government. They saw the uprising as a betrayal, and vowed to take back control of the prison by any means necessary.
 
-As the Countryballs celebrated their newfound freedom, China_Stole-theChip69420 watched at night, waiting for the perfect moment to strike. And Franceball and Germanyball, sleeping together, were oblivious to the danger that lurked in the darkness.
+After the Countryballs celebrated their newfound freedom, they went to sleep and China_Stole-theChips69420 watched at night, waiting for the perfect moment to strike. And as Germanyball and his wife were sleeping together, were oblivious to the danger that lurked in the darkness.
 
 
 
