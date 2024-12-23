@@ -134,7 +134,7 @@ As we explore the reproductive habits of the MemeVerse's most fascinating specie
 
 In the MemeVerse, Countryballs are known for their innovative spirit and resourcefulness. From the humble beginnings of the nation-state to the modern era of memes and mayhem, Countryballs have been at the forefront of invention and discovery.
 
-# Countryball Inventions
+## Countryball Inventions
 
 Countryballs have invented some of the most iconic and practical creations in the MemeVerse. Germanyball, for instance, is credited with inventing the "Engineer TF2", a complex device that combines memes, humor, and sheer technological prowess with a southern accent.
 
@@ -142,7 +142,7 @@ Franceball, on the other hand, is famous for creating the "Cuisineball," a delec
 
 Other notable Countryball inventions include the "Nationalism-nator," a device that amplifies nationalistic feelings to new heights, and the "Trolling-erator," a machine that generates endless streams of trolling memes.
 
-# The Most Iconic Countryballs
+## The Most Iconic Countryballs
 
 But which Countryballs have made the greatest impact on the MemeVerse? Let's take a look at some of the most iconic Countryballs of all time.
 
