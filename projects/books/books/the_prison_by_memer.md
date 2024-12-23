@@ -52,3 +52,15 @@ The other prisoners were a mix of meme creators, internet personalities, and mis
 Together, the prisoners formed a tight-knit community, bound together by their shared experiences and sense of humor. They spent their days creating memes, playing games, and plotting their escape from the prison.
 
 But despite the challenges they faced, the prisoners of Dank Memeria remained optimistic and determined. They knew that they were in this together, and that they would get through it as a team.
+
+# Chapter 6: Prison Routines
+
+Life inside the Prison of Dank Memeria was a never-ending routine for the three prisoners. Franceball and Germanyball spent most of their days creating memes and entertaining the non-existent prison staff with their antics. BVG messagener, on the other hand, kept to himself, preferring to spend his time reading and writing letters to his loved ones.
+
+The 0 prison guards had grown accustomed to the prisoners' routines and had even started to develop their own camaraderie with Franceball and Germanyball. They would often engage in heated debates with the prisoners about the latest memes and internet trends.
+
+One day, the prison guards decided to shake things up by introducing a new activity: indoor soccer. Franceball was immediately on board. Germanyball, however, was less than thrilled about the idea, citing concerns about having no legs (countryballs don't have legs)
+
+BVG messagener, on the other hand, declined to participate altogether, citing his dedication to his writing. As the days went by, the prison became a lively place, with the sound of indoor soccer balls bouncing off the walls and the prisoners' laughter filling the air.
+
+But despite the newfound sense of community, They knew that escape was always a possibility.
