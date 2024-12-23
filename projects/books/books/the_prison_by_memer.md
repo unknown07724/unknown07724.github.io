@@ -64,3 +64,35 @@ One day, the prison guards decided to shake things up by introducing a new activ
 BVG messagener, on the other hand, declined to participate altogether, citing his dedication to his writing. As the days went by, the prison became a lively place, with the sound of indoor soccer balls bouncing off the walls and the prisoners' laughter filling the air.
 
 But despite the newfound sense of community, They knew that escape was always a possibility.
+
+# Chapter 7: The Great Countryball Uprising
+
+As the days turned into weeks, life in the Prison of Dank Memeria continued to be a never-ending source of entertainment for the guards. Franceball and Germanyball were still the main attractions, with their constant bickering and antics keeping everyone on their toes.
+
+But little did the guards know, a new threat was brewing in the depths of the prison. A group of Countryballs, led by a charismatic leader named Portugalball, had been secretly planning a uprising. He was tired of having other countryballs locked up and subjected to the whims of the prison authorities.
+
+One day, Portugalball stood up on a pile of trash and declared, "Viva la revolución! We will not be silenced! We will not be imprisoned!" The other Countryballs cheered and chanted, their tiny voices echoing off the walls of the prison.
+
+The guards, caught off guard, were quickly overwhelmed by the sheer number of Countryballs. Franceball and Germanyball, seeing an opportunity, jumped into the fray, using their telekinesis to grab and throw trash at the guards.
+
+It was a chaotic scene, with Countryballs and the Army fighting for control of the prison. But in the end, it was the Countryballs who emerged victorious, standing on a pile of rubble and declaring, "We are free! We are the masters of our own destiny!"
+
+The Army, defeated and demoralized, retreated to their barracks, leaving the Countryballs to celebrate their victory. And as for Franceball and Germanyball, they just shrugged and said, "Hey, what's up? We're just here for the soccer."
+
+
+# Chapter 8: The Aftermath of the Uprising
+
+The days that followed the Countryball uprising were marked by a sense of unease and uncertainty. The guards were still reeling from their defeat, and the Countryballs were basking in the glow of their newfound freedom.
+
+Franceball and Germanyball, still the most popular inmates in the prison, were asked to join the Countryballs' new leadership council. They agreed, and soon found themselves sitting at the table with Portugalball, negotiating the terms of the new prison government.
+
+The negotiations were tense, with the Countryballs pushing for greater autonomy and the guards demanding that the prison be returned to its former state. But in the end, a compromise was reached, and the Countryballs were granted greater freedom and privileges within the prison.
+
+As the new government was formed, the Countryballs began to rebuild and reorganize the prison. They created new rules and regulations, and even established their own internal hierarchy. Franceball and Germanyball, still respected and admired by their friend's success, were appointed as advisors to the new government.
+
+But not everyone was happy with the new order. A Memer known only as "China_Stole-theChip69420", began to secretly plot against the new government. They saw the uprising as a betrayal, and vowed to take back control of the prison by any means necessary.
+
+As the Countryballs celebrated their newfound freedom, China_Stole-theChip69420 watched at night, waiting for the perfect moment to strike. And Franceball and Germanyball, sleeping together, were oblivious to the danger that lurked in the darkness.
+
+
+
