@@ -1,6 +1,6 @@
 # Chapter 1: Humankind - The Species that Can't Stop, Won't Stop
 
-As a 145-year-old meme enthusiast, I've had the privilege of observing humankind for most of my life. And let me tell you, it's been a wild ride. From their early days of tribal gatherings to their current obsession with cat videos, humans have always been a fascinating species.
+As a 145-year-old meme enthusiast, I've had the privilege of observing humankind for most of my life. And let me tell you, it's been a wild ride. From their early days of tribal gatherings to their current obsession with cat videos, humans have always been a fascinating species. 
 
 One of the most striking things about humans is their capacity for creativity. They've managed to produce some of the most incredible works of art, literature, music, and film in the multiverse. From the masterpieces of Leonardo da Vinci to the memes of the internet age, humans have consistently demonstrated their ability to think outside the box and push the boundaries of what's possible.
 
