@@ -31,7 +31,7 @@ But beneath their complex behavior and meme-based communication, Countryballs ar
 
 As we continue to explore the MemeVerse, we'll delve deeper into the mysteries of the Countryballs. We'll examine their social structures, their economy, and their technology. And we'll try to get to the bottom of the many questions surrounding this enigmatic species.
 
-![franceball with a beret and wine laughing](https://unknown07724.github.io/projects/books/images/franceball.png)
+<img src="https://unknown07724.github.io/projects/books/images/franceball.png" alt="Franceball with a beret and wine laughing" width="200"/>
 
 But for now, let's just appreciate the sheer weirdness of the Countryballs. They're a species that's equal parts fascinating and infuriating, a species that's always pushing the boundaries of what's possible and what's acceptable.
 
