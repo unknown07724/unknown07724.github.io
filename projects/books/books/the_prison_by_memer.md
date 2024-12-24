@@ -77,7 +77,7 @@ The guards, caught off guard, were quickly overwhelmed by the sheer number of Co
 
 It was a chaotic scene, with Countryballs and the Army fighting for control of the prison. But in the end, it was the Countryballs who emerged victorious, standing on a pile of rubble and declaring, "We are free! We are the masters of our own destiny!"
 
-The Army, defeated and demoralized, retreated to their barracks, leaving the Countryballs to celebrate their victory. And as for Franceball and Germanyball, they just shrugged and said, "Hey, what's up? We're just here for the soccer."
+The Army, defeated and demoralized, retreated to their barracks, leaving the Countryballs to celebrate their victory. And as for Franceball and Germanyball, they just said, "Hey, what's up? We're just here for the soccer." in their languages
 
 
 # Chapter 8: The Aftermath of the Uprising
