@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Copypasta Library</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #333;
+    }
+    header {
+      background: #444;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+    }
+    .copypasta {
+      background: white;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    .copypasta button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    .copypasta button:hover {
+      background: #0056b3;
+    }
+    .origin {
+      font-size: 0.9em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Copypasta Library</h1>
+  </header>
+  <div class="container">
+    <div id="copypasta-list">
+      <!-- Copypastas will be loaded here -->
+    </div>
+  </div>
+  <script>
+    const copypastaList = document.getElementById('copypasta-list');
+
+    // Load copypastas from JSON file
+    async function loadCopypastas() {
+      try {
+        const response = await fetch('api/copypasta.json');
+        if (!response.ok) {
+          throw new Error('Failed to load copypasta data');
+        }
+
+        const copypastas = await response.json();
+        copypastas.forEach(copypasta => {
+          const div = document.createElement('div');
+          div.className = 'copypasta';
+          div.innerHTML = `
+            <p>${copypasta.text}</p>
+            <p class="origin">Origin: ${copypasta.origin || 'Unknown'}</p>
+            <button onclick="copyText('${copypasta.text.replace(/'/g, '\\'')}')">Copy</button>
+          `;
+          copypastaList.appendChild(div);
+        });
+      } catch (error) {
+        copypastaList.innerHTML = `<p>Error loading copypastas: ${error.message}</p>`;
+      }
+    }
+
+    // Copy to clipboard function
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copied to clipboard!');
+      });
+    }
+
+    // Load copypastas on page load
+    loadCopypastas();
+  </script>
+</body>
+</html>
