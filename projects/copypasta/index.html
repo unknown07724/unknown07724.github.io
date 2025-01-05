@@ -72,7 +72,7 @@
           div.innerHTML = `
             <p>${copypasta.text}</p>
             <p class="origin">Origin: ${copypasta.origin || 'Unknown'}</p>
-            <button onclick="copyText('${copypasta.text.replace(/'/g, '\\'')}')">Copy</button>
+            <button onclick="copyText('${copypasta.text.replace(/'/g, "\\'")}")">Copy</button>
           `;
           copypastaList.appendChild(div);
         });
