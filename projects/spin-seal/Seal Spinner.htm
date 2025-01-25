@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)https://g.wildwest.gg/g/877fb595-42cf-4b16-8661-1ec49b71cb23 -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seal Spinner</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      overflow: hidden;
+    }
+
+    #seal-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #seal {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      cursor: pointer;
+    }
+  </style>
+
+<script>
+    (function() {
+      window.addEventListener("error", (event) => {
+        console.log("ERROR EVENT", event);
+        window.parent.postMessage({
+            type: "IFRAME_ERROR_EVENT",
+            message: event.message,
+            filename: event.filename,
+            error: event.error,
+            lineno: event.lineno,
+            colno: event.colno,
+          },
+          "*"
+        );
+      });
+
+      window.addEventListener('unhandledrejection', (event) => {
+        window.parent.postMessage(
+          {
+            type: 'IFRAME_UNHANDLED_REJECTION_EVENT',
+            message: event.reason?.message || String(event.reason),
+            stack: event.reason?.stack || null,
+            reason: event.reason,
+          },
+          '*'
+        )
+      })
+    })()
+  </script><link type="text/css" rel="stylesheet" id="dark-mode-custom-link"><link type="text/css" rel="stylesheet" id="dark-mode-general-link"><style lang="en" type="text/css" id="dark-mode-custom-style"></style><style lang="en" type="text/css" id="dark-mode-native-style"></style><style lang="en" type="text/css" id="dark-mode-native-sheet"></style></head>
+
+<body>
+<script>
+ (function() {
+      const targetNode = document.body;
+      const config = {
+        childList: true,
+        subtree: true,
+      };
+      const callback = (mutationsList, observer) => {
+        for (const mutation of mutationsList) {
+          if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach(node => {
+              if (node.tagName === 'A') {
+                node.addEventListener('click', (evt) => {
+                  evt.preventDefault();
+                  window.parent.postMessage({
+                    type: 'REQ_REDIRECT_EVENT',
+                    href: node.href,
+                    target: node.target,
+                  }, '*')
+                })
+              }
+            })
+          }
+        }
+      };
+      const observer = new MutationObserver(callback);
+      observer.observe(targetNode, config);
+    })();
+</script>
+
+  <div id="seal-container">
+    <img id="seal" src="./Seal Spinner_files/2025-01-10T01_44_36.846Z_seal-spin-2.gif" alt="Spinning Seal">
+  </div>
+  <script>
+    (function() {
+      let GG_ALL_GAME_CONFIG = {
+        backgroundMusic: "https://storage.wildwest.gg/uploads/2025-01-10T01:46:03.207Z_spinning-seal-made-with-vo.mp3" // Background music
+      };
+      const seal = document.getElementById('seal');
+      let backgroundMusic;
+
+      function initAudio() {
+        backgroundMusic = new Audio(GG_ALL_GAME_CONFIG.backgroundMusic);
+        backgroundMusic.loop = true;
+        playBackgroundMusic();
+      }
+
+      function playBackgroundMusic() {
+        backgroundMusic.play().catch(error => {
+          console.error('Background music playback failed', error);
+          // If autoplay is blocked, we'll start the music on the first user interaction
+          document.body.addEventListener('click', function playOnInteraction() {
+            backgroundMusic.play().catch(error => console.error('Background music playback failed on interaction', error));
+          }, {
+            once: true
+          });
+        });
+      }
+      seal.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        if (backgroundMusic.paused) {
+          playBackgroundMusic();
+        }
+      });
+      // Touch event listeners for mobile devices
+      seal.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (backgroundMusic.paused) {
+          playBackgroundMusic();
+        }
+      });
+      // Initialize audio immediately
+      initAudio();
+      // Ensure music keeps playing
+      setInterval(() => {
+        if (backgroundMusic && backgroundMusic.paused) {
+          playBackgroundMusic();
+        }
+      }, 1000);
+      // Handle visibility change to prevent stopping when tab is inactive
+      document.addEventListener("visibilitychange", function() {
+        if (document.hidden) {
+          backgroundMusic.pause();
+        } else {
+          playBackgroundMusic();
+        }
+      });
+    })();
+  </script>
+
+
+
+</body></html>
