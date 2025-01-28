@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reddit Archive</title>
+  <style>
+    /* Basic reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      line-height: 1.6;
+      display: flex;
+    }
+
+    /* Sidebar styles */
+    #sidebar {
+      width: 250px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-right: 2px solid #ccc;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    #sidebar h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #0073e6;
+    }
+
+    #sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #sidebar ul li {
+      margin-bottom: 10px;
+    }
+
+    #sidebar a {
+      text-decoration: none;
+      color: #0073e6;
+      font-size: 1.2rem;
+    }
+
+    #sidebar a:hover {
+      text-decoration: underline;
+    }
+
+    /* Content area styles */
+    #content {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 2.5rem;
+    }
+
+    #post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin: 0;
+    }
+
+    .post {
+      background-color: white;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    .post h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .post p {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: #555;
+    }
+
+    .post small {
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    #comment-list {
+      display: none;
+      margin: 20px 0;
+    }
+
+    .comment {
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .comment strong {
+      color: #0073e6;
+    }
+
+    .comment small {
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
+      }
+
+      #sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 2px solid #ccc;
+      }
+
+      #content {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <h2>Subreddits</h2>
+    <ul>
+      <li><a href="#" onclick="loadPosts()">r/learnprogramming</a></li>
+      <li><a href="#" onclick="loadPosts()">r/technology</a></li>
+      <!-- Add more subreddits here -->
+    </ul>
+  </div>
+
+  <!-- Content Area -->
+  <div id="content">
+    <h1>Reddit Archive</h1>
+
+    <!-- Post List -->
+    <div id="post-list"></div>
+
+    <!-- Comment List -->
+    <div id="comment-list"></div>
+  </div>
+
+  <script>
+    // Declare the post and comment data arrays
+    let postsData = [];
+    let commentsData = [];
+
+    // Function to load posts and comments
+    function loadPosts() {
+      // Load posts data
+      fetch('data/posts.json')
+        .then(response => response.json())
+        .then(data => {
+          postsData = data;
+          displayPosts();
+        })
+        .catch(err => console.error('Error loading posts:', err));
+
+      // Load comments data
+      fetch('data/comments.json')
+        .then(response => response.json())
+        .then(data => {
+          commentsData = data;
+        })
+        .catch(err => console.error('Error loading comments:', err));
+    }
+
+    // Display posts in the post list
+    function displayPosts() {
+      const postList = document.getElementById('post-list');
+      let postHTML = "";
+
+      postsData.forEach(post => {
+        postHTML += `
+          <div class="post" onclick="displayComments(${post.id})">
+            <h3>${post.title}</h3>
+            <p>${post.body}</p>
+            <small>by ${post.author} | Upvotes: ${post.upvotes} | ${new Date(post.timestamp).toLocaleString()}</small>
+          </div>
+        `;
+      });
+
+      postList.innerHTML = postHTML;
+    }
+
+    // Display comments for a specific post
+    function displayComments(postId) {
+      const commentList = document.getElementById('comment-list');
+      const postComments = commentsData.filter(comment => comment.postId === postId);
+
+      if (postComments.length === 0) {
+        commentList.innerHTML = `<p>No comments available for this post.</p>`;
+        return;
+      }
+
+      let commentHTML = `<h3>Comments</h3>`;
+
+      postComments.forEach(comment => {
+        commentHTML += `
+          <div class="comment">
+            <p><strong>${comment.author}:</strong> ${comment.body}</p>
+            <small>Upvotes: ${comment.upvotes} | ${new Date(comment.timestamp).toLocaleString()}</small>
+          </div>
+        `;
+      });
+
+      commentList.style.display = 'block';
+      commentList.innerHTML = commentHTML;
+    }
+  </script>
+
+</body>
+</html>
