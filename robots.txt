@@ -4,4 +4,8 @@ Disallow: /projects/wigets
 User-agent: *
 Allow: /
 
+User-agent: *
+Disallow: /beta/
+
+
 Sitemap: https://unknown07724.github.io/sitemap.xml
