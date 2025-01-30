@@ -11,30 +11,37 @@ body {
 p,h2,h1,h3,h4,h5 {
      text-align: center;
 }
-  summary {
+
+summary {
       text-align: center;
     }
+
 details {
   padding: 10px; 
   border: 5px solid #f7f7f7;
   border-radius: 3px;
 }
 
-ul{
+ul
+{
   text-align: center;
   display: inline-block;
 }
+
  a:visited {
       color: orange;
   }
+
  a:hover {
       color: green;
   }
+
  button:hover {
       color: white;
       background-color: orange;
       cursor: pointer;
   }
+
 button{
       color: orange;
       transition-duration: 0.4s;
