@@ -46,12 +46,12 @@ ul
 button{
       color: orange;
       transition-duration: 0.4s;
-      background-color: white;
+      background-color: #000d6b;
       border: 2px solid orange;
       margin: 4px 2px;
       display: inline-block;
       font-size: 16px;
-      color: #040273;
+    
 }
    a:link {
     color: white;
@@ -69,6 +69,7 @@ button{
       }
       button{
         color: white;
+        background-color: white;
       }
       a:link {
      color: black;
