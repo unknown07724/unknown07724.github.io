@@ -1,6 +1,9 @@
-/* #282828 */ 
+/* #282828
+   #040273
+   #334BFF
+ */ 
 body {
-    background-color: #040273;
+    background-color: #334BFF;
     color: white;
     font-family: sans-serif;
 }
