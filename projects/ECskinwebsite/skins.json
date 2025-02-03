@@ -1,0 +1,16 @@
+[
+    {
+        "name": "Steve",
+        "author": "Notch",
+        "date": "2009-1-06",
+        "preview": "skins/steve_preview.png",
+        "file": "skins/steve_skin.png"
+    },
+    {
+        "name": "Alex",
+        "author": "Mojang",
+        "date": "2025-02-03",
+        "preview": "skins/alex_preview.png",
+        "file": "skins/alex_skin.png"
+    }
+]
