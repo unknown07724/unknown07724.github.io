@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #1e1e1e;
+    color: white;
+}
+
+h1 {
+    margin-top: 20px;
+}
+
+.skin-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.skin-card {
+    background: #333;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 5px;
+    text-align: center;
+    width: 200px;
+}
+
+.skin-card img {
+    width: 128px;
+    height: 128px;
+    border-radius: 5px;
+}
+
+.download-btn {
+    display: block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.skin-info {
+    font-size: 14px;
+    color: #bbb;
+    margin-top: 5px;
+}
