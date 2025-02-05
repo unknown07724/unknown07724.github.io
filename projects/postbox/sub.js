@@ -25,7 +25,7 @@ function getSubredditIdFromUrl() {
 // Fetches subreddit info from JSON
 async function getSubredditData(subredditId) {
     try {
-        const response = await fetch("data/subreddits.json");
+        const response = await fetch("data/subreddits.json?t=${Date.now()}");
         if (!response.ok) throw new Error("Failed to load subreddit data");
 
         const subreddits = await response.json();
