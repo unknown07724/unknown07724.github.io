@@ -128,4 +128,24 @@ function updatePostList() {
         const div = document.createElement("div");
         div.classList.add("post-item");
         div.innerHTML = `
-            
+            <strong>${post.title}</strong><br>
+            Posted in r/${post.subreddit} by ${post.user}<br>
+            ${post.content}<br>
+            <button onclick="openCommentForm(${post.id})">Comment</button>
+        `;
+        postListDiv.appendChild(div);
+    });
+}
+
+// Function to shuffle posts (for random display)
+function shuffle(array) {
+    let shuffledArray = array.slice();
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;
+}
+
+// Load data on page load
+window.onload = loadData;
