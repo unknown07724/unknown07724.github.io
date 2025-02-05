@@ -12,7 +12,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            fetch("subreddits.json")
+            fetch("data/subreddits.json")
                 .then(response => response.json())
                 .then(subreddits => {
                     const subredditList = document.getElementById("subreddit-list");
