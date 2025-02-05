@@ -12,7 +12,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            fetch("data/subreddits.json")
+            fetch("data/subreddits.json?t=${Date.now()}")
                 .then(response => response.json())
                 .then(subreddits => {
                     const subredditList = document.getElementById("subreddit-list");
