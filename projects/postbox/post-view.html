@@ -25,15 +25,20 @@
     </main>
 
     <script>
-        // Webhook for moderation review
         const webhookURL = "https://discord.com/api/webhooks/1336541813212975175/8YcdxjTvptCriGzxVhNMbKSoW6Ngm1dVL3rvHylvMajPK13MALHg49acGUlkvxRcoaEK";
-
-        // Get post ID from the URL hash
         const postId = window.location.hash.substring(1);
+        let userIP = "Unknown";
+
         if (!postId) {
             alert("No post ID provided.");
             window.location.href = "index.html";
         }
+
+        // Get the user's IP
+        fetch("https://api64.ipify.org?format=json")
+            .then(response => response.json())
+            .then(data => userIP = data.ip)
+            .catch(error => console.error("Error fetching IP:", error));
 
         // Fetch post data
         fetch(`posts.json?t=${Date.now()}`)
@@ -51,7 +56,6 @@
             })
             .catch(error => console.error("Error loading post:", error));
 
-        // Fetch comments
         function loadComments() {
             fetch(`comments.json?t=${Date.now()}`)
                 .then(response => response.json())
@@ -69,12 +73,10 @@
                 .catch(error => console.error("Error loading comments:", error));
         }
 
-        loadComments(); // Initial load
+        loadComments();
 
-        // Comment submission
         document.getElementById("comment-form").addEventListener("submit", async (e) => {
             e.preventDefault();
-
             const content = document.getElementById("comment-content").value.trim();
             if (!content) {
                 alert("Comment cannot be empty!");
@@ -82,22 +84,28 @@
             }
 
             const commentData = {
-                id: crypto.randomUUID(), // Unique comment ID
-                referenceType: "post", // This is a post comment (not a reply)
-                referenceId: postId, // Links to the current post
-                content: content
+                id: crypto.randomUUID(),
+                referenceType: "post",
+                referenceId: postId,
+                content: content,
+                userIP: userIP
             };
 
-            // Send comment for moderation
             await fetch(webhookURL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content: "New comment for review!", embeds: [{ description: content, footer: { text: `Post ID: ${postId}` } }] })
+                body: JSON.stringify({
+                    content: "New comment for review!",
+                    embeds: [{
+                        description: content,
+                        footer: { text: `Post ID: ${postId} | IP: ${userIP}` }
+                    }]
+                })
             });
 
             alert("Comment submitted for review!");
             document.getElementById("comment-content").value = "";
-            loadComments(); // Reload comments
+            loadComments();
         });
     </script>
 </body>
