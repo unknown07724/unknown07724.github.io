@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Post</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1 id="post-title">Loading...</h1>
+        <p id="post-content"></p>
+        <p id="post-subreddit"></p>
+    </header>
+
+    <main>
+        <h2>Comments</h2>
+        <div id="comments-section">Loading comments...</div>
+
+        <h3>Add a Comment</h3>
+        <form id="comment-form">
+            <textarea id="comment-content" placeholder="Write a comment..." required></textarea><br>
+            <button type="submit">Post Comment</button>
+        </form>
+    </main>
+
+    <script>
+        // Webhook for moderation review
+        const webhookURL = "https://discord.com/api/webhooks/1336541813212975175/8YcdxjTvptCriGzxVhNMbKSoW6Ngm1dVL3rvHylvMajPK13MALHg49acGUlkvxRcoaEK";
+
+        // Get post ID from the URL hash
+        const postId = window.location.hash.substring(1);
+        if (!postId) {
+            alert("No post ID provided.");
+            window.location.href = "index.html";
+        }
+
+        // Fetch post data
+        fetch(`posts.json?t=${Date.now()}`)
+            .then(response => response.json())
+            .then(posts => {
+                const post = posts.find(p => p.id === postId);
+                if (!post) {
+                    document.body.innerHTML = "<h1>Post not found</h1>";
+                    return;
+                }
+
+                document.getElementById("post-title").innerText = post.title;
+                document.getElementById("post-content").innerText = post.content;
+                document.getElementById("post-subreddit").innerText = `Subreddit: ${post.subreddit}`;
+            })
+            .catch(error => console.error("Error loading post:", error));
+
+        // Fetch comments
+        function loadComments() {
+            fetch(`comments.json?t=${Date.now()}`)
+                .then(response => response.json())
+                .then(comments => {
+                    const postComments = comments.filter(c => c.referenceType === "post" && c.referenceId === postId);
+                    const commentsSection = document.getElementById("comments-section");
+
+                    if (postComments.length === 0) {
+                        commentsSection.innerHTML = "<p>No comments yet.</p>";
+                        return;
+                    }
+
+                    commentsSection.innerHTML = postComments.map(c => `<p>${c.content}</p>`).join("");
+                })
+                .catch(error => console.error("Error loading comments:", error));
+        }
+
+        loadComments(); // Initial load
+
+        // Comment submission
+        document.getElementById("comment-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const content = document.getElementById("comment-content").value.trim();
+            if (!content) {
+                alert("Comment cannot be empty!");
+                return;
+            }
+
+            const commentData = {
+                id: crypto.randomUUID(), // Unique comment ID
+                referenceType: "post", // This is a post comment (not a reply)
+                referenceId: postId, // Links to the current post
+                content: content
+            };
+
+            // Send comment for moderation
+            await fetch(webhookURL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content: "New comment for review!", embeds: [{ description: content, footer: { text: `Post ID: ${postId}` } }] })
+            });
+
+            alert("Comment submitted for review!");
+            document.getElementById("comment-content").value = "";
+            loadComments(); // Reload comments
+        });
+    </script>
+</body>
+</html>
