@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Loading Subreddit...</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div id="logo">
+            <a href="/">Reddit Clone</a>
+        </div>
+        <nav>
+            <a href="/create-post">Create Post</a>
+            <a href="/subreddits">Subreddits</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Subreddit Info -->
+        <section id="subreddit-info">
+            <h2 id="subreddit-name">Loading Subreddit...</h2>
+            <p id="subreddit-description">Loading description...</p>
+            <button onclick="openPostForm()">Create Post</button>
+        </section>
+
+        <!-- Posts Section -->
+        <section id="posts">
+            <h3>Top Posts</h3>
+            <div id="post-list">
+                <!-- Posts will be dynamically added here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Post Creation Form (Hidden by default) -->
+    <div id="postForm" style="display: none;">
+        <h3>Create a New Post</h3>
+        <input type="text" id="postTitle" placeholder="Post Title">
+        <textarea id="postContent" placeholder="What do you want to talk about?"></textarea>
+        <button onclick="createPost()">Post</button>
+        <button onclick="closePostForm()">Cancel</button>
+    </div>
+
+    <script src="sub.js"></script>
+</body>
+</html>
