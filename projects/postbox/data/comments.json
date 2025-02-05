@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "content": "First comment!",
+        "user": 2,
+        "postId": 1,
+        "reference": [null, null]
+    },
+    {
+        "id": 2,
+        "content": "Reply to first comment.",
+        "user": 1,
+        "postId": 1,
+        "reference": ["comment", 1]
+    }
+]
