@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subreddits</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Subreddits</h1>
+    <div id="subreddit-list"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("subreddits.json")
+                .then(response => response.json())
+                .then(subreddits => {
+                    const subredditList = document.getElementById("subreddit-list");
+                    subreddits.forEach(sub => {
+                        const subLink = document.createElement("a");
+                        subLink.href = `subreddit.html#${sub.id}`;
+                        subLink.textContent = `r/${sub.name}`;
+                        subLink.classList.add("subreddit-link");
+
+                        const subItem = document.createElement("div");
+                        subItem.classList.add("subreddit-item");
+                        subItem.appendChild(subLink);
+
+                        subredditList.appendChild(subItem);
+                    });
+                })
+                .catch(error => console.error("Error loading subreddits:", error));
+        });
+    </script>
+</body>
+</html>
