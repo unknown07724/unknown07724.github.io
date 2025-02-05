@@ -42,7 +42,7 @@ async function getSubredditData(subredditId) {
 // Loads posts for the subreddit from posts.json
 async function loadSubredditPosts(subredditId) {
     try {
-        const response = await fetch("posts.json");
+        const response = await fetch("data/posts.json?t=${Date.now()}");
         if (!response.ok) throw new Error("Failed to load posts");
 
         const posts = await response.json();
