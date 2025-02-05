@@ -3,53 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Post</title>
+    <title>Create a Post</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Create a Post in <span id="subreddit-name"></span></h1>
+        <h1>Create a Post in <span id="subreddit-name">...</span></h1>
     </header>
-    
+
     <main>
         <form id="post-form">
             <input type="text" id="post-title" placeholder="Title" required><br>
-            <textarea id="post-content" placeholder="Write something..." required></textarea><br>
-            <button type="submit">Submit</button>
+            <textarea id="post-content" placeholder="Write your post..." required></textarea><br>
+            <button type="submit">Submit Post</button>
         </form>
     </main>
 
     <script>
-        // Extract subreddit name from URL hash
-        const subreddit = window.location.hash.substring(1);
-        document.getElementById("subreddit-name").innerText = subreddit ? subreddit : "Unknown";
-
-        // Webhook URL
         const webhookURL = "https://discord.com/api/webhooks/1336541813212975175/8YcdxjTvptCriGzxVhNMbKSoW6Ngm1dVL3rvHylvMajPK13MALHg49acGUlkvxRcoaEK";
+        const subreddit = window.location.hash.substring(1);
+        let userIP = "Unknown";
+
+        if (!subreddit) {
+            alert("No subreddit specified.");
+            window.location.href = "index.html";
+        }
+
+        document.getElementById("subreddit-name").innerText = subreddit;
+
+        // Get the user's IP
+        fetch("https://api64.ipify.org?format=json")
+            .then(response => response.json())
+            .then(data => userIP = data.ip)
+            .catch(error => console.error("Error fetching IP:", error));
 
         document.getElementById("post-form").addEventListener("submit", async (e) => {
             e.preventDefault();
-
             const title = document.getElementById("post-title").value.trim();
             const content = document.getElementById("post-content").value.trim();
 
-            if (!title || !content || !subreddit) {
-                alert("All fields are required!");
+            if (!title || !content) {
+                alert("Title and content cannot be empty!");
                 return;
             }
 
             const postData = {
-                id: crypto.randomUUID(), // Generate a unique ID
+                id: crypto.randomUUID(),
+                subreddit: subreddit,
                 title: title,
                 content: content,
-                subreddit: subreddit
+                userIP: userIP
             };
 
-            // Send data to Discord webhook
+            // Send the post data to the Discord webhook for review
             await fetch(webhookURL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content: "New post for review!", embeds: [{ title, description: content, footer: { text: `Subreddit: ${subreddit}` } }] })
+                body: JSON.stringify({
+                    content: "New post for review!",
+                    embeds: [{
+                        title: title,
+                        description: content,
+                        footer: { text: `Subreddit: ${subreddit} | IP: ${userIP}` }
+                    }]
+                })
             });
 
             alert("Post submitted for review!");
