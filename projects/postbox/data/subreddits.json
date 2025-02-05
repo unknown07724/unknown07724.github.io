@@ -1,14 +1,17 @@
 [
     {
-        "id": 1,
-        "name": "General"
+        "id": "gaming",
+        "name": "Gaming",
+        "description": "All things gaming!"
+    },
+     {
+        "id": "gaming",
+        "name": "Banvideog*mes",
+        "description": "the only way to win is to not play"
     },
     {
-        "id": 2,
-        "name": "Banvideogames"
-    },
-    {
-        "id": 3,
-        "name": "Tech"
+        "id": "technology",
+        "name": "Technology",
+        "description": "Tech news and discussions"
     }
 ]
