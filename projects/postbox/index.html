@@ -1,1 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Clone</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div id="logo">
+            <a href="/">Reddit Clone</a>
+        </div>
+        <nav>
+            <a href="/create-post">Create Post</a>
+            <a href="/subreddits">Subreddits</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="posts">
+            <!-- Dynamically populated posts will go here -->
+        </section>
+
+        <section id="subreddits">
+            <!-- Dynamically populated subreddits will go here -->
+        </section>
+
+        <!-- Create Post Form -->
+        <div id="postForm" style="display: none;">
+            <h3>Create a New Post</h3>
+            <input type="text" id="postTitle" placeholder="Post Title">
+            <textarea id="postContent" placeholder="What do you want to talk about?"></textarea>
+            <select id="postSubreddit">
+                <!-- Subreddit options will go here -->
+            </select>
+            <button onclick="createPost()">Post</button>
+            <button onclick="closePostForm()">Cancel</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Reddit Clone</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
 
