@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Create a Post in <span id="subreddit-name"></span></h1>
+    </header>
+    
+    <main>
+        <form id="post-form">
+            <input type="text" id="post-title" placeholder="Title" required><br>
+            <textarea id="post-content" placeholder="Write something..." required></textarea><br>
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+
+    <script>
+        // Extract subreddit name from URL hash
+        const subreddit = window.location.hash.substring(1);
+        document.getElementById("subreddit-name").innerText = subreddit ? subreddit : "Unknown";
+
+        // Webhook URL
+        const webhookURL = "https://discord.com/api/webhooks/1336541813212975175/8YcdxjTvptCriGzxVhNMbKSoW6Ngm1dVL3rvHylvMajPK13MALHg49acGUlkvxRcoaEK";
+
+        document.getElementById("post-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById("post-title").value.trim();
+            const content = document.getElementById("post-content").value.trim();
+
+            if (!title || !content || !subreddit) {
+                alert("All fields are required!");
+                return;
+            }
+
+            const postData = {
+                id: crypto.randomUUID(), // Generate a unique ID
+                title: title,
+                content: content,
+                subreddit: subreddit
+            };
+
+            // Send data to Discord webhook
+            await fetch(webhookURL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content: "New post for review!", embeds: [{ title, description: content, footer: { text: `Subreddit: ${subreddit}` } }] })
+            });
+
+            alert("Post submitted for review!");
+            window.location.href = `subreddit.html#${subreddit}`;
+        });
+    </script>
+</body>
+</html>
