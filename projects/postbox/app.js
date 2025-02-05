@@ -46,18 +46,17 @@ function createSubreddit() {
 function createPost() {
     const title = document.getElementById("postTitle").value;
     const content = document.getElementById("postContent").value;
-    const subredditName = document.getElementById("postSubreddit").value;
+    const subredditId = parseInt(document.getElementById("postSubreddit").value);
 
-    if (title && content && subredditName) {
-        const subreddit = subreddits.find(sub => sub.name === subredditName);
+    if (title && content && subredditId) {
+        const subreddit = subreddits.find(sub => sub.id === subredditId);
         if (subreddit) {
             const post = {
                 id: Date.now(),
                 title,
                 content,
-                subreddit: subreddit.name,
-                user: "anonymous",
-                userId: 1
+                subreddit: subreddit.id,
+                user: 1
             };
             sendToWebhook(post, 'post');
         } else {
@@ -129,12 +128,24 @@ function updatePostList() {
         div.classList.add("post-item");
         div.innerHTML = `
             <strong>${post.title}</strong><br>
-            Posted in r/${post.subreddit} by ${post.user}<br>
+            Posted in r/${getSubredditName(post.subreddit)} by ${getUserName(post.user)}<br>
             ${post.content}<br>
             <button onclick="openCommentForm(${post.id})">Comment</button>
         `;
         postListDiv.appendChild(div);
     });
+}
+
+// Function to get subreddit name by id
+function getSubredditName(subredditId) {
+    const subreddit = subreddits.find(sub => sub.id === subredditId);
+    return subreddit ? subreddit.name : "Unknown";
+}
+
+// Function to get user name by id
+function getUserName(userId) {
+    const user = users.find(u => u.id === userId);
+    return user ? user.username : "Anonymous";
 }
 
 // Function to shuffle posts (for random display)
