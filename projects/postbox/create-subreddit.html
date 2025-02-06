@@ -14,7 +14,6 @@
         <nav>
             <a href="subreddits">Community Boxes</a>
             <a href="signup">Sign up</a>
-            <a href="create-subreddit">Create a Community Box</a>
         </nav>
     </header>
 
@@ -50,6 +49,13 @@
             if (!boxID || !boxName || !boxDescription) {
                 errorMessage.textContent = "All fields are required.";
                 return;
+            }
+
+            // Validate ID format (no spaces, only letters, numbers, - and _)
+            if (!/^[a-zA-Z0-9_-]+$/.test(boxID)) {
+                errorMessage.textContent = "Invalid Community Box ID. Use only letters, numbers, hyphens (-), or underscores (_).";
+                return;
+            }
 
             try {
                 const response = await fetch(webhookURL, {
