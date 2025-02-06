@@ -19,6 +19,22 @@
         "name": "Memes",
         "description": "Memes! A way of describing cultural information being shared. An element of a culture or system of behavior that may be considered to be passed from one individual to another by nongenetic means, especially imitation."
     },
+   
+    {
+        "id": "reddit_bad",
+        "name": "Reddit is bad",
+        "description": "tell your experiences of reddit before going to postbox"
+    },
+     {
+        "id": "deltarune",
+        "name": "Deltarune",
+        "description": "the only way to win is to not play"
+    },
+    {
+        "id": "postbox_help",
+        "name": "Postbox help",
+        "description": "help for postbox"
+    },
     {
         "id": "undertale",
         "name": "Undertale",
