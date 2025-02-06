@@ -26,7 +26,7 @@ function getSubredditIdFromUrl() {
 async function getSubredditData(subredditId) {
     try {
         const response = await fetch("data/subreddits.json?t=${Date.now()}");
-        if (!response.ok) throw new Error("Failed to load subreddit data");
+        if (!response.ok) throw new Error("Failed to load community-box data");
 
         const subreddits = await response.json();
         return subreddits.find(sub => sub.id === subredditId) || {
@@ -35,7 +35,7 @@ async function getSubredditData(subredditId) {
         };
     } catch (error) {
         console.error("Error:", error);
-        return { name: "Error", description: "Failed to load subreddit" };
+        return { name: "Error", description: "Failed to load community-box" };
     }
 }
 
@@ -63,7 +63,7 @@ async function loadSubredditPosts(subredditId) {
                 <h4>${post.title}</h4>
                 <p>${post.content}</p>
                 <div class="post-meta">
-                    <span>Posted by <a href="/user/${post.author}">${post.author}</a></span>
+                    <span>Posted by <a href="/user/${post.user}">${post.user}</a></span>
                 </div>
             `;
             postList.appendChild(postElement);
