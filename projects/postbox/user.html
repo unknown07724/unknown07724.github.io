@@ -21,44 +21,57 @@
         <h2>Posts by this user</h2>
         <div id="posts"></div>
     </main>
-    <script>
-        async function loadUserPosts() {
-            const userId = window.location.hash.substring(1); // Get user ID from URL hash
-            document.title = 'postbox -' + userId ;
-            
-            if (!userId) return;
+<script>
+    async function loadUserPosts() {
+        const userId = window.location.hash.substring(1); // Get user ID from URL hash
+        document.title = 'postbox - ' + userId;
 
-            document.getElementById("username").textContent = `User: ${userId}`;
+        if (!userId) return;
 
-            try {
-                const response = await fetch(`posts.json?nocache=${Date.now()}`);
-                const posts = await response.json();
+        document.getElementById("username").textContent = `User: ${userId}`;
 
-                const userPosts = posts.filter(post => post.user === userId);
+        try {
+            const response = await fetch(`posts.json?nocache=${Date.now()}`);
 
-                const postsContainer = document.getElementById("posts");
-                postsContainer.innerHTML = "";
-
-                if (userPosts.length === 0) {
-                    postsContainer.innerHTML = "<p>No posts found.</p>";
-                    return;
-                }
-
-                userPosts.forEach(post => {
-                    const postElement = document.createElement("div");
-                    postElement.classList.add("post");
-                    postElement.innerHTML = `
-                        <h3><a href="post-view.html#${post.id}">${post.title}</a></h3>
-                        <p>Community Box: <a href="subreddit.html#${post.subreddit}">${post.subreddit}</a></p>
-                    `;
-                    postsContainer.appendChild(postElement);
-                });
-            } catch (error) {
-                console.error("Error loading user posts:", error);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch posts.json. Status: ${response.status}`);
             }
-        }
 
-        window.onload = loadUserPosts;
-    </script>
+            const posts = await response.json();
+            console.log("Fetched posts:", posts); // Debugging
+
+            if (!Array.isArray(posts)) {
+                throw new Error("posts.json is not an array.");
+            }
+
+            const userPosts = posts.filter(post => post.user === userId);
+            console.log("Filtered posts:", userPosts); // Debugging
+
+            const postsContainer = document.getElementById("posts");
+            postsContainer.innerHTML = "";
+
+            if (userPosts.length === 0) {
+                postsContainer.innerHTML = "<p>No posts found.</p>";
+                return;
+            }
+
+            userPosts.forEach(post => {
+                const postElement = document.createElement("div");
+                postElement.classList.add("post");
+                postElement.innerHTML = `
+                    <h3><a href="post-view.html#${post.id}">${post.title}</a></h3>
+                    <p>Community Box: <a href="subreddit.html#${post.subreddit}">${post.subreddit}</a></p>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        } catch (error) {
+            console.error("Error loading user posts:", error);
+            document.getElementById("posts").innerHTML = `<p style="color: red;">Error loading posts: ${error.message}</p>`;
+        }
+    }
+
+    window.onload = loadUserPosts;
+</script>
+
 </body>
 </html>
