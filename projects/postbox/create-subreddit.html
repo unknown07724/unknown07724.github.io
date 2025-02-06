@@ -21,6 +21,9 @@
     <h1>Create a Community Box</h1>
     <main>
         <form id="create-box-form">
+            <label for="box-id">Community Box ID (unique, no spaces):</label>
+            <input type="text" id="box-id" name="box-id" pattern="^[a-zA-Z0-9_-]+$" required>
+            
             <label for="box-name">Community Box Name:</label>
             <input type="text" id="box-name" name="box-name" required>
 
@@ -39,32 +42,43 @@
         document.getElementById("create-box-form").addEventListener("submit", async function(event) {
             event.preventDefault();
 
+            const boxID = document.getElementById("box-id").value.trim();
             const boxName = document.getElementById("box-name").value.trim();
             const boxDescription = document.getElementById("box-description").value.trim();
             const errorMessage = document.getElementById("error-message");
 
-            if (!boxName || !boxDescription) {
+            if (!boxID || !boxName || !boxDescription) {
                 errorMessage.textContent = "All fields are required.";
                 return;
             }
 
+            // Validate ID format (no spaces, only letters, numbers, - and _)
+            if (!/^[a-zA-Z0-9_-]+$/.test(boxID)) {
+                errorMessage.textContent = "Invalid Community Box ID. Use only letters, numbers, hyphens (-), or underscores (_).";
+                return;
+            }
+
             try {
-                await fetch(webhookURL, {
+                const response = await fetch(webhookURL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        content: "New Community Box for review!",
+                        content: "New Community Box submitted for review!",
                         embeds: [{
                             title: boxName,
-                            description: boxDescription
+                            description: boxDescription,
+                            fields: [{ name: "Community Box ID", value: boxID }]
                         }]
                     })
                 });
 
+                if (!response.ok) {
+                    throw new Error("Failed to submit Community Box");
+                }
+
                 alert("Community Box submitted for review!");
-                document.getElementById("create-box-form").reset();
             } catch (error) {
-                errorMessage.textContent = `Error submitting: ${error.message}`;
+                errorMessage.textContent = `Error: ${error.message}`;
             }
         });
     </script>
