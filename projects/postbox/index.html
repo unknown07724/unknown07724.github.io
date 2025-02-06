@@ -31,7 +31,7 @@
     <script>
         async function loadPosts() {
             try {
-                const response = await fetch(`data/posts.json?t=${Date.now()}`);
+                const response = await fetch(`/projects/postbox/data/posts.json?t=${Date.now()}`);
                 if (!response.ok) throw new Error("Failed to load posts");
 
                 let posts = await response.json();
