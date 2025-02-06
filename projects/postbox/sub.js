@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     getSubredditData(subredditId).then(subredditData => {
-        document.getElementById("page-title").textContent = `r/${subredditData.name}`;
-        document.getElementById("subreddit-name").textContent = `r/${subredditData.name}`;
+        document.getElementById("page-title").textContent = `${subredditData.name}`;
+        document.getElementById("subreddit-name").textContent = `${subredditData.name}`;
         document.getElementById("subreddit-description").textContent = subredditData.description;
 
         loadSubredditPosts(subredditId);
@@ -31,7 +31,7 @@ async function getSubredditData(subredditId) {
         const subreddits = await response.json();
         return subreddits.find(sub => sub.id === subredditId) || {
             name: "Unknown",
-            description: "Subreddit not found"
+            description: "community-box not found"
         };
     } catch (error) {
         console.error("Error:", error);
