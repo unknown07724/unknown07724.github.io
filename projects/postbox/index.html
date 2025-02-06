@@ -26,57 +26,50 @@
         <section id="subreddits">
             <!-- Dynamically populated subreddits will go here -->
         </section>
-
-        <!-- Create Post Form -->
-        <div id="postForm" style="display: none;">
-            <h3>Create a New Post</h3>
-            <input type="text" id="postTitle" placeholder="Post Title">
-            <textarea id="postContent" placeholder="What do you want to talk about?"></textarea>
-            <select id="postSubreddit">
-                <!-- Subreddit options will go here -->
-            </select>
-            <button onclick="createPost()">Post</button>
-            <button onclick="closePostForm()">Cancel</button>
-        </div>
     </main>
-  <script>
-      async function loadposts() {
-    try {
-        const response = await fetch("data/posts.json?t=${Date.now()}");
-        if (!response.ok) throw new Error("Failed to load posts");
 
-        const posts = await response.json();
-        
+    <script>
+        async function loadPosts() {
+            try {
+                const response = await fetch(`data/posts.json?t=${Date.now()}`);
+                if (!response.ok) throw new Error("Failed to load posts");
 
-        const postList = document.getElementById("post-list");
-        postList.innerHTML = ""; // Clear old posts
+                let posts = await response.json();
 
-        if (posts.length === 0) {
-            postList.innerHTML = "<p>No posts yet.</p>";
-            return;
+                // Shuffle posts randomly
+                posts.sort(() => Math.random() - 0.5);
+
+                const postsContainer = document.getElementById("posts");
+                postsContainer.innerHTML = ""; // Clear old posts
+
+                if (posts.length === 0) {
+                    postsContainer.innerHTML = "<p>No posts yet.</p>";
+                    return;
+                }
+
+                posts.forEach(post => {
+                    const postElement = document.createElement("div");
+                    postElement.classList.add("post-item");
+                    postElement.innerHTML = `
+                        <h4>${post.title}</h4>
+                        <p>${post.content}</p>
+                        <div class="post-meta">
+                            <span>Posted by <a href="user.html#${post.username}">${post.username}</a></span>
+                        </div>
+                    `;
+                    postsContainer.appendChild(postElement);
+                });
+            } catch (error) {
+                console.error("Error fetching posts:", error);
+            }
         }
 
-        posts.forEach(post => {
-            const postElement = document.createElement("div");
-            postElement.classList.add("post-item");
-            postElement.innerHTML = `
-                <h4>${post.title}</h4>
-                <p>${post.content}</p>
-                <div class="post-meta">
-                    <span>Posted by <a href="user.html#${post.username}">${post.username}</a></span>
-                </div>
-            `;
-            postList.appendChild(postElement);
-        });
-    } catch (error) {
-        console.error("Error fetching posts:", error);
-    }
-}
-  </script>
+        window.onload = loadPosts;
+    </script>
+
     <footer>
         <p>Made by unknown07724</p>
     </footer>
-
     <script src="app.js"></script>
 </body>
 </html>
