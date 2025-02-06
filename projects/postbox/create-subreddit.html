@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Community Box</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div id="logo">
+            <a href="https://unknown07724.github.io/projects/postbox/">Postbox</a>
+        </div>
+        <nav>
+            <a href="subreddits">Community Boxes</a>
+            <a href="signup">Sign up</a>
+            <a href="create-subreddit">Create a Community Box</a>
+        </nav>
+    </header>
+
+    <h1>Create a Community Box</h1>
+    <main>
+        <form id="create-box-form">
+            <label for="box-name">Community Box Name:</label>
+            <input type="text" id="box-name" name="box-name" required>
+
+            <label for="box-description">Description:</label>
+            <textarea id="box-description" name="box-description" required></textarea>
+
+            <button type="submit">Submit for Review</button>
+        </form>
+
+        <p id="error-message" style="color: red;"></p>
+    </main>
+
+    <script>
+        const webhookURL = "YOUR_DISCORD_WEBHOOK_HERE"; // Replace with your actual webhook URL
+
+        document.getElementById("create-box-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const boxName = document.getElementById("box-name").value.trim();
+            const boxDescription = document.getElementById("box-description").value.trim();
+            const errorMessage = document.getElementById("error-message");
+
+            if (!boxName || !boxDescription) {
+                errorMessage.textContent = "All fields are required.";
+                return;
+            }
+
+            try {
+                await fetch(webhookURL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        content: "New Community Box for review!",
+                        embeds: [{
+                            title: boxName,
+                            description: boxDescription
+                        }]
+                    })
+                });
+
+                alert("Community Box submitted for review!");
+                document.getElementById("create-box-form").reset();
+            } catch (error) {
+                errorMessage.textContent = `Error submitting: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
