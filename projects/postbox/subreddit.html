@@ -35,7 +35,13 @@
         <button onclick="post()">Post</button>
     <script src="sub.js"></script>
     <script>
-        
+        function post() {
+    const sub = window.location.hash.substring(1); // Get the Community Box from the URL hash
+    if (!sub) return; // Ignore if no box is specified
+
+    window.location.href = `post.html#${sub}`; // Redirect to post.html with the subreddit hash
+}
+
     </script>
 </body>
 </html>
