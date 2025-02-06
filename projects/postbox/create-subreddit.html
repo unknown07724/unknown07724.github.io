@@ -36,7 +36,7 @@
     </main>
 
     <script>
-        const webhookURL = "YOUR_DISCORD_WEBHOOK_HERE"; // Replace with your actual webhook URL
+        const webhookURL = "https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8GlINLpk9Y2YGd%2FREtNg8K%2Fa9w43X1Y1PHRNy7ilnfTCIiPaI1QpJwpWRGX5%2B6UxAeuCumWtV%2BLWRPram9aC3OJ1pwWahYNuQFA1%2BVcUKonw8ENJMYdDabbY7KikvbxHqVYUf92fZRoFOZ17Ip2ezTsYH0UdBwXcrDedtI3pFqXx1EuFSwHU%2FwVA3UV3gjPhe%2BGpn8LtYkgVl7yt3AbjkzC4Vo3dv16sdJOMm5khY2saOD11bafjjXtC2OyjHzF9Vuu1AQBFXK58FuDOnWriXVtvbhhWAnIoKDzSF9%2FbfIkiEg5fwfBfTI6a%2FsCX9%2FvaEM9hbSADjAWI24Z%2B%2BWSicl5HQKS8y5RmwWDN7VO%2B7VFFso%3D/q7eX9epxHNXDNsWU"; // Replace with your actual webhook URL
 
         document.getElementById("create-box-form").addEventListener("submit", async function(event) {
             event.preventDefault();
@@ -52,7 +52,7 @@
             }
 
             // Validate ID format (no spaces, only letters, numbers, - and _)
-            if (!/^[a-zA-Z0-9_-]+$/.test(boxID)) {
+            if (!/^[a-zA-Z0-9-]+$/.test(boxID)) {
                 errorMessage.textContent = "Invalid Community Box ID. Use only letters, numbers, hyphens (-), or underscores (_).";
                 return;
             }
