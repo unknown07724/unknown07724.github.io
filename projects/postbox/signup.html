@@ -61,17 +61,18 @@
             }
         }
 
-        async function getUserIp() {
-            try {
-                const response = await fetch("https://api.ipify.org?format=json");
-                const data = await response.json();
-                return data.ip;
-            } catch (error) {
-                console.error("Error fetching IP:", error);
-                return "unknown"; // Default IP if fetch fails
-            }
-        }
-
+       await fetch(webhookURL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    content: "New user account for review!",
+                    embeds: [{
+                        title: username,
+                        description: userIp
+                    }]
+                })
+            });
+        
         document.getElementById("signup-form").addEventListener("submit", createAccount);
     </script>
 </body>
