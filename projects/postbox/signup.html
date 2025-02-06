@@ -40,16 +40,21 @@
             const postData = {
                 ip: userIp(),
                 username: username
+                
             };
             
             try {
-                const response = await fetch(webhookUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(data)
-                });
+                  await fetch(webhookURL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    content: "New user account for review!",
+                    embeds: [{
+                        title: username,
+                        description: userIp
+                    }]
+                })
+            });
 
                 if (!response.ok) {
                     throw new Error("Failed to submit account data");
@@ -61,17 +66,7 @@
             }
         }
 
-       await fetch(webhookURL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    content: "New user account for review!",
-                    embeds: [{
-                        title: username,
-                        description: userIp
-                    }]
-                })
-            });
+     
         
         document.getElementById("signup-form").addEventListener("submit", createAccount);
     </script>
