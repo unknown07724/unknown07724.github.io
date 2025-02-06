@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Panel</h1>
+    </header>
+
+    <main>
+        <!-- IP to User ID Tool -->
+        <section>
+            <h2>IP to User ID</h2>
+            <form id="ip-lookup-form">
+                <input type="text" id="ip-input" placeholder="Enter IP Address" required>
+                <button type="submit">Lookup User ID</button>
+            </form>
+            <p id="ip-lookup-result">Result: </p>
+        </section>
+
+        <!-- Post JSON Generator Tool -->
+        <section>
+            <h2>Post JSON Generator</h2>
+            <form id="post-json-form">
+                <input type="text" id="post-title" placeholder="Post Title" required><br>
+                <textarea id="post-content" placeholder="Post Content" required></textarea><br>
+                <input type="text" id="post-subreddit" placeholder="Subreddit" required><br>
+                <button type="submit">Generate Post JSON</button>
+            </form>
+            <pre id="post-json-result">Generated JSON: </pre>
+        </section>
+    </main>
+
+    <script>
+        // Simulated Data for IP-to-User ID Mapping (Replace with actual data)
+        const ipToUserData = {
+            "192.168.1.1": { id: "user-123", username: "User123" },
+            "38.50.236.238": { id: "1", username: "unknown07724" }
+        };
+
+        // IP to User ID Lookup Function
+        document.getElementById("ip-lookup-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const ip = document.getElementById("ip-input").value.trim();
+            const userData = ipToUserData[ip];
+
+            if (userData) {
+                document.getElementById("ip-lookup-result").innerText = `User ID: ${userData.id}, Username: ${userData.username}`;
+            } else {
+                document.getElementById("ip-lookup-result").innerText = "User not found";
+            }
+        });
+
+        // Post JSON Generator Function
+        document.getElementById("post-json-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById("post-title").value.trim();
+            const content = document.getElementById("post-content").value.trim();
+            const subreddit = document.getElementById("post-subreddit").value.trim();
+
+            if (!title || !content || !subreddit) {
+                alert("All fields are required!");
+                return;
+            }
+
+            const postJson = {
+                id: crypto.randomUUID(),
+                subreddit: subreddit,
+                title: title,
+                content: content,
+                userID: "PLACEHOLDER_USER_ID", // Replace with actual user ID logic
+            };
+
+            // Display generated Post JSON
+            document.getElementById("post-json-result").innerText = JSON.stringify(postJson, null, 4);
+        });
+    </script>
+</body>
+</html>
