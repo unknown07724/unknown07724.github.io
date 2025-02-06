@@ -3,7 +3,8 @@
         "id": 1,
         "title": "First Post",
         "content": "This is the content of the first post.",
-        "subreddit_id": "technology",
+        "subreddit_id": "postbox_official",
         "user": 1
+        "username": "unknown07724"
     }
 ]
