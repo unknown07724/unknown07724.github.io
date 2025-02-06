@@ -24,7 +24,7 @@
     <script>
         async function loadUserPosts() {
             const userId = window.location.hash.substring(1); // Get user ID from URL hash
-            document.title = userId;
+            document.title = 'postbox -' + username ;
             if (!userId) return;
 
             document.getElementById("username").textContent = `User: ${userId}`;
