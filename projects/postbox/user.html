@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1 id="username"></h1>
+    </header>
+    <main>
+        <h2>Posts by this user</h2>
+        <div id="posts"></div>
+    </main>
+    <script>
+        async function loadUserPosts() {
+            const userId = window.location.hash.substring(1); // Get user ID from URL hash
+            document.title = userId;
+            if (!userId) return;
+
+            document.getElementById("username").textContent = `User: ${userId}`;
+
+            try {
+                const response = await fetch(`posts.json?nocache=${Date.now()}`);
+                const posts = await response.json();
+
+                const userPosts = posts.filter(post => post.user === userId);
+
+                const postsContainer = document.getElementById("posts");
+                postsContainer.innerHTML = "";
+
+                if (userPosts.length === 0) {
+                    postsContainer.innerHTML = "<p>No posts found.</p>";
+                    return;
+                }
+
+                userPosts.forEach(post => {
+                    const postElement = document.createElement("div");
+                    postElement.classList.add("post");
+                    postElement.innerHTML = `
+                        <h3><a href="post-view.html#${post.id}">${post.title}</a></h3>
+                        <p>Community Box: <a href="subreddit.html#${post.subreddit}">${post.subreddit}</a></p>
+                    `;
+                    postsContainer.appendChild(postElement);
+                });
+            } catch (error) {
+                console.error("Error loading user posts:", error);
+            }
+        }
+
+        window.onload = loadUserPosts;
+    </script>
+</body>
+</html>
