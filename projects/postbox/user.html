@@ -31,7 +31,7 @@
         document.getElementById("username").textContent = `User: ${userId}`;
 
         try {
-            const response = await fetch(`posts.json?nocache=${Date.now()}`);
+            const response = await fetch(`data/posts.json?nocache=${Date.now()}`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch posts.json. Status: ${response.status}`);
