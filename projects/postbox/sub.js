@@ -63,7 +63,7 @@ async function loadSubredditPosts(subredditId) {
                 <h4>${post.title}</h4>
                 <p>${post.content}</p>
                 <div class="post-meta">
-                    <span>Posted by <a href="/user/${post.user}">${post.user}</a></span>
+                    <span>Posted by <a href="user.html#${post.username}">${post.username}</a></span>
                 </div>
             `;
             postList.appendChild(postElement);
