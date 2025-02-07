@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Account Deletion</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div id="logo">
+            <a href="https://unknown07724.github.io/projects/postbox/">Postbox</a>
+        </div>
+        <nav>
+            <a href="subreddits">Community Boxes</a>
+            <a href="signup">Sign up</a>
+            <a href="create-subreddit">Create a Community Box</a>   
+        </nav>
+    </header>
+
+    <main>
+        <section id="delete-request-form">
+            <h1>Request to Delete Your Account</h1>
+            <p>We are sorry to see you go! If you wish to delete your account, please fill out the form below. Please note that your posts and comments will not be deleted, but your account and personal details will be removed.</p>
+            <p><strong>Note:</strong> Once your account is deleted, all account-related data will be permanently erased unless we explictly change that in the privacy policy</p>
+
+            <form id="deleteAccountForm">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+                <label for="reason">Reason for Account Deletion</label>
+                <textarea id="reason" name="reason" placeholder="Please let us know why you're deleting your account" required></textarea>
+
+                <button type="submit">Request Account Deletion</button>
+            </form>
+
+            <p id="confirmation-message" style="display: none; color: green;">Your request has been submitted. We will process it shortly.</p>
+            <p id="error-message" style="display: none; color: red;">There was an error submitting your request. Please try again later.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>Made by unknown07724</p>
+    </footer>
+
+    <script>
+        // Form submission handler
+        document.getElementById("deleteAccountForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const reason = document.getElementById("reason").value;
+
+            // Construct the request payload
+            const requestPayload = {
+                username: username,
+                reason: reason,
+                note: "User account deletion request, posts and comments will remain"
+            };
+
+            try {
+                // Replace YOUR_WEBHOOK_URL with the actual webhook URL
+                const response = await fetch('YOUR_WEBHOOK_URL', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestPayload)
+                });
+
+                if (response.ok) {
+                    document.getElementById("confirmation-message").style.display = 'block';
+                    document.getElementById("deleteAccountForm").reset(); // Reset form
+                } else {
+                    throw new Error('Failed to submit the request');
+                }
+            } catch (error) {
+                document.getElementById("error-message").style.display = 'block';
+                console.error("Error submitting account deletion request:", error);
+            }
+        });
+    </script>
+</body>
+</html>
