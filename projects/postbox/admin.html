@@ -71,7 +71,7 @@
             const ipParts = ip.split('.');
             if (ipParts.length === 4) {
                 // Replace the last part with 'xxx' for truncation
-                ipParts[3] = 'xxx';
+                ipParts[1] = 'xxx';
             }
             return ipParts.join('.');
         }
