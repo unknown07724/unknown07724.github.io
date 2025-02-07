@@ -22,6 +22,16 @@
             <p id="ip-lookup-result">Result: </p>
         </section>
 
+        <!-- IP Truncator Tool -->
+        <section>
+            <h2>IP Truncator</h2>
+            <form id="ip-truncator-form">
+                <input type="text" id="ip-truncate-input" placeholder="Enter IP Address" required>
+                <button type="submit">Truncate IP</button>
+            </form>
+            <p id="ip-truncated-result">Truncated IP: </p>
+        </section>
+
         <!-- Post JSON Generator Tool -->
         <section>
             <h2>Post JSON Generator</h2>
@@ -53,6 +63,28 @@
                 document.getElementById("ip-lookup-result").innerText = `User ID: ${userData.id}, Username: ${userData.username}`;
             } else {
                 document.getElementById("ip-lookup-result").innerText = "User not found";
+            }
+        });
+
+        // IP Truncator Function
+        function truncateIP(ip) {
+            const ipParts = ip.split('.');
+            if (ipParts.length === 4) {
+                // Replace the last part with 'xxx' for truncation
+                ipParts[3] = 'xxx';
+            }
+            return ipParts.join('.');
+        }
+
+        // IP Truncator Tool Submit Handler
+        document.getElementById("ip-truncator-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const ip = document.getElementById("ip-truncate-input").value.trim();
+            if (ip) {
+                const truncatedIp = truncateIP(ip);
+                document.getElementById("ip-truncated-result").innerText = `Truncated IP: ${truncatedIp}`;
+            } else {
+                document.getElementById("ip-truncated-result").innerText = "Please enter a valid IP address.";
             }
         });
 
