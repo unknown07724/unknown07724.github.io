@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report a Problem</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Report a Community Box, User, Post, or Comment</h1>
+    </header>
+
+    <main>
+        <!-- Report Form -->
+        <section>
+            <h2>Submit a Report</h2>
+            <form id="report-form">
+                <label for="report-type">What are you reporting?</label>
+                <select id="report-type" required>
+                    <option value="">Select an option</option>
+                    <option value="community_box">Community Box</option>
+                    <option value="user">User</option>
+                    <option value="post">Post</option>
+                    <option value="comment">Comment</option>
+                </select><br>
+
+                <input type="text" id="report-target" placeholder="Enter ID (e.g., community name, username, post ID, comment ID)" required><br>
+
+                <label for="report-reason">Reason for Report:</label>
+                <select id="report-reason" required>
+                    <option value="">Select a reason</option>
+                    <option value="spam">Spam</option>
+                    <option value="harassment">Harassment</option>
+                    <option value="hate_speech">Hate Speech</option>
+                    <option value="scam">Scam</option>
+                    <option value="other">Other</option>
+                </select><br>
+
+                <textarea id="report-details" placeholder="Additional details (optional)"></textarea><br>
+
+                <button type="submit">Submit Report</button>
+            </form>
+        </section>
+
+        <p id="report-status"></p>
+    </main>
+
+    <script>
+        const webhookURL = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your actual webhook
+
+        document.getElementById("report-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const type = document.getElementById("report-type").value;
+            const target = document.getElementById("report-target").value.trim();
+            const reason = document.getElementById("report-reason").value;
+            const details = document.getElementById("report-details").value.trim();
+
+            if (!type || !target || !reason) {
+                alert("All fields except additional details are required.");
+                return;
+            }
+
+            const reportData = {
+                type: type,
+                target: target,
+                reason: reason,
+                details: details || "No additional details provided",
+                timestamp: new Date().toISOString()
+            };
+
+            const payload = {
+                content: `**New Report Submitted**\n\n**Type:** ${reportData.type}\n**Target ID:** ${reportData.target}\n**Reason:** ${reportData.reason}\n**Details:** ${reportData.details}\n**Timestamp:** ${reportData.timestamp}`
+            };
+
+            try {
+                const response = await fetch(webhookURL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    document.getElementById("report-status").innerText = "Report submitted successfully.";
+                    document.getElementById("report-form").reset();
+                } else {
+                    throw new Error("Failed to send report.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("report-status").innerText = "Error submitting report.";
+            }
+        });
+    </script>
+</body>
+</html>
