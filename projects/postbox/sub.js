@@ -60,11 +60,12 @@ async function loadSubredditPosts(subredditId) {
             const postElement = document.createElement("div");
             postElement.classList.add("post-item");
             postElement.innerHTML = `
-                <h4>${post.title}</h4>
-                <p>${post.content}</p>
                 <div class="post-meta">
                     <span>Posted by <a href="user.html#${post.username}">${post.username}</a></span>
                 </div>
+                <h4>${post.title}</h4>
+                <p>${post.content}</p>
+                <img src="${post.image}" width="500" height="500">
             `;
             postList.appendChild(postElement);
         });
