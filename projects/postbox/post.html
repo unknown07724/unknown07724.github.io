@@ -15,21 +15,23 @@
             <a href="subreddits">Community Boxes</a>
             <a href="signup">Sign up</a>
             <a href="create-subreddit">Create a Community Box</a>
+            <a href="report">Report</a>
         </nav>
     </header>
 
-        <h1>Create a Post in <span id="subreddit-name">...</span></h1>
+    <h1>Create a Post in <span id="subreddit-name">...</span></h1>
 
     <main>
         <form id="post-form">
             <input type="text" id="post-title" placeholder="Title" required><br>
             <textarea id="post-content" placeholder="Write your post..." required></textarea><br>
+            <input type="file" id="post-image" accept="image/png, image/jpeg, image/webp"><br>
             <button type="submit">Submit Post</button>
         </form>
     </main>
 
     <script>
-        const webhookURL = "https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8GlINLpk9Y2YGd%2FREtNg8K%2Fa9w43X1Y1PHRNy7ilnfTCIiPaI1QpJwpWRGX5%2B6UxAeuCumWtV%2BLWRPram9aC3OJ1pwWahYNuQFA1%2BVcUKonw8ENJMYdDabbY7KikvbxHqVYUf92fZRoFOZ17Ip2ezTsYH0UdBwXcrDedtI3pFqXx1EuFSwHU%2FwVA3UV3gjPhe%2BGpn8LtYkgVl7yt3AbjkzC4Vo3dv16sdJOMm5khY2saOD11bafjjXtC2OyjHzF9Vuu1AQBFXK58FuDOnWriXVtvbhhWAnIoKDzSF9%2FbfIkiEg5fwfBfTI6a%2FsCX9%2FvaEM9hbSADjAWI24Z%2B%2BWSicl5HQKS8y5RmwWDN7VO%2B7VFFso%3D/q7eX9epxHNXDNsWU";
+        const webhookURL = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with actual webhook
         const subreddit = window.location.hash.substring(1);
         let userIP = "Unknown";
 
@@ -50,36 +52,43 @@
             e.preventDefault();
             const title = document.getElementById("post-title").value.trim();
             const content = document.getElementById("post-content").value.trim();
+            const imageFile = document.getElementById("post-image").files[0];
 
             if (!title || !content) {
                 alert("Title and content cannot be empty!");
                 return;
             }
 
-            const postData = {
-                id: crypto.randomUUID(),
-                subreddit: subreddit,
-                title: title,
-                content: content,
-                userIP: userIP
-            };
+            const formData = new FormData();
+            formData.append("payload_json", JSON.stringify({
+                content: "New post for review!",
+                embeds: [{
+                    title: title,
+                    description: content,
+                    footer: { text: `Subreddit: ${subreddit} | IP: ${userIP}` }    
+                }]
+            }));
 
-            // Send the post data to the encrypted Discord webhook for review
-            await fetch(webhookURL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    content: "New post for review!",
-                    embeds: [{
-                        title: title,
-                        description: content,
-                        footer: { text: `Subreddit: ${subreddit} | IP: ${userIP}` }
-                    }]
-                })
-            });
+            if (imageFile) {
+                formData.append("file", imageFile);
+            }
 
-            alert("Post submitted for review!");
-            window.location.href = `subreddit.html#${subreddit}`;
+            try {
+                const response = await fetch(webhookURL, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert("Post submitted for review!");
+                    window.location.href = `subreddit.html#${subreddit}`;
+                } else {
+                    throw new Error("Failed to submit post.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error submitting post.");
+            }
         });
     </script>
 </body>
