@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     getSubredditData(subredditId).then(subredditData => {
-        document.getElementById("page-title").textContent = `${subredditData.name}`;
-        document.getElementById("subreddit-name").textContent = `${subredditData.name}`;
+        document.getElementById("page-title").textContent = `c/${subredditData.name}`;
+        document.getElementById("subreddit-name").textContent = `c/${subredditData.name}`;
         document.getElementById("subreddit-description").textContent = subredditData.description;
 
         loadSubredditPosts(subredditId);
