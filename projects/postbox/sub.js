@@ -66,7 +66,7 @@ async function loadSubredditPosts(subredditId) {
                 </div>
                 <h4>${post.title}</h4>
                 <p>${post.content}</p>
-                <img src="${post.image}" width="500" height="500">
+                <img src="${post.image}">
             `;
             postList.appendChild(postElement);
         });
