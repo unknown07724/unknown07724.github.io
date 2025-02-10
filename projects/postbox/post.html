@@ -32,24 +32,25 @@
 
     <script>
         const webhookURL = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with actual webhook
-        const subreddit = window.location.hash.substring(1);
+        const subreddit = window.location.hash.substring(1).trim();
         let userIP = "Unknown";
 
         if (!subreddit) {
             alert("No subreddit specified.");
             window.location.href = "index.html";
+        } else {
+            document.getElementById("subreddit-name").innerText = subreddit;
         }
-
-        document.getElementById("subreddit-name").innerText = subreddit;
 
         // Get the user's IP
         fetch("https://api64.ipify.org?format=json")
             .then(response => response.json())
-            .then(data => userIP = data.ip)
+            .then(data => { userIP = data.ip; })
             .catch(error => console.error("Error fetching IP:", error));
 
         document.getElementById("post-form").addEventListener("submit", async (e) => {
             e.preventDefault();
+
             const title = document.getElementById("post-title").value.trim();
             const content = document.getElementById("post-content").value.trim();
             const imageFile = document.getElementById("post-image").files[0];
