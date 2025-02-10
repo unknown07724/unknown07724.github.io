@@ -25,24 +25,24 @@ function getSubredditIdFromUrl() {
 // Fetches subreddit info from JSON
 async function getSubredditData(subredditId) {
     try {
-        const response = await fetch("data/subreddits.json?t=${Date.now()}");
+        const response = await fetch(`data/subreddits.json?t=${Date.now()}`);
         if (!response.ok) throw new Error("Failed to load community-box data");
 
         const subreddits = await response.json();
         return subreddits.find(sub => sub.id === subredditId) || {
             name: "Unknown",
-            description: "community-box not found"
+            description: "Community box not found"
         };
     } catch (error) {
         console.error("Error:", error);
-        return { name: "Error", description: "Failed to load community-box" };
+        return { name: "Error", description: "Failed to load community box" };
     }
 }
 
 // Loads posts for the subreddit from posts.json
 async function loadSubredditPosts(subredditId) {
     try {
-        const response = await fetch("data/posts.json?t=${Date.now()}");
+        const response = await fetch(`data/posts.json?t=${Date.now()}`);
         if (!response.ok) throw new Error("Failed to load posts");
 
         const posts = await response.json();
@@ -59,6 +59,10 @@ async function loadSubredditPosts(subredditId) {
         filteredPosts.forEach(post => {
             const postElement = document.createElement("div");
             postElement.classList.add("post-item");
+
+            // Check if post has an image
+            const imageHTML = post.image ? `<img src="${post.image}" alt="Post Image">` : "";
+
             postElement.innerHTML = `
                 <div class="post-meta">
                     <span>Posted by <a href="user.html#${post.username}">${post.username}</a></span>
@@ -66,7 +70,7 @@ async function loadSubredditPosts(subredditId) {
                 </div>
                 <h4>${post.title}</h4>
                 <p>${post.content}</p>
-                <img src="${post.image}">
+                ${imageHTML}
             `;
             postList.appendChild(postElement);
         });
