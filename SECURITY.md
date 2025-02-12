@@ -11,4 +11,4 @@
 
 ## Reporting a Vulnerability
 
-report any Vulnerabilities to trash1,junk99@gmail.com
+report any Vulnerabilities to trash1.junk99@gmail.com
