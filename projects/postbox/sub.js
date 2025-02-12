@@ -65,7 +65,7 @@ async function loadSubredditPosts(subredditId) {
 
             postElement.innerHTML = `
                 <div class="post-meta">
-                    <span>Posted by <a href="user.html#${post.username}">${post.username}</a></span>
+                    <span>Posted by <a href="user.html#${post.user}">${post.username}</a></span>
                     <p>Posted on ${post.posted}</p>
                 </div>
                 <h4>${post.title}</h4>
