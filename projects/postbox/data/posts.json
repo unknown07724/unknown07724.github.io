@@ -7,8 +7,8 @@
         "user": 1,
         "username": "unknown07724",
         "posted": "feb 6th 2025",
-        "image": "/projects/postbox/cdn/1x1.png"
     },
+    
     {
         "id": 2,
         "title": "introducing images!",
@@ -18,5 +18,14 @@
         "username": "unknown07724",
         "posted": "feb 10th 2025",
         "image": "/projects/postbox/cdn/Shebia1.jpg"
-    }
+    },
+    {
+        "id": 3,
+        "title": "profile refresh",
+        "content": "we added profile pictures and description to your profile, have no pfp? then we use a default one",
+        "subreddit_id": "postbox-official",
+        "user": 1,
+        "username": "unknown07724",
+        "posted": "feb 6th 2025",
+    },
 ]
