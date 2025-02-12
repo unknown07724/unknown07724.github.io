@@ -12,4 +12,10 @@
         "id": 3,
         "username": "um"
     }
+    {
+        "id": 4,
+        "username": "???"
+        "description": "this is the account of which all posts by banned users are credited too, expect a few posts that violate the guidelines"
+
+    }
 ]
