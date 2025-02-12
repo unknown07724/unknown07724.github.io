@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div id="logo">
+            <a href="https://unknown07724.github.io/projects/postbox/">Postbox</a>
+        </div>
+        <nav>
+            <a href="subreddits">Community Boxes</a>
+            <a href="signup">Sign up</a>
+            <a href="create-subreddit">Create a Community Box</a>
+            <a href="report">Report</a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="edit-profile-form">
+            <h2>Edit Your Profile</h2>
+            <label for="profile-pic">Profile Picture</label>
+            <input type="file" id="profile-pic" accept="image/png, image/jpeg, image/webp"><br><br>
+            
+            <label for="description">Description</label><br>
+            <textarea id="description" placeholder="Write a short bio..."></textarea><br><br>
+            
+            <button id="submit-profile">Submit Changes for Review</button>
+        </div>
+    </main>
+
+    <script>
+        const userId = window.location.hash.substring(1); // Get user ID from URL hash (if present)
+        
+        document.getElementById("submit-profile").addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            const description = document.getElementById("description").value.trim();
+            const profilePic = document.getElementById("profile-pic").files[0];
+
+            if (!description && !profilePic) {
+                alert("Please provide at least one field to update.");
+                return;
+            }
+
+            // Prepare the data for Discord webhook
+            const payload = {
+                username: "Profile Update Request",
+                avatar_url: "https://example.com/your-avatar.png", // Customize the bot avatar
+                embeds: [{
+                    title: "Profile Update Submitted for Review",
+                    description: `User: ${userId}\nDescription: ${description}`,
+                    fields: [{
+                        name: "Profile Picture",
+                        value: profilePic ? profilePic.name : "No profile picture uploaded"
+                    }],
+                    footer: {
+                        text: `Submitted on: ${new Date().toLocaleString()}`
+                    },
+                    color: 0x00ff00 // Green color for approval, can be changed
+                }]
+            };
+
+            try {
+                // Send the data to a Discord webhook
+                const response = await fetch("YOUR_DISCORD_WEBHOOK_URL", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert("Your profile update has been submitted for review.");
+                    window.location.href = `user.html#${userId}`;
+                } else {
+                    throw new Error("Failed to submit changes for review.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error submitting your profile changes.");
+            }
+        });
+    </script>
+</body>
+</html>
