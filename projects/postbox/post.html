@@ -61,15 +61,18 @@
             }
 
             const formData = new FormData();
+
+            // Append JSON payload without image field in embed
             formData.append("payload_json", JSON.stringify({
                 content: "New post for review!",
                 embeds: [{
                     title: title,
                     description: content,
-                    footer: { text: `Subreddit: ${subreddit} | IP: ${userIP}` }    
+                    footer: { text: `Subreddit: ${subreddit} | IP: ${userIP}` }
                 }]
             }));
 
+            // Attach image file separately without adding it to the embed
             if (imageFile) {
                 formData.append("file", imageFile);
             }
