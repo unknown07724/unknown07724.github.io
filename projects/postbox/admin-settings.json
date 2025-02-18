@@ -1,0 +1,5 @@
+{
+    "maintenance_mode": false,
+    "require_post_review": true,
+    "allow_image_uploads": true
+}
