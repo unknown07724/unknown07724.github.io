@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="memes and other garbage">
+    <meta name="keywords" content="website, memes">
+    <meta name="author" content="Unknown07724">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+    <link rel="stylesheet" href="styles/main.css">
+    <title>Projects - by unknown07724</title>
+    <style>
+        body {
+            background-color: #040273;
+            color: white;
+            font-family: sans-serif;
+            text-align: center;
+        }
+        @media screen and (prefers-color-scheme: light) {
+            body {
+                background-color: white;
+                color: black;
+            }
+        }
+        .project-container {
+            margin: 20px auto;
+            width: 50%;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h2>Project List</h2>
+    <p>Automatically loaded from JSON.</p>
+    <div id="projects" class="project-container"></div>
+    
+    <script>
+        fetch('projects.json')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('projects');
+                data.projects.forEach(project => {
+                    const projectDiv = document.createElement('div');
+                    projectDiv.innerHTML = `
+                        <a href="${project.url}"><h4>${project.name}</h4></a>
+                        <p>${project.description}</p>
+                        <hr>
+                    `;
+                    container.appendChild(projectDiv);
+                });
+            })
+            .catch(error => console.error('Error loading projects:', error));
+    </script>
+</body>
+</html>
