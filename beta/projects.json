@@ -1,0 +1,74 @@
+{
+    "projects": [
+        {
+            "name": "Duolingo Quotes",
+            "url": "projects/duolingo-quotes/index",
+            "description": "Weird quotes/sentences from Duolingo"
+        },
+        {
+            "name": "Cat Memes",
+            "url": "projects/Catmemes/index",
+            "description": "Cat memes from my memes folder"
+        },
+        {
+            "name": "Universe Simulation",
+            "url": "projects/universe-simulation/index",
+            "description": "Game - Version 0.9"
+        },
+        {
+            "name": "Nothing",
+            "url": "projects/nothing/index",
+            "description": "It is actually nothing"
+        },
+        {
+            "name": "The Meme-Wiki",
+            "url": "projects/wiki/index",
+            "description": "Stuff explained in simple terms and memes"
+        },
+        {
+            "name": "Exploration 1",
+            "url": "projects/exploration/exploration1.html",
+            "description": "Go on a mission to anywhere"
+        },
+        {
+            "name": "Internet News",
+            "url": "projects/internet-news/index",
+            "description": "Check what's actually happening"
+        },
+        {
+            "name": "Crates",
+            "url": "projects/crates",
+            "description": "Puzzle game with nukes, swappers, buttons, eyeballs, and holes for crates"
+        },
+        {
+            "name": "Planet Collision",
+            "url": "projects/planet-collision/index.html",
+            "description": "See a collision between planets"
+        },
+        {
+            "name": "Cat Clicker Revamped",
+            "url": "projects/cat-clicker-revamped/index.html",
+            "description": "Revamped version of my game, Cat Clicker"
+        },
+        {
+            "name": "Wave Shooter",
+            "url": "projects/sas/index.html",
+            "description": "Press space or click to shoot, arrow keys to turn, don't let enemies touch the turret"
+        },
+        {
+            "name": "Spinning Seal",
+            "url": "projects/spin-seal/index.html",
+            "description": "Spinny boi"
+        },
+        {
+            "name": "Trap Cube",
+            "url": "projects/trap_cube",
+            "description": "Be a cube. Controls: WASD to move, blue dots kill, red enemy guys spawn with left click"
+        },
+        {
+            "name": "Random Roast Generator",
+            "url": "projects/rrg/index",
+            "description": "Generates roasts"
+        }
+    ]
+}
