@@ -18,9 +18,16 @@
     <button type="submit">Search</button>
   </form>
   <div id="results"></div>
-  <script>// JavaScript search engine
+  <script>
 // JavaScript search engine
-// JavaScript search engine
+// JavaScript search engine with SafeSearch, Favicons, and Answer Boxes
+const answerBoxData = {
+  "when did ww2 end": "1945",
+  "who is the president of the us": "This depends on the current year. Check an official source for the latest information.",
+  "capital of france": "Paris",
+  "largest ocean": "The Pacific Ocean"
+};
+
 async function loadSites() {
   try {
     const response = await fetch('./data/sites.json'); // Load local file within the project
@@ -43,12 +50,20 @@ function searchSites(query, sites, safeSearch) {
   return results;
 }
 
-function displayResults(results) {
+function displayResults(results, query) {
   const resultsContainer = document.getElementById('results');
   resultsContainer.innerHTML = '';
 
+  // Check for direct answer box
+  if (answerBoxData[query.toLowerCase()]) {
+    const answerBox = document.createElement('div');
+    answerBox.className = 'answer-box';
+    answerBox.innerHTML = `<h2>Answer:</h2><p>${answerBoxData[query.toLowerCase()]}</p>`;
+    resultsContainer.appendChild(answerBox);
+  }
+
   if (results.length === 0) {
-    resultsContainer.innerHTML = '<p>No results found.</p>';
+    resultsContainer.innerHTML += '<p>No results found.</p>';
     return;
   }
 
@@ -75,7 +90,7 @@ document.getElementById('searchForm').addEventListener('submit', async (event) =
 
   const sites = await loadSites();
   const results = searchSites(query, sites, safeSearch);
-  displayResults(results);
+  displayResults(results, query);
 });
 
 </script>
