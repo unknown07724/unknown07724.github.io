@@ -34,6 +34,13 @@
             <div id="post-list">
                 <!-- Posts will be dynamically added here -->
             </div>
+            <div class="sidebar">
+        <h3>About this Community box</h3>
+        <p id="subreddit-description">Loading...</p>
+
+        <h4>Created On</h4>
+        <p id="subreddit-date">Loading...</p>
+    </div>
         </section>
     </main>
         <button onclick="post()">Post</button>
@@ -45,6 +52,33 @@
 
     window.location.href = `post.html#${sub}`; // Redirect to post.html with the subreddit hash
 }
+document.addEventListener("DOMContentLoaded", () => {
+    // Get the subreddit name from the URL or hash
+    const subredditName = window.location.hash.substring(1).trim();
+
+    // Fetch subreddit data from a JSON file or backend API
+    fetch('/subreddits.json')  // Or replace with your backend endpoint
+        .then(response => response.json())
+        .then(data => {
+            // Check if the subreddit exists
+            if (data[subredditName]) {
+                const subreddit = data[subredditName];
+                
+                // Update the description and date in the sidebar
+                document.getElementById('subreddit-description').innerText = subreddit.description;
+                document.getElementById('subreddit-date').innerText = `Created on: ${subreddit.createdOn}`;
+            } else {
+                // If subreddit is not found, show an error
+                document.getElementById('subreddit-description').innerText = "Subreddit not found.";
+                document.getElementById('subreddit-date').innerText = "N/A";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching subreddit data:", error);
+            document.getElementById('subreddit-description').innerText = "Error loading data.";
+            document.getElementById('subreddit-date').innerText = "N/A";
+        });
+});
 
     </script>
 </body>
