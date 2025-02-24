@@ -2,68 +2,68 @@
     {
         "id": "gaming",
         "name": "Gaming",
-        "description": "All things gaming!"
+        "description": "All things gaming!"c
         "createdOn": "Feb 6, 2025"
     },
      {
         "id": "banvideogames",
         "name": "Banvideog*mes",
-        "description": "the only way to win is to not play"
+        "description": "the only way to win is to not play"c
          "createdOn": "Feb 7, 2025"
     },
     {
         "id": "postbox-official",
         "name": "Postbox",
-        "description": "the most official of the official Community Boxes"
+        "description": "the most official of the official Community Boxes"c
         "createdOn": "Feb 5, 2025"
     },
     {
         "id": "ahkjfl-insert",
         "name": "AHKJFLDHJKSDAFHZAJKHFGSDJK",
-        "description": "dhbewhiefwhifwegfywefeohm2gmbnmixyaumi"
+        "description": "dhbewhiefwhifwegfywefeohm2gmbnmixyaumi"c
         "createdOn": "Feb 8, 2025"
     },
     {
         "id": "heyersp",
         "name": "heyers swamp pit",
-        "description": ""
+        "description": "",
         "createdOn": "Feb 8, 2025"
     },
     {
         "id": "memes",
         "name": "Memes",
         "description": "Memes! A way of describing cultural information being shared. An element of a culture or system of behavior that may be considered to be passed from one individual to another by nongenetic means, especially imitation."
-        "createdOn": "Feb 8, 2025"
+        "createdOn": "Feb 8, 2025",
     },
    
     {
         "id": "reddit_bad",
         "name": "Reddit_is_bad",
         "description": "tell your experiences of reddit before going to postbox"
-        "createdOn": "Feb 8, 2025"
+        "createdOn": "Feb 8, 2025",
     },
      {
         "id": "deltarune",
         "name": "Deltarune",
         "description": "An unofficial subreddit to discuss the 2018 indie game Deltarune and its creator Toby Fox"
-         "createdOn": "Feb 9, 2025"
+         "createdOn": "Feb 9, 2025",
     },
     {
         "id": "postbox_help",
         "name": "Postbox help",
         "description": "help for postbox"
-        "createdOn": "Feb 5, 2025"
+        "createdOn": "Feb 5, 2025",
     },
     {
         "id": "undertale",
         "name": "Undertale",
         "description": "UNDERTALE is an indie RPG created by developer Toby Fox about a child, who falls into an underground world filled with monsters. Their only weapon being their DETERMINATION as they try to FIGHT or ACT their way out. Will you show monsters standing in your way MERCY, or slaughter them all?"
-        "createdOn": "Feb 5, 2025"
+        "createdOn": "Feb 5, 2025",
     },
     {
         "id": "technology",
         "name": "Technology",
-        "description": "Tech news and discussions"
+        "description": "Tech news and discussions",
         "createdOn": "Feb 5, 2025"
     }
 ]
