@@ -1,5 +1,5 @@
 {
-    "maintenance_mode": false,
+    "maintenance_mode": true,
     "require_post_review": true,
     "allow_image_uploads": true
 }
