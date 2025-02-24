@@ -152,3 +152,17 @@ footer p {
         margin: 10px;
     }
 }
+
+.sidebar h3 {
+    margin-top: 0;
+}
+
+.sidebar h4 {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.sidebar p {
+    font-size: 14px;
+    color: #555;
+}
