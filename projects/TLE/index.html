@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History Timeline Explorer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>History Timeline Explorer</h1>
+
+        <!-- Filter Section -->
+        <div id="filters">
+            <h3>Filter Events</h3>
+            <form id="filter-form">
+                <label for="nation">Nation:</label>
+                <select id="nation">
+                    <option value="">Select Nation</option>
+                    <!-- Nations will be populated here -->
+                </select>
+                
+                <label for="season">Season:</label>
+                <select id="season">
+                    <option value="">Select Season</option>
+                    <option value="Fall">Fall</option>
+                    <option value="Summer">Fall</option>
+                    <option value="Winter">Fall</option>
+                    <option value="Spring">Fall</option>
+                    <option value="N/A">N/A</option>
+                </select>
+                
+                <label for="century">Century:</label>
+                <select id="century">
+                    <option value="">Select Century</option>
+                    <option value="5th century">5th century</option>
+                    <option value="N/A">N/A</option>
+                </select>
+                
+                <label for="period">Period:</label>
+                <select id="period">
+                    <option value="">Select Period</option>
+                    <option value="Classical Era">Classical Era</option>
+                    <option value="Prehistoric Era">Prehistoric Era</option>
+                    <option value="Ancient Era">Ancient Era</option>
+                </select>
+
+                <button type="submit">Apply Filters</button>
+            </form>
+        </div>
+
+        <!-- Event List Section -->
+        <div id="event-list">
+            <!-- Events will be displayed here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
