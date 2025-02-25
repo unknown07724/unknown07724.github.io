@@ -1,45 +1,12 @@
-// Sample event data
-const events = [
-  {
-    "event_name": "Fall of the Roman Empire",
-    "description": "The collapse of the Western Roman Empire in 476 AD.",
-    "date": "476 AD",
-    "start_date": "27 BC",
-    "end_date": "476 AD",
-    "nation": "Roman Empire",
-    "season": "Fall",
-    "century": "5th century",
-    "period": "Classical Era",
-    "prehistory": false
-  },
-  {
-    "event_name": "Discovery of Fire",
-    "description": "The discovery of fire by prehistoric humans.",
-    "date": "1 million BC",
-    "start_date": "2 million BC",
-    "end_date": "N/A",
-    "nation": "Prehistoric Humans",
-    "season": "N/A",
-    "century": "N/A",
-    "period": "Prehistoric Era",
-    "prehistory": true
-  },
-  {
-    "event_name": "Pyramids of Giza Construction",
-    "description": "The construction of the Great Pyramids of Giza in Egypt.",
-    "date": "2580 BC",
-    "start_date": "2580 BC",
-    "end_date": "2560 BC",
-    "nation": "Ancient Egypt",
-    "season": "Summer",
-    "century": "3rd millennium BC",
-    "period": "Ancient Egypt",
-    "prehistory": false
-  }
-];
+// Function to fetch events data from the JSON file
+async function fetchEvents() {
+  const response = await fetch('events.json');
+  const data = await response.json();
+  return data;
+}
 
 // Function to filter events based on selected filters
-function filterEvents(filters) {
+function filterEvents(events, filters) {
   return events.filter(event => {
     let matches = true;
 
@@ -75,7 +42,7 @@ function displayEvents(filteredEvents) {
 }
 
 // Function to populate nation dropdown dynamically
-function populateNationDropdown() {
+function populateNationDropdown(events) {
   const nationSelect = document.getElementById('nation');
   const nations = [...new Set(events.map(event => event.nation))]; // Get unique nations
 
@@ -88,9 +55,12 @@ function populateNationDropdown() {
 }
 
 // Event listener for the filter form
-document.getElementById('filter-form').addEventListener('submit', function(event) {
+document.getElementById('filter-form').addEventListener('submit', async function(event) {
   event.preventDefault();
-  
+
+  // Fetch the events data when the form is submitted
+  const events = await fetchEvents();
+
   const nation = document.getElementById('nation').value;
   const season = document.getElementById('season').value;
   const century = document.getElementById('century').value;
@@ -102,13 +72,18 @@ document.getElementById('filter-form').addEventListener('submit', function(event
     century: century || "",
     period: period || ""
   };
-  
-  const filteredEvents = filterEvents(filters);
+
+  const filteredEvents = filterEvents(events, filters);
   displayEvents(filteredEvents);
 });
 
-// Populate the nation dropdown when the page loads
-populateNationDropdown();
-
-// Display all events initially
-displayEvents(events);
+// Fetch and display events when the page loads
+window.addEventListener('DOMContentLoaded', async () => {
+  const events = await fetchEvents();
+  
+  // Populate nation dropdown dynamically
+  populateNationDropdown(events);
+  
+  // Display all events initially
+  displayEvents(events);
+});
