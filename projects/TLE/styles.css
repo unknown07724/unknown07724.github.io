@@ -1,1 +1,30 @@
+/* Same styles as before */
+
+#filters select, #filters button {
+    padding: 8px;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+#event-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.event-item {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.event-item h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.event-item p {
+    color: #666;
+}
 
