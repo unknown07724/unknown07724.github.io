@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 // Update the description and date in the sidebar
                 document.getElementById('subreddit-description').innerText = subreddit.description;
-                document.getElementById('subreddit-date').innerText = `Created on: ${subreddit.createdOn}`;
+                document.getElementById('subreddit-date').innerText = `${subreddit.createdOn}`;
             } else {
                 // If subreddit is not found, show an error
                 document.getElementById('subreddit-description').innerText = "Subreddit not found.";
