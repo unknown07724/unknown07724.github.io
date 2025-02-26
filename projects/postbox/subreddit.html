@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const subredditName = window.location.hash.substring(1).trim();
 
     // Fetch subreddit data from a JSON file or backend API
-    fetch('/subreddits.json')  // Or replace with your backend endpoint
+    fetch('data/subreddits.json')  // Or replace with your backend endpoint
         .then(response => response.json())
         .then(data => {
             // Check if the subreddit exists
