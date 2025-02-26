@@ -157,6 +157,14 @@ footer p {
     margin-top: 0;
 }
 
+.sidebar {
+    left: 0; /* Moves it to the left side */
+    border-left: none;
+    border-right: 1px solid #ccc; /* Optional border for left sidebar */
+    margin-top: 0;
+    margin-left: 50;
+}
+
 .sidebar h4 {
     margin-top: 10px;
     font-weight: bold;
