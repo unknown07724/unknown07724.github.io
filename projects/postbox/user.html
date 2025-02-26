@@ -30,29 +30,33 @@
     </main>
 
     <script>
-        
-        // Fetch user data (from a local JSON file or an API)
-        const userId = window.location.hash.substring(1); // Get user ID from URL hash (if present)
+       const userId = window.location.hash.substring(1).trim(); // Ensure there's an ID
 
-        fetch(`data/users.json?t=${Date.now()}`)
-            .then(response => response.json())
-            .then(users => {
-                const user = users.find(u => u.id === userId);
-                if (user) {
-                    document.getElementById("username").textContent = user.username;
-                    document.getElementById("description").textContent = user.description || "No description set.";
-                    if (user.profilePicture) {
-                        document.getElementById("profile-pic").src = user.profilePicture;
-                    }
-                }
-            })
-            .catch(error => console.error("Error fetching user data:", error));
+if (!userId) {
+    alert("Invalid user profile.");
+    window.location.href = "index.html"; // Redirect to home if no ID
+}
 
-        // Edit profile button functionality (optional)
-        document.getElementById("edit-profile").addEventListener("click", () => {
-            // This would open a modal or redirect to a profile editing page
-            window.location.href = `edit-profile.html#${userId}`;
-        });
+fetch(`data/users.json?t=${Date.now()}`)
+    .then(response => response.json())
+    .then(users => {
+        const user = users.find(u => String(u.id) === userId); // Convert id to string
+        if (user) {
+            document.getElementById("username").textContent = user.username;
+            document.getElementById("description").textContent = user.description || "No description set.";
+            if (user.profilePicture) {
+                document.getElementById("profile-pic").src = user.profilePicture;
+            }
+        } else {
+            alert("User not found.");
+            window.location.href = "index.html"; // Redirect if user not found
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching user data:", error);
+        alert("Failed to load user profile.");
+    });
+
     </script>
 </body>
 </html>
