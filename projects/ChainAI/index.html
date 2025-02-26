@@ -3,41 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markov AI Sentence Generator</title>
+    <title>Markov AI Chat</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
         button { margin: 5px; padding: 10px; font-size: 16px; }
         input { margin: 5px; padding: 5px; font-size: 16px; }
         #output { margin-top: 20px; font-size: 18px; font-weight: bold; }
-        .message-list { margin-top: 20px; list-style-type: none; padding: 0; }
+        .message-list { margin-top: 20px; list-style-type: none; padding: 0; max-height: 400px; overflow-y: auto; }
         .message-item { margin: 10px 0; padding: 10px; background-color: #f1f1f1; border: 1px solid #ccc; }
         #user-message { width: 80%; }
+        .settings { margin-top: 30px; text-align: left; display: none; }
+        .settings input, .settings button { margin-bottom: 10px; }
+        /* Floating button for settings */
+        .settings-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .settings-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Markov AI Sentence Generator</h1>
+    <h1>Markov AI Chat</h1>
     
-    <button onclick="generate()">Generate Sentence</button>
-    <p id="output">Click the button to generate a sentence.</p>
+    <h2>Messages</h2>
+    <ul id="messageList" class="message-list"></ul>
 
-    <h2>Train AI</h2>
-    <input type="text" id="word" placeholder="New word">
-    <input type="text" id="partOfSpeech" placeholder="Part of speech">
-    <input type="text" id="transitions" placeholder="Transitions (word:probability)">
-    <button onclick="train()">Add Word</button>
+    <div class="settings">
+        <h2>Settings - Train AI</h2>
+        <input type="text" id="word" placeholder="New word">
+        <input type="text" id="partOfSpeech" placeholder="Part of speech">
+        <input type="text" id="transitions" placeholder="Transitions (word:probability)">
+        <button onclick="train()">Add Word</button>
+    </div>
 
-    <h2>Your Messages</h2>
+    <h2>Send a Message</h2>
     <input type="text" id="user-message" placeholder="Type a message">
     <button onclick="sendMessage()">Send Message</button>
 
-    <ul id="userMessages" class="message-list"></ul>
-
-    <h2>Markov Chain Messages</h2>
-    <ul id="generatedMessages" class="message-list"></ul>
+    <button class="settings-button" onclick="toggleSettings()">⚙️</button>
 
     <script>
         let words = {};  // This will hold our word data from the JSON file
+        let userMessages = [];
+        let generatedMessages = [];
 
         // Function to load the words from the JSON file
         async function loadWords() {
@@ -58,9 +77,6 @@
         window.onload = () => {
             loadWords();
         };
-
-        let generatedMessages = [];
-        let userMessages = [];
 
         // Sentence generator function
         function generateSentence(startWord = "hello", maxWords = 10) {
@@ -83,18 +99,6 @@
             }
 
             return sentence.join(" ");
-        }
-
-        // Generate sentence on button click
-        function generate() {
-            if (Object.keys(words).length === 0) {
-                alert('Please wait for the words to load.');
-                return;
-            }
-
-            let sentence = generateSentence();
-            generatedMessages.push(sentence);
-            displayMessages();
         }
 
         // Add new word to training data
@@ -125,6 +129,11 @@
             let userMessage = document.getElementById("user-message").value.trim();
             if (userMessage) {
                 userMessages.push(userMessage);
+
+                // Generate AI response
+                let aiResponse = generateSentence(userMessage.split(" ")[userMessage.split(" ").length - 1]);
+                generatedMessages.push(aiResponse);
+
                 displayMessages();
                 document.getElementById("user-message").value = ""; // clear the input field
             }
@@ -132,30 +141,33 @@
 
         // Display messages
         function displayMessages() {
-            const userMessagesList = document.getElementById("userMessages");
-            const generatedMessagesList = document.getElementById("generatedMessages");
+            const messageList = document.getElementById("messageList");
 
             // Clear current list
-            userMessagesList.innerHTML = '';
-            generatedMessagesList.innerHTML = '';
+            messageList.innerHTML = '';
 
             // Display user messages
             userMessages.forEach(message => {
                 let li = document.createElement("li");
                 li.classList.add("message-item");
                 li.textContent = `You: ${message}`;
-                userMessagesList.appendChild(li);
+                messageList.appendChild(li);
             });
 
-            // Display generated messages
+            // Display generated AI messages
             generatedMessages.forEach(message => {
                 let li = document.createElement("li");
                 li.classList.add("message-item");
                 li.textContent = `AI: ${message}`;
-                generatedMessagesList.appendChild(li);
+                messageList.appendChild(li);
             });
         }
 
+        // Toggle the visibility of the Settings
+        function toggleSettings() {
+            const settingsDiv = document.querySelector('.settings');
+            settingsDiv.style.display = settingsDiv.style.display === 'block' ? 'none' : 'block';
+        }
     </script>
 
 </body>
