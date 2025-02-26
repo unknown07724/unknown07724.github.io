@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markov AI Sentence Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        button { margin: 5px; padding: 10px; font-size: 16px; }
+        input { margin: 5px; padding: 5px; font-size: 16px; }
+        #output { margin-top: 20px; font-size: 18px; font-weight: bold; }
+        .message-list { margin-top: 20px; list-style-type: none; padding: 0; }
+        .message-item { margin: 10px 0; padding: 10px; background-color: #f1f1f1; border: 1px solid #ccc; }
+        #user-message { width: 80%; }
+    </style>
+</head>
+<body>
+
+    <h1>Markov AI Sentence Generator</h1>
+    
+    <button onclick="generate()">Generate Sentence</button>
+    <p id="output">Click the button to generate a sentence.</p>
+
+    <h2>Train AI</h2>
+    <input type="text" id="word" placeholder="New word">
+    <input type="text" id="partOfSpeech" placeholder="Part of speech">
+    <input type="text" id="transitions" placeholder="Transitions (word:probability)">
+    <button onclick="train()">Add Word</button>
+
+    <h2>Your Messages</h2>
+    <input type="text" id="user-message" placeholder="Type a message">
+    <button onclick="sendMessage()">Send Message</button>
+
+    <ul id="userMessages" class="message-list"></ul>
+
+    <h2>Markov Chain Messages</h2>
+    <ul id="generatedMessages" class="message-list"></ul>
+
+    <script>
+        let words = {};  // This will hold our word data from the JSON file
+
+        // Function to load the words from the JSON file
+        async function loadWords() {
+            try {
+                const response = await fetch('words.json');  // Assuming words.json is in the same directory
+                if (!response.ok) {
+                    throw new Error('Failed to load words JSON');
+                }
+                const data = await response.json();
+                words = data;
+                console.log('Words loaded successfully:', words);
+            } catch (error) {
+                console.error('Error loading words:', error);
+            }
+        }
+
+        // Run the loadWords function when the page is loaded
+        window.onload = () => {
+            loadWords();
+        };
+
+        let generatedMessages = [];
+        let userMessages = [];
+
+        // Sentence generator function
+        function generateSentence(startWord = "hello", maxWords = 10) {
+            let word = startWord;
+            let sentence = [word];
+            let partOfSpeech = words[word]?.part_of_speech;
+
+            for (let i = 0; i < maxWords - 1; i++) {
+                if (!words[word] || !words[word].transitions) break;
+
+                let possibleNextWords = Object.keys(words).filter(
+                    w => words[w].part_of_speech && words[word].valid_next.includes(words[w].part_of_speech)
+                );
+
+                if (possibleNextWords.length === 0) break;
+
+                let nextWord = possibleNextWords[Math.floor(Math.random() * possibleNextWords.length)];
+                sentence.push(nextWord);
+                word = nextWord;
+            }
+
+            return sentence.join(" ");
+        }
+
+        // Generate sentence on button click
+        function generate() {
+            if (Object.keys(words).length === 0) {
+                alert('Please wait for the words to load.');
+                return;
+            }
+
+            let sentence = generateSentence();
+            generatedMessages.push(sentence);
+            displayMessages();
+        }
+
+        // Add new word to training data
+        function train() {
+            let word = document.getElementById("word").value.trim();
+            let partOfSpeech = document.getElementById("partOfSpeech").value.trim();
+            let transitionsInput = document.getElementById("transitions").value.trim();
+            
+            if (!word || !partOfSpeech || !transitionsInput) {
+                alert("Please fill out all fields!");
+                return;
+            }
+
+            let transitions = {};
+            transitionsInput.split(",").forEach(pair => {
+                let [key, value] = pair.split(":");
+                transitions[key.trim()] = parseFloat(value);
+            });
+
+            words[word] = { part_of_speech: partOfSpeech, valid_next: [], transitions };
+            localStorage.setItem("words", JSON.stringify(words));
+
+            alert(`Added: ${word}`);
+        }
+
+        // Send a message
+        function sendMessage() {
+            let userMessage = document.getElementById("user-message").value.trim();
+            if (userMessage) {
+                userMessages.push(userMessage);
+                displayMessages();
+                document.getElementById("user-message").value = ""; // clear the input field
+            }
+        }
+
+        // Display messages
+        function displayMessages() {
+            const userMessagesList = document.getElementById("userMessages");
+            const generatedMessagesList = document.getElementById("generatedMessages");
+
+            // Clear current list
+            userMessagesList.innerHTML = '';
+            generatedMessagesList.innerHTML = '';
+
+            // Display user messages
+            userMessages.forEach(message => {
+                let li = document.createElement("li");
+                li.classList.add("message-item");
+                li.textContent = `You: ${message}`;
+                userMessagesList.appendChild(li);
+            });
+
+            // Display generated messages
+            generatedMessages.forEach(message => {
+                let li = document.createElement("li");
+                li.classList.add("message-item");
+                li.textContent = `AI: ${message}`;
+                generatedMessagesList.appendChild(li);
+            });
+        }
+
+    </script>
+
+</body>
+</html>
