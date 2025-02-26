@@ -14,6 +14,22 @@ body {
 }
 
 /* Sidebar */
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and main layout */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #1a1a1b;
+    position: relative; /* Allows positioning of child elements */
+}
+
+/* Sidebar */
 #sidebar {
     position: fixed; /* Fix the sidebar to the right side */
     right: 0; /* Place it on the right */
@@ -27,12 +43,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start; /* Align content to the left */
-}
-h3, p {
-    margin: 10px 0;
+    z-index: 1000; /* Ensure it's on top of content */
 }
 
-/* Optional styling for header, posts, etc. */
+
+
+/* Header */
 header {
     background-color: #00baff;
     padding: 15px;
@@ -40,6 +56,7 @@ header {
     justify-content: space-between;
     align-items: center;
     color: white;
+    z-index: 999; /* Ensure the header stays above the content */
 }
 
 header a {
@@ -53,3 +70,4 @@ header a:hover {
     background-color: #33caff;
     border-radius: 5px;
 }
+
