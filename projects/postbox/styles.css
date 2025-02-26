@@ -157,7 +157,7 @@ footer p {
     margin-top: 0;
 }
 
-#sidebar {
+.sidebar {
     position: fixed; /* Keeps it fixed to the viewport */
     right: 0; /* Aligns it to the right */
     top: 0; /* Aligns it to the top */
