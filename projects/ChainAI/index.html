@@ -146,21 +146,22 @@
             // Clear current list
             messageList.innerHTML = '';
 
-            // Display user messages
-            userMessages.forEach(message => {
+            // Display user messages and AI responses in order of sending
+            let allMessages = [...userMessages, ...generatedMessages];
+
+            allMessages.forEach(message => {
                 let li = document.createElement("li");
                 li.classList.add("message-item");
-                li.textContent = `You: ${message}`;
+                if (userMessages.includes(message)) {
+                    li.textContent = `You: ${message}`;
+                } else {
+                    li.textContent = `AI: ${message}`;
+                }
                 messageList.appendChild(li);
             });
 
-            // Display generated AI messages
-            generatedMessages.forEach(message => {
-                let li = document.createElement("li");
-                li.classList.add("message-item");
-                li.textContent = `AI: ${message}`;
-                messageList.appendChild(li);
-            });
+            // Scroll to the bottom of the message list
+            messageList.scrollTop = messageList.scrollHeight;
         }
 
         // Toggle the visibility of the Settings
