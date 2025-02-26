@@ -158,21 +158,17 @@ footer p {
 }
 
 #sidebar {
-    position: absolute; /* Keeps it fixed within the page */
-    right: 0; /* Aligns it to the left side */
+    position: fixed; /* Keeps it fixed to the viewport */
+    right: 0; /* Aligns it to the right */
     top: 0; /* Aligns it to the top */
     width: 250px; /* Adjust width as needed */
     height: 100vh; /* Makes it full height */
     background-color: #f4f4f4; /* Light background */
     padding: 15px;
-    border-right: 1px solid #ccc; /* Border to separate from content */
-    text-align: right; /* Ensures text aligns to the left */
+    border-left: 1px solid #ccc; /* Border to separate from content */
+    text-align: left; /* Ensures text aligns to the left */
     display: flex;
     flex-direction: column; /* Stack elements vertically */
-    align-items: flex-start; /* Align elements to the left */
-}
-
-#sidebar h2,
-#sidebar p {
-    margin: 0 0 10px 0; /* Space between elements */
+    align-items: flex-start; /* Align elements inside to the left */
+    overflow-y: auto; /* Enable scrolling if needed */
 }
