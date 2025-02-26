@@ -1,0 +1,27 @@
+{
+    "hello": {
+        "part_of_speech": "interjection",
+        "valid_next": ["noun", "verb"],
+        "transitions": { "world": 0.5, "there": 0.5 }
+    },
+    "world": {
+        "part_of_speech": "noun",
+        "valid_next": ["verb", "adjective"],
+        "transitions": { "is": 1.0 }
+    },
+    "is": {
+        "part_of_speech": "verb",
+        "valid_next": ["adjective", "noun"],
+        "transitions": { "beautiful": 0.7, "cold": 0.3 }
+    },
+    "beautiful": {
+        "part_of_speech": "adjective",
+        "valid_next": ["noun"],
+        "transitions": { "day": 1.0 }
+    },
+    "cold": {
+        "part_of_speech": "adjective",
+        "valid_next": ["noun"],
+        "transitions": { "winter": 1.0 }
+    }
+}
