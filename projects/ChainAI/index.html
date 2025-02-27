@@ -12,8 +12,7 @@
         .message-list { margin-top: 20px; list-style-type: none; padding: 0; max-height: 400px; overflow-y: auto; }
         .message-item { margin: 10px 0; padding: 10px; background-color: #f1f1f1; border: 1px solid #ccc; }
         #user-message { width: 80%; }
-        .settings { margin-top: 30px; text-align: left; display: none; }
-        .settings input, .settings button { margin-bottom: 10px; }
+        
         /* Floating button for settings */
         .settings-button {
             position: fixed;
@@ -30,6 +29,44 @@
         .settings-button:hover {
             background-color: #0056b3;
         }
+
+        /* Settings Modal */
+        .settings-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .settings-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            width: 300px;
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .close-button:hover {
+            background: darkred;
+        }
     </style>
 </head>
 <body>
@@ -39,60 +76,56 @@
     <h2>Messages</h2>
     <ul id="messageList" class="message-list"></ul>
 
-    <div class="settings">
-        <h2>Settings - Train AI</h2>
-        <input type="text" id="word" placeholder="New word">
-        <input type="text" id="partOfSpeech" placeholder="Part of speech">
-        <input type="text" id="transitions" placeholder="Transitions (word:probability)">
-        <button onclick="train()">Add Word</button>
-    </div>
-
     <h2>Send a Message</h2>
     <input type="text" id="user-message" placeholder="Type a message">
     <button onclick="sendMessage()">Send Message</button>
 
     <button class="settings-button" onclick="toggleSettings()">⚙️</button>
 
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="settings-modal">
+        <div class="settings-content">
+            <button class="close-button" onclick="toggleSettings()">✖</button>
+            <h2>Settings - Train AI</h2>
+            <input type="text" id="word" placeholder="New word">
+            <input type="text" id="partOfSpeech" placeholder="Part of speech">
+            <input type="text" id="transitions" placeholder="Transitions (word:probability)">
+            <button onclick="train()">Add Word</button>
+        </div>
+    </div>
+
     <script>
-        let words = {};  // This will hold our word data from the JSON file
+        let words = {};  // Holds our word data from the JSON file
         let userMessages = [];
         let generatedMessages = [];
 
-        // Function to load the words from the JSON file
         async function loadWords() {
             try {
-                const response = await fetch('words.json');  // Assuming words.json is in the same directory
+                const response = await fetch('words.json'); 
                 if (!response.ok) {
                     throw new Error('Failed to load words JSON');
                 }
-                const data = await response.json();
-                words = data;
-                console.log('Words loaded successfully:', words);
+                words = await response.json();
+                console.log('Words loaded:', words);
             } catch (error) {
                 console.error('Error loading words:', error);
             }
         }
 
-        // Run the loadWords function when the page is loaded
         window.onload = () => {
             loadWords();
         };
 
-        // Sentence generator function
         function generateSentence(startWord = "hello", maxWords = 10) {
             let word = startWord;
             let sentence = [word];
-            let partOfSpeech = words[word]?.part_of_speech;
 
             for (let i = 0; i < maxWords - 1; i++) {
                 if (!words[word] || !words[word].transitions) break;
-
                 let possibleNextWords = Object.keys(words).filter(
                     w => words[w].part_of_speech && words[word].valid_next.includes(words[w].part_of_speech)
                 );
-
                 if (possibleNextWords.length === 0) break;
-
                 let nextWord = possibleNextWords[Math.floor(Math.random() * possibleNextWords.length)];
                 sentence.push(nextWord);
                 word = nextWord;
@@ -101,7 +134,6 @@
             return sentence.join(" ");
         }
 
-        // Add new word to training data
         function train() {
             let word = document.getElementById("word").value.trim();
             let partOfSpeech = document.getElementById("partOfSpeech").value.trim();
@@ -124,29 +156,23 @@
             alert(`Added: ${word}`);
         }
 
-        // Send a message
         function sendMessage() {
             let userMessage = document.getElementById("user-message").value.trim();
             if (userMessage) {
                 userMessages.push(userMessage);
 
-                // Generate AI response
-                let aiResponse = generateSentence(userMessage.split(" ")[userMessage.split(" ").length - 1]);
+                let aiResponse = generateSentence(userMessage.split(" ").slice(-1)[0]);
                 generatedMessages.push(aiResponse);
 
                 displayMessages();
-                document.getElementById("user-message").value = ""; // clear the input field
+                document.getElementById("user-message").value = "";
             }
         }
 
-        // Display messages
         function displayMessages() {
             const messageList = document.getElementById("messageList");
-
-            // Clear current list
             messageList.innerHTML = '';
 
-            // Display user messages and AI responses in order of sending
             let allMessages = [...userMessages, ...generatedMessages];
 
             allMessages.forEach(message => {
@@ -155,19 +181,17 @@
                 if (userMessages.includes(message)) {
                     li.textContent = `You: ${message}`;
                 } else {
-                    li.textContent = `AI: ${message}`;  // This should now display "AI" instead of "You"
+                    li.textContent = `AI: ${message}`;
                 }
                 messageList.appendChild(li);
             });
 
-            // Scroll to the bottom of the message list
             messageList.scrollTop = messageList.scrollHeight;
         }
 
-        // Toggle the visibility of the Settings
         function toggleSettings() {
-            const settingsDiv = document.querySelector('.settings');
-            settingsDiv.style.display = settingsDiv.style.display === 'block' ? 'none' : 'block';
+            let modal = document.getElementById("settingsModal");
+            modal.style.display = modal.style.display === "flex" ? "none" : "flex";
         }
     </script>
 
