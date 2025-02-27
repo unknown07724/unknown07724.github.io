@@ -160,12 +160,14 @@
             let userMessage = document.getElementById("user-message").value.trim();
             if (userMessage) {
                 userMessages.push(userMessage);
+                document.getElementById("user-message").value = ""; // Clear input instantly
 
-                let aiResponse = generateSentence(userMessage.split(" ").slice(-1)[0]);
-                generatedMessages.push(aiResponse);
-
-                displayMessages();
-                document.getElementById("user-message").value = "";
+                // Delay AI response slightly for realism
+                setTimeout(() => {
+                    let aiResponse = generateSentence(userMessage.split(" ").slice(-1)[0]);
+                    generatedMessages.push(aiResponse);
+                    displayMessages();
+                }, 150); // 150ms delay for a smoother effect
             }
         }
 
