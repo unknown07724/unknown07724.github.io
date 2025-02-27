@@ -155,7 +155,7 @@
                 if (userMessages.includes(message)) {
                     li.textContent = `You: ${message}`;
                 } else {
-                    li.textContent = `AI: ${message}`;
+                    li.textContent = `AI: ${message}`;  // This should now display "AI" instead of "You"
                 }
                 messageList.appendChild(li);
             });
