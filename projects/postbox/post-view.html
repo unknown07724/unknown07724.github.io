@@ -4,49 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post View</title>
-     <link rel="stylesheet" href="styles.css">
+       <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Ensure this path is correct -->
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #post {
-            border-bottom: 2px solid #ccc;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        .comments-section {
-            margin-top: 20px;
-        }
-        .comment {
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-        }
-        .reply {
-            padding-left: 20px;
-            background-color: #e9e9e9;
-        }
-        .comment-form input, .comment-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .comment-form button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .comment-form button:hover {
-            background-color: #45a049;
-        }
+        /* Your styles here */
     </style>
 </head>
 <body>
@@ -75,70 +36,52 @@ const webhookURL = "https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8G
 const postId = window.location.hash.substring(1);
 let userIP = "Unknown";
 
-// Check if the postId is available
+// Ensure the postId is available
 if (!postId) {
     alert("No post ID provided.");
     window.location.href = "index.html";  // Redirect to index if no postId
 }
 
-// Get the user's IP
 fetch("https://api64.ipify.org?format=json")
     .then(response => response.json())
     .then(data => userIP = data.ip)
     .catch(error => console.error("Error fetching IP:", error));
 
-// Fetch the post data
-fetch(`data/posts.json?t=${Date.now()}`)
-    .then(response => response.json())
-    .then(posts => {
-        const post = posts.find(p => p.id === postId);
-        if (!post) {
-            document.body.innerHTML = "<h1>Post not found</h1>";
-            return;
-        }
+document.addEventListener('DOMContentLoaded', function () {
+    loadComments();
+});
 
-        // Show post details
-        document.getElementById("post-title").innerText = post.title;
-        document.getElementById("post-content").innerText = post.content;
-        document.getElementById("post-subreddit").innerText = `Subreddit: ${post.subreddit}`;
-    })
-    .catch(error => console.error("Error loading post:", error));
-
-// Fetch and load comments
 function loadComments() {
-    fetch(`data/comments.json?t=${Date.now()}`)
+    const commentsSection = document.getElementById("comments-section");
+    if (!commentsSection) {
+        console.error("Comments section element not found.");
+        return;
+    }
+
+    fetch(`comments.json?t=${Date.now()}`)
         .then(response => response.json())
         .then(comments => {
             const postComments = comments.filter(c => c.postId === parseInt(postId));
-            const commentsSection = document.getElementById("comments-section");
-
             if (postComments.length === 0) {
                 commentsSection.innerHTML = "<p>No comments yet.</p>";
                 return;
             }
 
             commentsSection.innerHTML = postComments.map(c => {
-                // Display comment
                 let commentText = `<div class="comment"><p><strong>User ${c.user}</strong>: ${c.content}</p>`;
-                
-                // Handle replies
                 if (c.reference[0] === "comment" && c.reference[1]) {
                     commentText += `<p class="reply"><strong>Replying to Comment ${c.reference[1]}</strong></p>`;
                 }
-
                 commentText += `</div>`;
                 return commentText;
             }).join("");
         })
         .catch(error => {
             console.error("Error loading comments:", error);
-            document.getElementById("comments-section").innerHTML = "<p>Error loading comments. Please try again later.</p>";
+            commentsSection.innerHTML = "<p>Error loading comments. Please try again later.</p>";
         });
 }
 
-loadComments();
-
-// Handling comment submission
 document.getElementById("submit-comment").addEventListener("click", async (e) => {
     e.preventDefault();
     const content = document.getElementById("comment-content").value.trim();
@@ -147,18 +90,16 @@ document.getElementById("submit-comment").addEventListener("click", async (e) =>
         return;
     }
 
-    // Check if the comment is a reply
     let reference = [null, null];
-    const replyToCommentId = getReplyToCommentId();  // Function to check if it's a reply
+    const replyToCommentId = getReplyToCommentId();
     if (replyToCommentId) {
         reference = ["comment", replyToCommentId];
     }
 
-    // Assuming userId is the ID of the logged-in user
     const commentData = {
         id: crypto.randomUUID(),
         content: content,
-        user: userId,  // Use user ID here
+        user: userIP,  // User IP here (replace with actual user ID in your app)
         postId: postId,
         reference: reference
     };
@@ -170,17 +111,16 @@ document.getElementById("submit-comment").addEventListener("click", async (e) =>
             content: "New comment for review!",
             embeds: [{
                 description: content,
-                footer: { text: `Post ID: ${postId} | User: ${userId}` }
+                footer: { text: `Post ID: ${postId} | User: ${userIP}` }
             }]
         })
     });
 
     alert("Comment submitted for review!");
-    document.getElementById("comment-content").value = "";  // Clear comment input
-    loadComments();  // Reload the comments after posting
+    document.getElementById("comment-content").value = "";
+    loadComments();
 });
 
-// Helper function to extract reply comment ID from the comment input field
 function getReplyToCommentId() {
     const replyContent = document.getElementById("comment-content").value;
     const match = replyContent.match(/@Comment (\d+)/);
