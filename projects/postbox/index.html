@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Postbox - your space for conversation</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="aettings-apply.js"></script>
+    <script src="settings-apply.js"></script> <!-- Corrected typo here -->
 </head>
 <body>
     <header>
@@ -13,10 +13,10 @@
             <a href="https://unknown07724.github.io/projects/postbox/">Postbox</a>
         </div>
         <nav>
-            <a href="subreddits">Community Boxes</a>
-            <a href="signup">Sign up</a>
-            <a href="create-subreddit">Create a Community Box</a>   
-            <a href="report">Report</a>   
+            <a href="/subreddits">Community Boxes</a> <!-- Added leading / -->
+            <a href="/signup">Sign up</a> <!-- Added leading / -->
+            <a href="/create-subreddit">Create a Community Box</a> <!-- Added leading / -->
+            <a href="/report">Report</a> <!-- Added leading / -->
         </nav>
     </header>
 
@@ -81,11 +81,35 @@
             }
         }
 
-        window.onload = loadPosts;
+        async function loadSubreddits() {
+            try {
+                const response = await fetch('data/subreddits.json?t=' + Date.now());
+                const subreddits = await response.json();
+
+                const selectElement = document.getElementById('postSubreddit');
+                selectElement.innerHTML = '<option value="">Select a subreddit</option>';
+
+                subreddits.forEach(subreddit => {
+                    const option = document.createElement('option');
+                    option.value = subreddit.id;
+                    option.innerHTML = subreddit.name;
+                    selectElement.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading subreddits:', error);
+            }
+        }
+
+        window.onload = function() {
+            loadPosts();
+            loadSubreddits();
+        };
     </script>
 
     <footer>
-        <p>made by unknown07724</p> <a href=privacy></a> <a href=guidelines></a>
+        <p>Made by unknown07724</p>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/guidelines">Community Guidelines</a>
     </footer>
 </body>
 </html>
