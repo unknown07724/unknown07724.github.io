@@ -18,7 +18,6 @@ body {
     padding: 15px; /* Space inside the post */
     margin: 10px 0; /* Space between posts */
     border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .post-item h4 {
