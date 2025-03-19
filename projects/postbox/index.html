@@ -13,10 +13,10 @@
             <a href="https://unknown07724.github.io/projects/postbox/">Postbox</a>
         </div>
         <nav>
-            <a href="subreddits">Community Boxes</a> <!-- Added leading / -->
-            <a href="signup">Sign up</a> <!-- Added leading / -->
-            <a href="create-subreddit">Create a Community Box</a> <!-- Added leading / -->
-            <a href="report">Report</a> <!-- Added leading / -->
+            <a href="subreddits">Community Boxes</a>
+            <a href="signup">Sign up</a>
+            <a href="create-subreddit">Create a Community Box</a>
+            <a href="report">Report</a>
         </nav>
     </header>
 
@@ -60,21 +60,21 @@
                 }
 
                 posts.forEach(post => {
-                     const imageHTML = post.image ? `<img src="${post.image}" alt="Post Image">` : "";
-            postList.appendChild(postElement);
+                    const imageHTML = post.image ? `<img src="${post.image}" alt="Post Image" class="post-image">` : "";
+
                     const postElement = document.createElement("div");
                     postElement.classList.add("post-item");
+
                     postElement.innerHTML = `
-                         postElement.innerHTML = `
-                <div class="post-meta">
-                    <span>Posted by <a href="user.html#${post.user}">${post.username}</a></span>
-                    <p>Posted on ${post.posted}</p>
-                </div>
-                <h4>${post.title}</h4>
-                <p>${post.content}</p>
-                ${imageHTML}
-            `;
+                        <div class="post-meta">
+                            <span>Posted by <a href="user.html#${post.user}">${post.username}</a></span>
+                            <p>Posted on ${post.posted}</p>
+                        </div>
+                        <h4>${post.title}</h4>
+                        <p>${post.content}</p>
+                        ${imageHTML}
                     `;
+
                     postsContainer.appendChild(postElement);
                 });
             } catch (error) {
@@ -83,7 +83,6 @@
             }
         }
 
-       
         window.onload = function() {
             loadPosts();
         };
