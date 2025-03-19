@@ -12,6 +12,65 @@ body {
     color: #1a1a1b;
     position: relative; /* Ensure this allows positioning of child elements */
 }
+/* Post Item Styles */
+.post-item {
+    background-color: #fff; /* White background for posts */
+    padding: 15px; /* Space inside the post */
+    margin: 10px 0; /* Space between posts */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.post-item h4 {
+    font-size: 1.25em; /* Larger font for the title */
+    margin-bottom: 10px; /* Space below the title */
+}
+
+.post-item p {
+    font-size: 1em; /* Regular font size for post content */
+    color: #333; /* Dark text color */
+}
+
+.post-meta {
+    font-size: 0.875em; /* Smaller text for metadata */
+    color: #777; /* Lighter color for the metadata */
+}
+
+.post-meta a {
+    color: #00baff; /* Color for links in post meta */
+}
+
+.post-meta a:hover {
+    text-decoration: underline; /* Underline links on hover */
+}
+/* Subreddit Box Styles */
+.subreddit-box {
+    background-color: #f4f4f4; /* Light gray background */
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.subreddit-box h3 {
+    font-size: 1.5em;
+    color: #00baff; /* Use the accent color for titles */
+}
+
+.subreddit-box p {
+    font-size: 1em;
+    color: #333;
+}
+
+.subreddit-box a {
+    color: #00baff; /* Link color for subreddit links */
+    text-decoration: none;
+}
+
+.subreddit-box a:hover {
+    text-decoration: underline; /* Underline on hover for links */
+}
+
 
 /* Sidebar */
 /* General Reset */
