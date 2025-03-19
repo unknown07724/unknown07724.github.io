@@ -11,6 +11,7 @@ body {
     background-color: #f8f9fa;
     color: #1a1a1b;
     position: relative; /* Ensure this allows positioning of child elements */
+    text-align: center
 }
 /* Post Item Styles */
 .post-item {
