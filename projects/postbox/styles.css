@@ -31,19 +31,20 @@ body {
 
 /* Sidebar */
 #sidebar {
-    position: fixed; /* Fix the sidebar to the right side */
-    right: 0; /* Place it on the right */
-    top: 0; /* Align it to the top */
-    width: 250px; /* Width of the sidebar */
-    height: 100vh; /* Full height of the viewport */
-    background-color: #f4f4f4; /* Light background */
+    position: absolute;
+    right: 0;
+    top: 50%; /* Positions the sidebar in the middle of the page */
+    transform: translateY(-50%); /* Centers the sidebar vertically */
+    width: 250px; /* Sidebar width */
+    background-color: #f4f4f4;
     padding: 15px;
-    border-left: 1px solid #ccc; /* Border to separate from content */
+    border-left: 1px solid #ccc; /* Optional: Adds a border to the left */
     text-align: left; /* Align text to the left */
     display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Align content to the left */
-    z-index: 1000; /* Ensure it's on top of content */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: flex-start; /* Align elements to the left */
+    height: auto; /* Automatically adjust the height based on content */
+    max-height: 80%; /* Optional: Add a max-height so it doesn't get too tall */
 }
 
 
