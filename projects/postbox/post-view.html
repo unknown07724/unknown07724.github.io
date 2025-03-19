@@ -3,125 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Post</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="settings-apply.js"></script>
+    <title>Post View</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #post {
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .comments-section {
+            margin-top: 20px;
+        }
+        .comment {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .reply {
+            padding-left: 20px;
+            background-color: #e9e9e9;
+        }
+        .comment-form input, .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .comment-form button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .comment-form button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-  
-        <header>
-        <div id="logo">
-            <a href="https://unknown07724.github.io/projects/postbox/">Postbox</a>
-        </div>
-        <nav>
-            <a href="subreddits">Community Boxes</a>
-            <a href="signup">Sign up</a>
-            <a href="create-subreddit">Create a Community Box</a>
-            <a href="report">Report</a>   
-        </nav>
-    </header>
-    
-<h1 id="post-title">Loading...</h1>
-        <p id="post-content"></p>
-        <p id="post-subreddit"></p>
 
-    <main>
-        <h2>Comments</h2>
-        <div id="comments-section">Loading comments...</div>
+<h1>Post View</h1>
 
-        <h3>Add a Comment</h3>
-        <form id="comment-form">
-            <textarea id="comment-content" placeholder="Write a comment..." required></textarea><br>
-            <button type="submit">Post Comment</button>
-        </form>
-    </main>
+<div id="post">
+    <h2 id="post-title"></h2>
+    <p id="post-content"></p>
+    <p id="post-subreddit"></p>
+</div>
 
-    <script>
-        const webhookURL = "https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8GlINLpk9Y2YGd%2FREtNg8K%2Fa9w43X1Y1PHRNy7ilnfTCIiPaI1QpJwpWRGX5%2B6UxAeuCumWtV%2BLWRPram9aC3OJ1pwWahYNuQFA1%2BVcUKonw8ENJMYdDabbY7KikvbxHqVYUf92fZRoFOZ17Ip2ezTsYH0UdBwXcrDedtI3pFqXx1EuFSwHU%2FwVA3UV3gjPhe%2BGpn8LtYkgVl7yt3AbjkzC4Vo3dv16sdJOMm5khY2saOD11bafjjXtC2OyjHzF9Vuu1AQBFXK58FuDOnWriXVtvbhhWAnIoKDzSF9%2FbfIkiEg5fwfBfTI6a%2FsCX9%2FvaEM9hbSADjAWI24Z%2B%2BWSicl5HQKS8y5RmwWDN7VO%2B7VFFso%3D/q7eX9epxHNXDNsWU";
-        const postId = window.location.hash.substring(1);
-        let userIP = "Unknown";
+<div class="comments-section">
+    <h3>Comments</h3>
+    <div id="comments-section"></div>
+</div>
 
-        if (!postId) {
-            alert("No post ID provided.");
-            window.location.href = "index.html";
+<div class="comment-form">
+    <h3>Leave a Comment</h3>
+    <textarea id="comment-content" placeholder="Write your comment here..." rows="4"></textarea><br>
+    <button id="submit-comment">Submit Comment</button>
+</div>
+
+<script>
+const webhookURL = "https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8GlINLpk9Y2YGd%2FREtNg8K%2Fa9w43X1Y1PHRNy7ilnfTCIiPaI1QpJwpWRGX5%2B6UxAeuCumWtV%2BLWRPram9aC3OJ1pwWahYNuQFA1%2BVcUKonw8ENJMYdDabbY7KikvbxHqVYUf92fZRoFOZ17Ip2ezTsYH0UdBwXcrDedtI3pFqXx1EuFSwHU%2FwVA3UV3gjPhe%2BGpn8LtYkgVl7yt3AbjkzC4Vo3dv16sdJOMm5khY2saOD11bafjjXtC2OyjHzF9Vuu1AQBFXK58FuDOnWriXVtvbhhWAnIoKDzSF9%2FbfIkiEg5fwfBfTI6a%2FsCX9%2FvaEM9hbSADjAWI24Z%2B%2BWSicl5HQKS8y5RmwWDN7VO%2B7VFFso%3D/q7eX9epxHNXDNsWU";
+const postId = window.location.hash.substring(1);
+let userIP = "Unknown";
+
+// Check if the postId is available
+if (!postId) {
+    alert("No post ID provided.");
+    window.location.href = "index.html";  // Redirect to index if no postId
+}
+
+// Get the user's IP
+fetch("https://api64.ipify.org?format=json")
+    .then(response => response.json())
+    .then(data => userIP = data.ip)
+    .catch(error => console.error("Error fetching IP:", error));
+
+// Fetch the post data
+fetch(`posts.json?t=${Date.now()}`)
+    .then(response => response.json())
+    .then(posts => {
+        const post = posts.find(p => p.id === postId);
+        if (!post) {
+            document.body.innerHTML = "<h1>Post not found</h1>";
+            return;
         }
 
-        // Get the user's IP
-        fetch("https://api64.ipify.org?format=json")
-            .then(response => response.json())
-            .then(data => userIP = data.ip)
-            .catch(error => console.error("Error fetching IP:", error));
+        // Show post details
+        document.getElementById("post-title").innerText = post.title;
+        document.getElementById("post-content").innerText = post.content;
+        document.getElementById("post-subreddit").innerText = `Subreddit: ${post.subreddit}`;
+    })
+    .catch(error => console.error("Error loading post:", error));
 
-        // Fetch post data
-        fetch(`posts.json?t=${Date.now()}`)
-            .then(response => response.json())
-            .then(posts => {
-                const post = posts.find(p => p.id === postId);
-                if (!post) {
-                    document.body.innerHTML = "<h1>Post not found</h1>";
-                    return;
-                }
+// Fetch and load comments
+function loadComments() {
+    fetch(`comments.json?t=${Date.now()}`)
+        .then(response => response.json())
+        .then(comments => {
+            const postComments = comments.filter(c => c.postId === parseInt(postId));
+            const commentsSection = document.getElementById("comments-section");
 
-                document.getElementById("post-title").innerText = post.title;
-                document.getElementById("post-content").innerText = post.content;
-                document.getElementById("post-subreddit").innerText = `Subreddit: ${post.subreddit}`;
-            })
-            .catch(error => console.error("Error loading post:", error));
-
-        function loadComments() {
-            fetch(`comments.json?t=${Date.now()}`)
-                .then(response => response.json())
-                .then(comments => {
-                    const postComments = comments.filter(c => c.referenceType === "post" && c.referenceId === postId);
-                    const commentsSection = document.getElementById("comments-section");
-
-                    if (postComments.length === 0) {
-                        commentsSection.innerHTML = "<p>No comments yet.</p>";
-                        return;
-                    }
-
-                    commentsSection.innerHTML = postComments.map(c => `<p>${c.content}</p>`).join("");
-                })
-                .catch(error => console.error("Error loading comments:", error));
-        }
-
-        loadComments();
-
-        document.getElementById("comment-form").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const content = document.getElementById("comment-content").value.trim();
-            if (!content) {
-                alert("Comment cannot be empty!");
+            if (postComments.length === 0) {
+                commentsSection.innerHTML = "<p>No comments yet.</p>";
                 return;
             }
 
-            const commentData = {
-                id: crypto.randomUUID(),
-                referenceType: "post",
-                referenceId: postId,
-                content: content,
-                userIP: userIP
-            };
+            commentsSection.innerHTML = postComments.map(c => {
+                // Display comment
+                let commentText = `<div class="comment"><p><strong>User ${c.user}</strong>: ${c.content}</p>`;
+                
+                // Handle replies
+                if (c.reference[0] === "comment" && c.reference[1]) {
+                    commentText += `<p class="reply"><strong>Replying to Comment ${c.reference[1]}</strong></p>`;
+                }
 
-            await fetch(webhookURL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    content: "New comment for review!",
-                    embeds: [{
-                        description: content,
-                        footer: { text: `Post ID: ${postId} | IP: ${userIP}` }
-                    }]
-                })
-            });
-
-            alert("Comment submitted for review!");
-            document.getElementById("comment-content").value = "";
-            loadComments();
+                commentText += `</div>`;
+                return commentText;
+            }).join("");
+        })
+        .catch(error => {
+            console.error("Error loading comments:", error);
+            document.getElementById("comments-section").innerHTML = "<p>Error loading comments. Please try again later.</p>";
         });
-    </script>
-    <footer>
-        <p>made by unknown07724</p> <a href=privacy></a> <a href=guidelines></a>
-    </footer>
+}
+
+loadComments();
+
+// Handling comment submission
+document.getElementById("submit-comment").addEventListener("click", async (e) => {
+    e.preventDefault();
+    const content = document.getElementById("comment-content").value.trim();
+    if (!content) {
+        alert("Comment cannot be empty!");
+        return;
+    }
+
+    // Check if the comment is a reply
+    let reference = [null, null];
+    const replyToCommentId = getReplyToCommentId();  // Function to check if it's a reply
+    if (replyToCommentId) {
+        reference = ["comment", replyToCommentId];
+    }
+
+    // Assuming userId is the ID of the logged-in user
+    const commentData = {
+        id: crypto.randomUUID(),
+        content: content,
+        user: userId,  // Use user ID here
+        postId: postId,
+        reference: reference
+    };
+
+    await fetch(webhookURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            content: "New comment for review!",
+            embeds: [{
+                description: content,
+                footer: { text: `Post ID: ${postId} | User: ${userId}` }
+            }]
+        })
+    });
+
+    alert("Comment submitted for review!");
+    document.getElementById("comment-content").value = "";  // Clear comment input
+    loadComments();  // Reload the comments after posting
+});
+
+// Helper function to extract reply comment ID from the comment input field
+function getReplyToCommentId() {
+    const replyContent = document.getElementById("comment-content").value;
+    const match = replyContent.match(/@Comment (\d+)/);
+    return match ? match[1] : null;
+}
+</script>
+
 </body>
 </html>
+
