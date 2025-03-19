@@ -25,10 +25,6 @@
             <!-- Dynamically populated posts will go here -->
         </section>
 
-        <section id="subreddits">
-            <!-- Dynamically populated subreddits will go here -->
-        </section>
-
         <!-- Create Post Form -->
         <div id="postForm" style="display: none;">
             <h3>Create a New Post</h3>
@@ -81,28 +77,9 @@
             }
         }
 
-        async function loadSubreddits() {
-            try {
-                const response = await fetch('data/subreddits.json?t=' + Date.now());
-                const subreddits = await response.json();
-
-                const selectElement = document.getElementById('postSubreddit');
-                selectElement.innerHTML = '<option value="">Select a subreddit</option>';
-
-                subreddits.forEach(subreddit => {
-                    const option = document.createElement('option');
-                    option.value = subreddit.id;
-                    option.innerHTML = subreddit.name;
-                    selectElement.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Error loading subreddits:', error);
-            }
-        }
-
+       
         window.onload = function() {
             loadPosts();
-            loadSubreddits();
         };
     </script>
 
