@@ -43,7 +43,7 @@ body {
     text-decoration: underline; /* Underline links on hover */
 }
 /* Subreddit Box Styles */
-.subreddit-box {
+.subreddit-item {
     background-color: #f4f4f4; /* Light gray background */
     padding: 20px;
     margin: 10px 0;
@@ -51,22 +51,22 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-.subreddit-box h3 {
+.subreddit-item h3 {
     font-size: 1.5em;
     color: #00baff; /* Use the accent color for titles */
 }
 
-.subreddit-box p {
+.subreddit-item p {
     font-size: 1em;
     color: #333;
 }
 
-.subreddit-box a {
+.subreddit-item a {
     color: #00baff; /* Link color for subreddit links */
     text-decoration: none;
 }
 
-.subreddit-box a:hover {
+.subreddit-item a:hover {
     text-decoration: underline; /* Underline on hover for links */
 }
 
