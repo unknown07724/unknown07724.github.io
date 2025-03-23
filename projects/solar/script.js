@@ -38,7 +38,7 @@ const planets = [
         color: 'blue',
         speed: 0.4,
         moons: [
-            { distance: 20, radius: 5, color: 'white', speed: 0.2 } // luna
+            { distance: 20, radius: 5, color: 'white', speed: 2 } // luna
         ]
     },
     {
