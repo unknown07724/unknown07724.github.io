@@ -2,8 +2,8 @@ const canvas = document.getElementById('solarSystem');
 const ctx = canvas.getContext('2d');
 
 // Set canvas size
-canvas.width = 800;
-canvas.height = 800;
+canvas.width = 1600;
+canvas.height = 1600;
 
 // Sun (center of the system)
 const sun = {
