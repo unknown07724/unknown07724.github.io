@@ -26,7 +26,7 @@ const planets = [
     {
         name: 'Venus',
         distance: 235,
-        radius: 19,
+        radius: 11,
         color: 'orange',
         speed: 0.6,
         moons: [] // Venus has no moons
@@ -34,7 +34,7 @@ const planets = [
     {
         name: 'Earth',
         distance: 300,
-        radius: 20,
+        radius: 12,
         color: 'blue',
         speed: 0.4,
         moons: [
@@ -44,7 +44,7 @@ const planets = [
     {
         name: 'Mars',
         distance: 500,
-        radius: 14,
+        radius: 6,
         color: 'red',
         speed: 0.08,
         moons: [
