@@ -25,7 +25,7 @@ const planets = [
     },
     {
         name: 'Venus',
-        distance: 270,
+        distance: 235,
         radius: 10,
         color: 'orange',
         speed: 0.6,
@@ -38,7 +38,7 @@ const planets = [
         color: 'blue',
         speed: 0.4,
         moons: [
-            { distance: 20, radius: 5, color: 'white', speed: 2 } // luna
+            { distance: 60, radius: 5, color: 'white', speed: 2 } // luna
         ]
     },
     {
