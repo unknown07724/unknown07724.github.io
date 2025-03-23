@@ -28,7 +28,7 @@ const planets = [
         distance: 270,
         radius: 10,
         color: 'orange',
-        speed: 0.02,
+        speed: 0.6,
         moons: [] // Venus has no moons
     },
     {
@@ -36,17 +36,17 @@ const planets = [
         distance: 300,
         radius: 12,
         color: 'blue',
-        speed: 0.01,
+        speed: 0.4,
         moons: [
             { distance: 20, radius: 5, color: 'white', speed: 0.2 } // luna
         ]
     },
     {
         name: 'Mars',
-        distance: 200,
+        distance: 500,
         radius: 8,
         color: 'red',
-        speed: 0.008,
+        speed: 0.08,
         moons: [
             { distance: 25, radius: 4, color: 'gray', speed: 0.03 }, // Phobos
             { distance: 40, radius: 6, color: 'lightgray', speed: 0.015 } // Deimos
@@ -54,10 +54,10 @@ const planets = [
     },
     {
         name: 'Jupiter',
-        distance: 300,
+        distance: 900,
         radius: 25,
         color: 'brown',
-        speed: 0.004,
+        speed: 0.04,
         moons: [
             { distance: 50, radius: 8, color: 'white', speed: 0.01 }, // Io
             { distance: 70, radius: 10, color: 'lightgray', speed: 0.007 } // Europa
@@ -65,7 +65,7 @@ const planets = [
     },
     {
         name: 'Saturn',
-        distance: 400,
+        distance: 1200,
         radius: 22,
         color: 'goldenrod',
         speed: 0.002,
@@ -73,7 +73,7 @@ const planets = [
     },
     {
         name: 'Uranus',
-        distance: 500,
+        distance: 1600,
         radius: 18,
         color: 'lightblue',
         speed: 0.001,
@@ -81,7 +81,7 @@ const planets = [
     },
     {
         name: 'Neptune',
-        distance: 600,
+        distance: 2500,
         radius: 16,
         color: 'darkblue',
         speed: 0.0008,
