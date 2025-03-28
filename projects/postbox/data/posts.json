@@ -26,5 +26,14 @@
         "user": 1,
         "username": "unknown07724",
         "posted": "feb 12th 2025"
-    }
+    },
+    {
+        "id": 4,
+        "title": "If we remove all bones from a human, do they become a water balloon?",
+        "content": "Title says it all",
+        "subreddit_id": "ask_postbox",
+        "user": 1,
+        "username": "BananaLord69",
+        "posted": "Mar 27th 2025"
+    },
 ]
