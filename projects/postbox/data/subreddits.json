@@ -11,6 +11,12 @@
         "description": "the only way to win is to not play",
         "createdOn": "Feb 4, 2025"
     },
+     {
+        "id": "Ask_postbox",
+        "name": "Ask postbox",
+        "description": "Ask all users of postbox any question except NSFW",
+        "createdOn": "Mar 27, 2025"
+    },
     {
         "id": "postbox-official",
         "name": "Postbox",
@@ -38,7 +44,7 @@
     {
         "id": "reddit_bad",
         "name": "Reddit_is_bad",
-        "description": "tell your experiences of reddit before going to postbox",
+        "description": "tell your experiences of r#ddit before going to postbox",
         "createdOn": "Feb 8, 2025"
     },
     {
