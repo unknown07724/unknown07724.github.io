@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Image Gallery</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .image-card { width: 200px; }
+        .image-card img { width: 100%; height: auto; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>My Image Gallery</h1>
+    <input type="text" id="search" placeholder="Search images..." onkeyup="filterImages()">
+    <div id="gallery"></div>
+
+    <script>
+        async function loadImages() {
+            const timestamp = new Date().getTime(); // Prevent caching
+            const response = await fetch(`json/images.json?t=${timestamp}`);
+            const images = await response.json();
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+            images.forEach(image => {
+                const imgCard = document.createElement('div');
+                imgCard.className = 'image-card';
+                imgCard.innerHTML = `<img src="${image.url}" alt="${image.name}"><p>${image.name}</p>`;
+                gallery.appendChild(imgCard);
+            });
+        }
+
+        function filterImages() {
+            const query = document.getElementById('search').value.toLowerCase();
+            document.querySelectorAll('.image-card').forEach(card => {
+                const name = card.textContent.toLowerCase();
+                card.style.display = name.includes(query) ? 'block' : 'none';
+            });
+        }
+
+        loadImages();
+    </script>
+</body>
+</html>
