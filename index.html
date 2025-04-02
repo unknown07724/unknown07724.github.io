@@ -49,40 +49,16 @@
     <p> </p>
     <p> </p>
     <p> </p>
-  <div id="video-container" style="display: none;">
-  <video id="myVideo" width="320" height="240">
+ <div id="video-container">
+  <video id="myVideo" width="320" height="240" controls>
     <source src="the-dimentional-occulus.mp4" type="video/mp4">
   </video>
 </div>
-<button id="show-video-button" style="opacity: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></button>
-
-<style>
-  #show-video-button {
-    width: 100px;
-    height: 30px;
-    background-color: #ccc;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  #show-video-button:hover {
-    background-color: #aaa;
-  }
-</style>
+<button id="play-video-button">Play Video</button>
 
 <script>
-  document.getElementById('show-video-button').addEventListener('click', function() {
-    document.getElementById('video-container').style.display = 'block';
+  document.getElementById('play-video-button').addEventListener('click', function() {
     document.getElementById('myVideo').play();
-  });
-
-  document.getElementById('show-video-button').addEventListener('mouseover', function() {
-    this.style.opacity = 1;
-  });
-
-  document.getElementById('show-video-button').addEventListener('mouseout', function() {
-    this.style.opacity = 0;
   });
 </script>
   <footer>
