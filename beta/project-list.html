@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="description" content="memes and other garbage">
@@ -35,6 +35,8 @@
 <div id="projects-list"></div>
 
 <script>
+  // Banner script commented out for now
+  /*
   // Show banner unless hidden by user
   if (!localStorage.getItem("hideBanner")) {
     document.getElementById("update-banner").style.display = "block";
@@ -44,6 +46,7 @@
     document.getElementById("update-banner").style.display = "none";
     localStorage.setItem("hideBanner", "true");
   }
+  */
 
   let projectsData = []; // Declare the projectsData variable here
 
@@ -52,7 +55,11 @@
     .then(response => response.json())
     .then(projects => {
       projectsData = projects;
-      sortProjects();
+      sortProjects(); // Sort the projects after successfully fetching the data
+    })
+    .catch(error => {
+      console.error("Error loading projects.json:", error);
+      alert("Failed to load projects. Please try again later.");
     });
 
   function sortProjects() {
