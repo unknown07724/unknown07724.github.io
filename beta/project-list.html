@@ -6,16 +6,17 @@
   <meta name="keywords" content="website, memes">
   <meta name="author" content="Unknown07724">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png">
   <link rel="stylesheet" href="/styles/main.css">
   <title>Project List - by Unknown07724</title>
 </head>
 
 <body>
 
-<!--  
+<!-- Banner for Old List  -->
+<!--
 <div id="update-banner" style="background: yellow; color: black; text-align: center; padding: 10px; display: none;">
-  <p>We've changed how the project list works! <a href="old/index.html">Click here for the old version.</a></p>
+  <p>We've changed how the project list works! <a href="/old/index.html">Click here for the old version.</a></p>
   <button onclick="hideBanner()">Don't Show Again</button>
 </div>
 -->
@@ -44,19 +45,19 @@
     localStorage.setItem("hideBanner", "true");
   }
 
-  let projectsData = [];
+  let projectsData = []; // Declare the projectsData variable here
 
   // Fetch projects from JSON
-  fetch('projects.json')
+  fetch('/projects.json') // Link starts with /
     .then(response => response.json())
     .then(projects => {
-      projectsData = projects;
-      sortProjects(); // Initial sorting
+      projectsData = projects;  // Now we assign the fetched data to the projectsData
+      sortProjects(); // Now we call the sorting function after the data is loaded
     });
 
   function sortProjects() {
     const sortBy = document.getElementById("sort-options").value;
-    let sortedProjects = [...projectsData];
+    let sortedProjects = [...projectsData];  // Make a copy to avoid mutating the original array
 
     if (sortBy === "last_updated") {
       sortedProjects.sort((a, b) => new Date(b.last_updated) - new Date(a.last_updated));
@@ -64,7 +65,7 @@
       sortedProjects.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    displayProjects(sortedProjects);
+    displayProjects(sortedProjects);  // Display the sorted list
   }
 
   function displayProjects(projects) {
@@ -75,7 +76,7 @@
     projects.forEach(project => {
       if (currentAuthor !== project.author) {
         currentAuthor = project.author;
-        container.innerHTML += `<hr><a href="users/${project.author}.html"><h2>${project.author}</h2></a><hr>`;
+        container.innerHTML += `<hr><a href="/users/${project.author}.html"><h2>${project.author}</h2></a><hr>`;
       }
 
       let projectDiv = document.createElement('div');
