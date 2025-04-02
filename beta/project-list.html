@@ -35,24 +35,16 @@
 <div id="projects-list"></div>
 
 <script>
-  // Banner script commented out for now
-  /*
-  // Show banner unless hidden by user
-  if (!localStorage.getItem("hideBanner")) {
-    document.getElementById("update-banner").style.display = "block";
-  }
-
-  function hideBanner() {
-    document.getElementById("update-banner").style.display = "none";
-    localStorage.setItem("hideBanner", "true");
-  }
-  */
-
   let projectsData = []; // Declare the projectsData variable here
 
   // Fetch projects from JSON (no leading slash here)
   fetch('projects.json')
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
     .then(projects => {
       projectsData = projects;
       sortProjects(); // Sort the projects after successfully fetching the data
@@ -63,6 +55,11 @@
     });
 
   function sortProjects() {
+    if (projectsData.length === 0) {
+      console.error("No projects to display.");
+      return;
+    }
+
     const sortBy = document.getElementById("sort-options").value;
     let sortedProjects = [...projectsData];
 
@@ -77,7 +74,12 @@
 
   function displayProjects(projects) {
     let container = document.getElementById('projects-list');
-    container.innerHTML = "";
+    container.innerHTML = ""; // Clear the container before adding new projects
+
+    if (projects.length === 0) {
+      container.innerHTML = "<p>No projects available at the moment.</p>";
+      return;
+    }
 
     let currentAuthor = "";
     projects.forEach(project => {
