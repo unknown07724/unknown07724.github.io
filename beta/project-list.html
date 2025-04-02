@@ -19,6 +19,18 @@
   <p>We've changed how the project list works! <a href="/old/index.html">Click here for the old version.</a></p>
   <button onclick="hideBanner()">Don't Show Again</button>
 </div>
+
+<script>
+  // Show banner unless hidden by user
+  if (!localStorage.getItem("hideBanner")) {
+    document.getElementById("update-banner").style.display = "block";
+  }
+
+  function hideBanner() {
+    document.getElementById("update-banner").style.display = "none";
+    localStorage.setItem("hideBanner", "true");
+  }
+</script>
 -->
 
 <p>hello, this is the project list</p>
@@ -41,18 +53,36 @@
   fetch('projects.json')
     .then(response => {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error(`Network response was not ok: ${response.statusText}`);
       }
       return response.json();
     })
-    .then(projects => {
-      projectsData = projects;
+    .then(data => {
+      // Flatten the nested structure into a single array of projects
+      projectsData = flattenProjects(data.projects);
       sortProjects(); // Sort the projects after successfully fetching the data
     })
     .catch(error => {
-      console.error("Error loading projects.json:", error);
+      console.error("Error loading projects.json:", error); // Log the error message
       alert("Failed to load projects. Please try again later.");
     });
+
+  // Flatten the nested author-project structure
+  function flattenProjects(authors) {
+    let allProjects = [];
+    authors.forEach(author => {
+      author.projects.forEach(project => {
+        allProjects.push({
+          author: author.author,
+          name: project.name,
+          description: project.description,
+          url: project.url,
+          last_updated: project.last_updated
+        });
+      });
+    });
+    return allProjects;
+  }
 
   function sortProjects() {
     if (projectsData.length === 0) {
@@ -83,6 +113,7 @@
 
     let currentAuthor = "";
     projects.forEach(project => {
+      // Check if this author is already displayed
       if (currentAuthor !== project.author) {
         currentAuthor = project.author;
         container.innerHTML += `<hr><a href="/users/${project.author}.html"><h2>${project.author}</h2></a><hr>`;
@@ -90,7 +121,7 @@
 
       let projectDiv = document.createElement('div');
       projectDiv.innerHTML = `
-        <a href="${project.link}">
+        <a href="${project.url}">
           <h4>${project.name}</h4>
         </a>
         <p>${project.description}</p>
