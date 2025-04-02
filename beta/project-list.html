@@ -13,7 +13,7 @@
 
 <body>
 
-<!-- Banner for Old List  -->
+<!-- Banner for Old List (commented out) -->
 <!--
 <div id="update-banner" style="background: yellow; color: black; text-align: center; padding: 10px; display: none;">
   <p>We've changed how the project list works! <a href="/old/index.html">Click here for the old version.</a></p>
@@ -36,7 +36,6 @@
 
 <script>
   // Show banner unless hidden by user
-  /*
   if (!localStorage.getItem("hideBanner")) {
     document.getElementById("update-banner").style.display = "block";
   }
@@ -44,21 +43,21 @@
   function hideBanner() {
     document.getElementById("update-banner").style.display = "none";
     localStorage.setItem("hideBanner", "true");
-  } */
+  }
 
   let projectsData = []; // Declare the projectsData variable here
 
-  // Fetch projects from JSON
-  fetch('projects.json') // Link starts with /
+  // Fetch projects from JSON (no leading slash here)
+  fetch('projects.json')
     .then(response => response.json())
     .then(projects => {
-      projectsData = projects;  // Now we assign the fetched data to the projectsData
-      sortProjects(); // Now we call the sorting function after the data is loaded
+      projectsData = projects;
+      sortProjects();
     });
 
   function sortProjects() {
     const sortBy = document.getElementById("sort-options").value;
-    let sortedProjects = [...projectsData];  // Make a copy to avoid mutating the original array
+    let sortedProjects = [...projectsData];
 
     if (sortBy === "last_updated") {
       sortedProjects.sort((a, b) => new Date(b.last_updated) - new Date(a.last_updated));
@@ -66,7 +65,7 @@
       sortedProjects.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    displayProjects(sortedProjects);  // Display the sorted list
+    displayProjects(sortedProjects);
   }
 
   function displayProjects(projects) {
@@ -94,3 +93,4 @@
 
 </body>
 </html>
+
