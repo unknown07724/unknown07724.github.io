@@ -49,7 +49,7 @@
   let projectsData = []; // Declare the projectsData variable here
 
   // Fetch projects from JSON
-  fetch('/projects.json') // Link starts with /
+  fetch('projects.json') // Link starts with /
     .then(response => response.json())
     .then(projects => {
       projectsData = projects;  // Now we assign the fetched data to the projectsData
