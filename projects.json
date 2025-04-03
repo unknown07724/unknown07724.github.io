@@ -1,7 +1,7 @@
 {
   "projects": [
     {
-      "author": "Unknown07724",
+      "author": "unknown07724",
       "projects": [
         {
           "name": "duolingo quotes",
@@ -78,7 +78,7 @@
       ]
     },
     {
-      "author": "localdrone",
+      "author": "drone",
       "projects": [
         {
           "name": "trap cube",
@@ -98,6 +98,10 @@
           "last_updated": "2024-08-09"
         }
       ]
+    },
+    {
+      "author": "yeeman_test",
+      "projects": []
     }
   ]
 }
