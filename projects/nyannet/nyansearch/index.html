@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Searchia</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .result { margin-bottom: 20px; }
+    .result h3 { margin: 0; }
+    .result p { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <h1>Nyansearch</h1>
+  <form id="searchForm">
+    <input type="text" id="searchInput" placeholder="Enter keywords" required>
+     <input type="toggle" id="safeSearchtoggle"
+    <button type="submit">Search</button>
+  </form>
+  <div id="results"></div>
+  <script>
+// JavaScript search engine
+const answerBoxData = {
+  "when did ww2 end": "1945",
+  "who is the president of the us": "This depends on the current year. Check an official source for the latest information.",
+  "capital of france": "Paris",
+  "largest ocean": "The Pacific Ocean"
+};
+
+async function loadSites() {
+  try {
+    const response = await fetch('./data/sites.json'); // Load local file within the project
+    const sites = await response.json();
+    return sites;
+  } catch (error) {
+    console.error('Error loading sites:', error);
+    return [];
+  }
+}
+
+function searchSites(query, sites, safeSearch) {
+  const results = sites.filter(site => {
+    const matchesQuery = site.keywords.some(keyword => 
+      keyword.toLowerCase().includes(query.toLowerCase())
+    );
+    const passesSafeSearch = !safeSearch || !site.sensitive;
+    return matchesQuery && passesSafeSearch;
+  });
+  return results;
+}
+
+function displayResults(results, query) {
+  const resultsContainer = document.getElementById('results');
+  resultsContainer.innerHTML = '';
+
+  // Check for direct answer box
+  if (answerBoxData[query.toLowerCase()]) {
+    const answerBox = document.createElement('div');
+    answerBox.className = 'answer-box';
+    answerBox.innerHTML = `<h2>Answer:</h2><p>${answerBoxData[query.toLowerCase()]}</p>`;
+    resultsContainer.appendChild(answerBox);
+  }
+
+  if (results.length === 0) {
+    resultsContainer.innerHTML += '<p>No results found.</p>';
+    return;
+  }
+
+  results.forEach(site => {
+    const resultElement = document.createElement('div');
+    resultElement.className = 'result';
+    resultElement.innerHTML = `
+      <h3>
+        <img src="${site.favicon}" alt="Favicon" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+        <a href="${site.url}" target="_blank">${site.name}</a>
+      </h3>
+      <p>${site.description}</p>
+    `;
+    resultsContainer.appendChild(resultElement);
+  });
+}
+
+// Hooking everything up
+document.getElementById('searchForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const query = document.getElementById('searchInput').value;
+  const safeSearch = document.getElementById('safeSearchToggle').checked;
+
+  const sites = await loadSites();
+  const results = searchSites(query, sites, safeSearch);
+  displayResults(results, query);
+});
+
+</script>
+</body>
+</html>
