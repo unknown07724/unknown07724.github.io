@@ -87,7 +87,7 @@ document.getElementById('searchForm').addEventListener('submit', async (event) =
   event.preventDefault();
 
   const query = document.getElementById('searchInput').value;
-  const safeSearch = document.getElementById('safeSearchToggle').checked;
+  const safeSearch = true//document.getElementById('safeSearchToggle').checked;
 
   const sites = await loadSites();
   const results = searchSites(query, sites, safeSearch);
