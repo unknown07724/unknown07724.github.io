@@ -3,7 +3,7 @@
     "name": "Example Domain",
     "url": "https://example.com",
     "keywords": ["example", "Domain", "Example", "domain"],
-    "description": "A placeholder site used for demonstration purposes."
+    "description": "A placeholder site used for demonstration purposes.",
     "favicon": "https://example.com/favicon.ico",
     "sensitive": false
   },
@@ -11,7 +11,7 @@
     "name": "Example Domain",
     "url": "https://example.org",
     "keywords": ["example", "Domain", "Example", "domain"],
-    "description": "A placeholder site used for demonstration purposes."
+    "description": "A placeholder site used for demonstration purposes.",
      "favicon": "https://example.org/favicon.ico",
     "sensitive": false
   },
@@ -19,7 +19,7 @@
     "name": "Searchia",
     "url": "https://unknown07724.github.io/projects/searchia/",
     "keywords": ["Search", "Searchia"],
-    "description": "A placeholder site used for demonstration purposes."
+    "description": "A placeholder site used for demonstration purposes.",
     "favicon": "",
     "sensitive": false
   },
@@ -27,7 +27,7 @@
     "name": "Wikipedia",
     "url": "https://www.wikipedia.org/",
     "keywords": ["Wikipedia", "Wiki","Wikimedia"],
-    "description": "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and hosted by the Wikimedia Foundation."
+    "description": "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and hosted by the Wikimedia Foundation.",
      "favicon": "https://en.wikipedia.org/favicon.ico",
     "sensitive": false
      
@@ -36,7 +36,7 @@
     "name": "Youtube",
     "url": "https://youtube.com",
     "keywords": ["video", "sharing", "camera phone", "video phone", "free", "upload", "Youtube"],
-    "description": "Share your videos with friends, family, and the world."
+    "description": "Share your videos with friends, family, and the world.",
      "favicon": "https://reddit.com/favicon.ico",
     "sensitive": false
   },
@@ -44,7 +44,7 @@
     "name": "Reddit - Dive into anything",
     "url": "https://reddit.com",
     "keywords": ["Reddit"],
-    "description": "Reddit is a network of communities where people can dive into their interests, hobbies and passions. There's a community for whatever you're interested in"
+    "description": "Reddit is a network of communities where people can dive into their interests, hobbies and passions. There's a community for whatever you're interested in",
      "favicon": "https://reddit.com/favicon.ico",
     "sensitive": false
   },
@@ -52,7 +52,7 @@
     "name": "Scratch - MIT",
     "url": "https://scratch.mit.edu",
     "keywords": ["Scratch","MIT"],
-    "description": ""
+    "description": "",
     "favicon": "https://scratch.mit.edu/favicon.ico",
     "sensitive": false
   },
@@ -60,13 +60,13 @@
     "name": "Turbowarp",
     "url": "https://turbowarp.org",
     "keywords": ["Turbowarp","Scratch"],
-    "description": "TurboWarp is a Scratch mod with a compiler to run projects faster, dark mode for your eyes, a bunch of addons to improve the editor, and more."
+    "description": "TurboWarp is a Scratch mod with a compiler to run projects faster, dark mode for your eyes, a bunch of addons to improve the editor, and more.",
   },
   {
     "name": "Google",
     "url": "https://Google.com",
     "keywords": ["Google","Search"],
-    "description": "Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for."
+    "description": "Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for.",
     "favicon": "",
     "sensitive": false
   },
@@ -74,13 +74,13 @@
     "name": "Penguinmod",
     "url": "https://penguinmod.com",
     "keywords": ["Turbowarp","Scratch","Penguin","Mod","penguinmod"],
-    "description": "PenguinMod is not affiliated with Scratch, TurboWarp, the Scratch Team, or the Scratch Foundation."
+    "description": "PenguinMod is not affiliated with Scratch, TurboWarp, the Scratch Team, or the Scratch Foundation.",
   },
   {
     "name": "Google",
     "url": "https://Google.com",
     "keywords": ["Google","Search"],
-    "description": "Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for."
+    "description": "Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for.",
     "favicon": "",
     "sensitive": false
   },
@@ -88,7 +88,7 @@
     "name": "Frogs",
     "url": "https://unknown07724.github.io",
     "keywords": ["Memes", "Unknown07724", "site"],
-    "description": "memes and other garbage like projects."
+    "description": "memes and other garbage like projects.",
     "favicon": "https://unknown07724.github.io/favicon.png",
     "sensitive": false
   }
