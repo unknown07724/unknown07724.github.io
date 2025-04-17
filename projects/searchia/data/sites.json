@@ -70,6 +70,20 @@
     "favicon": "",
     "sensitive": false
   },
+     {
+    "name": "Penguinmod",
+    "url": "https://penguinmod.com",
+    "keywords": ["Turbowarp","Scratch","Penguin","Mod","penguinmod"],
+    "description": "PenguinMod is not affiliated with Scratch, TurboWarp, the Scratch Team, or the Scratch Foundation."
+  },
+  {
+    "name": "Google",
+    "url": "https://Google.com",
+    "keywords": ["Google","Search"],
+    "description": "Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for."
+    "favicon": "",
+    "sensitive": false
+  },
   {
     "name": "Frogs",
     "url": "https://unknown07724.github.io",
