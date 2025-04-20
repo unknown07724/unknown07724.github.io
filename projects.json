@@ -74,6 +74,12 @@
           "description": "Spinny boi",
           "url": "projects/spin-seal/index.html",
           "last_updated": "2025-01-25"
+        },
+        {
+          "name": "Chicken Coop Simulator beta",
+          "description": "Beta of Chicken coop simulator",
+          "url": "projects/ccs/beta.html",
+          "last_updated": "2025-04-20"
         }
       ]
     },
