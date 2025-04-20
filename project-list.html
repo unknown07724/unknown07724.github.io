@@ -50,7 +50,7 @@
   let projectsData = []; // Declare the projectsData variable here
 
   // Fetch projects from JSON (no leading slash here)
-  fetch('projects.json')
+  fetch('projects.json?t=' + Date.now())
     .then(response => {
       if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.statusText}`);
