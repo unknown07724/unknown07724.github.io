@@ -65,13 +65,16 @@
                     const postElement = document.createElement("div");
                     postElement.classList.add("post-item");
 
+                    // Now, each post is wrapped with an anchor tag linking to post.html#<ID>
                     postElement.innerHTML = `
                         <div class="post-meta">
                             <span>Posted by <a href="user.html#${post.user}">${post.username}</a></span>
                             <p>Posted on ${post.posted}</p>
                         </div>
-                        <h4>${post.title}</h4>
-                        <p>${post.content}</p>
+                        <a href="post.html#${post.id}">
+                            <h4>${post.title}</h4>
+                            <p>${post.content}</p>
+                        </a>
                         ${imageHTML}
                     `;
 
