@@ -14,7 +14,6 @@
 <body>
 
 <!-- Banner for Old List (commented out) -->
-
 <div id="update-banner" style="background: #6495ED; color: black; text-align: center; padding: 10px; border-radius: 15px; display: none;">
   <p>We've changed how the project list works! <a href="other/old/project-list.html">Click here for the old version.</a></p>
   <button onclick="hideBanner()">Don't Show Again</button>
@@ -32,7 +31,6 @@
   }
 </script>
 
-
 <p>hello, this is the project list</p>
 <p>it is to show projects</p>
 
@@ -43,11 +41,20 @@
   <option value="alphabetical">Alphabetical</option>
 </select>
 
+<!-- Ads Filter Dropdown -->
+<label for="ads-filter">Filter by Ads:</label>
+<select id="ads-filter" onchange="filterByAds()">
+  <option value="all">All Projects</option>
+  <option value="true">Has Ads</option>
+  <option value="false">No Ads</option>
+</select>
+
 <!-- Projects Container -->
 <div id="projects-list"></div>
 
 <script>
   let projectsData = []; // Declare the projectsData variable here
+  let filteredProjects = []; // Filtered projects based on HasAds
 
   // Fetch projects from JSON (no leading slash here)
   fetch('projects.json?t=' + Date.now())
@@ -60,6 +67,7 @@
     .then(data => {
       // Flatten the nested structure into a single array of projects
       projectsData = flattenProjects(data.projects);
+      filteredProjects = [...projectsData]; // Initially, show all projects
       sortProjects(); // Sort the projects after successfully fetching the data
     })
     .catch(error => {
@@ -77,7 +85,8 @@
           name: project.name,
           description: project.description,
           url: project.url,
-          last_updated: project.last_updated
+          last_updated: project.last_updated,
+          HasAds: project.HasAds || false // Ensure HasAds is part of each project
         });
       });
     });
@@ -85,13 +94,13 @@
   }
 
   function sortProjects() {
-    if (projectsData.length === 0) {
+    if (filteredProjects.length === 0) {
       console.error("No projects to display.");
       return;
     }
 
     const sortBy = document.getElementById("sort-options").value;
-    let sortedProjects = [...projectsData];
+    let sortedProjects = [...filteredProjects];
 
     if (sortBy === "last_updated") {
       sortedProjects.sort((a, b) => new Date(b.last_updated) - new Date(a.last_updated));
@@ -100,6 +109,20 @@
     }
 
     displayProjects(sortedProjects);
+  }
+
+  function filterByAds() {
+    const adsFilter = document.getElementById("ads-filter").value;
+    
+    if (adsFilter === "all") {
+      filteredProjects = [...projectsData];
+    } else if (adsFilter === "true") {
+      filteredProjects = projectsData.filter(project => project.HasAds === true);
+    } else if (adsFilter === "false") {
+      filteredProjects = projectsData.filter(project => project.HasAds === false);
+    }
+
+    sortProjects(); // Reapply sorting after filtering
   }
 
   function displayProjects(projects) {
