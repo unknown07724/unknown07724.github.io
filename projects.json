@@ -7,79 +7,92 @@
           "name": "duolingo quotes",
           "description": "Weird quotes/sentences from Duolingo",
           "url": "projects/duolingo-quotes/index",
-          "last_updated": "2025-03-22"
+          "last_updated": "2025-03-22",
+          "HasAds": false
         },
         {
           "name": "Cat Memes",
           "description": "Cat memes from my memes folder",
           "url": "projects/Catmemes/index",
-          "last_updated": "2024-07-16"
+          "last_updated": "2024-07-16",
+          "HasAds": false
         },
         {
           "name": "universe.simulation",
           "description": "Game at version 0.9",
           "url": "projects/universe-simulation/index",
-          "last_updated": "2024-07-23"
+          "last_updated": "2024-07-23",
+          "HasAds": false
         },
         {
           "name": "Nothing",
           "description": "It is actually nothing",
           "url": "projects/nothing/index",
-          "last_updated": "2024-07-29"
+          "last_updated": "2024-07-29",
+          "HasAds": false
         },
         {
           "name": "the meme-wiki",
           "description": "Stuff explained in simple terms and memes",
           "url": "projects/wiki/index",
-          "last_updated": "2025-02-12"
+          "last_updated": "2025-02-12",
+          "HasAds": false
         },
         {
           "name": "exploration 1",
           "description": "Go on a mission to anywhere",
           "url": "projects/exploration/exploration1.html",
-          "last_updated": "2024-08-09"
+          "last_updated": "2024-08-09",
+          "HasAds": false
         },
         {
           "name": "internet news",
           "description": "Check what's actually happening",
           "url": "projects/internet-news/index",
-          "last_updated": "2024-10-16"
+          "last_updated": "2024-10-16",
+          "HasAds": false
         },
         {
           "name": "crates",
           "description": "Puzzle game with nukes, swappers, buttons, eyeballs that follow you and holes for crates",
           "url": "projects/crates",
-          "last_updated": "2024-08-13"
+          "last_updated": "2024-08-13",
+          "HasAds": false
         },
         {
           "name": "planet collision",
           "description": "See a collision between planets",
           "url": "projects/planet-collision/index.html",
-          "last_updated": "2024-08-26"
+          "last_updated": "2024-08-26",
+          "HasAds": false
         },
         {
           "name": "cat clicker revamped",
           "description": "Revamped version of my game, Cat Clicker",
           "url": "projects/cat-clicker-revamped/index.html",
-          "last_updated": "2024-09-10"
+          "last_updated": "2024-09-10",
+          "HasAds": false
         },
         {
           "name": "wave shooter",
           "description": "Press space or click to shoot, turn via arrow keys, don't let enemies touch the turret",
           "url": "projects/sas/index.html",
-          "last_updated": "2025-01-01"
+          "last_updated": "2025-01-01",
+          "HasAds": false
         },
         {
           "name": "spinning seal",
           "description": "Spinny boi",
           "url": "projects/spin-seal/index.html",
-          "last_updated": "2025-01-25"
+          "last_updated": "2025-01-25",
+          "HasAds": false
         },
         {
           "name": "Chicken Coop Simulator beta",
           "description": "Beta of Chicken coop simulator",
           "url": "projects/ccs/beta.html",
-          "last_updated": "2025-04-20"
+          "last_updated": "2025-04-20",
+          "HasAds": false
         }
       ]
     },
@@ -90,7 +103,8 @@
           "name": "trap cube",
           "description": "Be a cube. WASD to move, blue dots kill enemies, left click to spawn them",
           "url": "projects/trap_cube",
-          "last_updated": "2024-09-12"
+          "last_updated": "2024-09-12",
+          "HasAds": false
         }
       ]
     },
@@ -101,7 +115,8 @@
           "name": "random roast generator",
           "description": "Generates roasts",
           "url": "projects/rrg/index",
-          "last_updated": "2024-08-09"
+          "last_updated": "2024-08-09",
+          "HasAds": false
         }
       ]
     },
