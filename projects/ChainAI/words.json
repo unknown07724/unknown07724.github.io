@@ -9,6 +9,72 @@
         "valid_next": ["verb", "adjective", "preposition"],
         "transitions": { "is": 0.5, "spins": 0.3, "beautiful": 0.1, "round": 0.1 }
     },
+    {
+  "sus": {
+    "part_of_speech": "adjective",
+    "valid_next": ["noun", "verb"],
+    "transitions": { "vibe": 0.5, "bruh": 0.3, "no_cap": 0.2 }
+  },
+  "pog": {
+    "part_of_speech": "interjection",
+    "valid_next": ["noun", "verb", "adjective"],
+    "transitions": { "moment": 0.6, "gamer": 0.4 }
+  },
+  "yeet": {
+    "part_of_speech": "verb",
+    "valid_next": ["noun", "adverb"],
+    "transitions": { "that": 0.7, "away": 0.3 }
+  },
+  "no_cap": {
+    "part_of_speech": "adverb",
+    "valid_next": ["verb", "adjective"],
+    "transitions": { "this": 0.5, "bro": 0.5 }
+  },
+  "ratio": {
+    "part_of_speech": "noun",
+    "valid_next": ["verb", "adjective"],
+    "transitions": { "owned": 0.6, "big": 0.4 }
+  },
+  "simp": {
+    "part_of_speech": "noun",
+    "valid_next": ["is", "flex"],
+    "transitions": { "is": 0.7, "flex": 0.3 }
+  },
+  "flex": {
+    "part_of_speech": "verb",
+    "valid_next": ["noun", "adjective"],
+    "transitions": { "on": 0.6, "hard": 0.4 }
+  },
+  "bruh": {
+    "part_of_speech": "interjection",
+    "valid_next": ["sus", "oof", "deadass"],
+    "transitions": { "sus": 0.4, "oof": 0.4, "deadass": 0.2 }
+  },
+  "oof": {
+    "part_of_speech": "interjection",
+    "valid_next": ["moment", "bruh"],
+    "transitions": { "moment": 0.6, "bruh": 0.4 }
+  },
+  "deadass": {
+    "part_of_speech": "adverb",
+    "valid_next": ["no_cap", "seriously"],
+    "transitions": { "no_cap": 0.7, "seriously": 0.3 }
+  },
+  "mood": {
+    "part_of_speech": "noun",
+    "valid_next": ["check", "vibe"],
+    "transitions": { "check": 0.6, "vibe": 0.4 }
+  },
+  "vibe_check": {
+    "part_of_speech": "noun",
+    "valid_next": ["passed", "failed"],
+    "transitions": { "passed": 0.5, "failed": 0.5 }
+  },
+  "cancelled": {
+    "part_of_speech": "adjective",
+    "valid_next": ["no_cap", "big"],
+    "transitions": { "no_cap": 0.7, "big": 0.3 }
+  },
     "is": {
         "part_of_speech": "verb",
         "valid_next": ["adjective", "noun", "verb"],
