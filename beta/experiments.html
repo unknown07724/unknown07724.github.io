@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="memes and other garbage">
+  <meta name="keywords" content="website, memes">
+  <meta name="author" content="Unknown07724">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png">
+  <link rel="stylesheet" href="/styles/main.css">
+  <title>Project List - by Unknown07724</title>
+</head>
+
+<body>
+
+<!-- Banner for Old List (commented out) -->
+<div id="update-banner" style="background: #6495ED; color: black; text-align: center; padding: 10px; border-radius: 15px; display: none;">
+  <p>We've changed how the project list works! <a href="other/old/project-list.html">Click here for the old version.</a></p>
+  <button onclick="hideBanner()">Don't Show Again</button>
+</div>
+
+<script>
+  // Show banner unless hidden by user
+  if (!localStorage.getItem("hideBanner")) {
+    document.getElementById("update-banner").style.display = "block";
+  }
+
+  function hideBanner() {
+    document.getElementById("update-banner").style.display = "none";
+    localStorage.setItem("hideBanner", "true");
+  }
+</script>
+
+<p>hello, this is the project list</p>
+<p>it is to show projects</p>
+
+<!-- Sorting Dropdown -->
+<label for="sort-options">Sort by:</label>
+<select id="sort-options" onchange="sortProjects()">
+  <option value="last_updated">Last Updated</option>
+  <option value="alphabetical">Alphabetical</option>
+</select>
+
+<!-- Ads Filter Dropdown -->
+<label for="ads-filter">Filter by Ads:</label>
+<select id="ads-filter" onchange="filterByAds()">
+  <option value="all">All Projects</option>
+  <option value="true">Has Ads</option>
+  <option value="false">No Ads</option>
+</select>
+
+<!-- Projects Container -->
+<div id="projects-list"></div>
+
+<script>
+  let projectsData = []; // Declare the projectsData variable here
+  let filteredProjects = []; // Filtered projects based on HasAds
+
+  // Fetch projects from JSON (no leading slash here)
+  fetch('projects.json?t=' + Date.now())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Flatten the nested structure into a single array of projects
+      projectsData = flattenProjects(data.projects);
+      filteredProjects = [...projectsData]; // Initially, show all projects
+      sortProjects(); // Sort the projects after successfully fetching the data
+    })
+    .catch(error => {
+      console.error("Error loading projects.json:", error); // Log the error message
+      alert("Failed to load projects. Please try again later.");
+    });
+
+  // Flatten the nested author-project structure
+  function flattenProjects(authors) {
+    let allProjects = [];
+    authors.forEach(author => {
+      author.projects.forEach(project => {
+        allProjects.push({
+          author: author.author,
+          name: project.name,
+          description: project.description,
+          url: project.url,
+          last_updated: project.last_updated,
+          HasAds: project.HasAds || false // Ensure HasAds is part of each project
+        });
+      });
+    });
+    return allProjects;
+  }
+
+  function sortProjects() {
+    if (filteredProjects.length === 0) {
+      console.error("No projects to display.");
+      return;
+    }
+
+    const sortBy = document.getElementById("sort-options").value;
+    let sortedProjects = [...filteredProjects];
+
+    if (sortBy === "last_updated") {
+      sortedProjects.sort((a, b) => new Date(b.last_updated) - new Date(a.last_updated));
+    } else if (sortBy === "alphabetical") {
+      sortedProjects.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    displayProjects(sortedProjects);
+  }
+
+  function filterByAds() {
+    const adsFilter = document.getElementById("ads-filter").value;
+    
+    if (adsFilter === "all") {
+      filteredProjects = [...projectsData];
+    } else if (adsFilter === "true") {
+      filteredProjects = projectsData.filter(project => project.HasAds === true);
+    } else if (adsFilter === "false") {
+      filteredProjects = projectsData.filter(project => project.HasAds === false);
+    }
+
+    sortProjects(); // Reapply sorting after filtering
+  }
+
+  function displayProjects(projects) {
+    let container = document.getElementById('projects-list');
+    container.innerHTML = ""; // Clear the container before adding new projects
+
+    if (projects.length === 0) {
+      container.innerHTML = "<p>No projects available at the moment.</p>";
+      return;
+    }
+
+    let currentAuthor = "";
+    projects.forEach(project => {
+      // Check if this author is already displayed
+      if (currentAuthor !== project.author) {
+        currentAuthor = project.author;
+        container.innerHTML += `<hr><a href="/users/${project.author}.html"><h2>${project.author}</h2></a><hr>`;
+      }
+
+      let projectDiv = document.createElement('div');
+      projectDiv.innerHTML = `
+        <a href="${project.url}">
+          <h4>${project.name}</h4>
+        </a>
+        <p>${project.description}</p>
+      `;
+      container.appendChild(projectDiv);
+    });
+  }
+</script>
+
+</body>
+</html>
