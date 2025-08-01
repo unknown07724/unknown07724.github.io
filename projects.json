@@ -107,7 +107,14 @@
           "url": "projects/pong/",
           "last_updated": "2025-06-16",
           "HasAds": false
-        }
+        },
+         {
+          "name": "Multiplayer game",
+          "description": "universe.simulation's cousin or something, idfk",
+          "url": "projects/multiplay/",
+          "last_updated": "2025-08-01",
+          "HasAds": false
+        },
       ]
     },
     {
