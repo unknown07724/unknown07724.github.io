@@ -114,6 +114,13 @@
           "url": "projects/multiplay/",
           "last_updated": "2025-08-01",
           "HasAds": false
+        },
+           {
+          "name": "Growth calculator",
+          "description": "calculate growth of communities",
+          "url": "projects/growth_calculator/",
+          "last_updated": "2025-08-04",
+          "HasAds": false
         }
       ]
     },
