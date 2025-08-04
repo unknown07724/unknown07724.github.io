@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Community Growth Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js/dist/Chart.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 640px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.06);
+      padding: 2rem 1.5rem 2.5rem 1.5rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1.2rem;
+      font-size: 2rem;
+      color: #1a2734;
+    }
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+    .form-group {
+      flex: 1 1 220px;
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+      color: #2b3a4b;
+    }
+    input, select {
+      padding: 0.4rem 0.6rem;
+      border: 1px solid #bfc9d1;
+      border-radius: 5px;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input:focus, select:focus {
+      border-color: #5f89fc;
+    }
+    .error {
+      color: #d14343;
+      background: #ffeaea;
+      border-radius: 5px;
+      padding: 0.7rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    .output {
+      background: #f7fafd;
+      border: 1px solid #dbe7f4;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1.2rem;
+      font-size: 1.05rem;
+      color: #212a31;
+    }
+    .chart-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 1rem 0.3rem; }
+      form { gap: 0.7rem; }
+      .form-group { min-width: 170px; }
+      h1 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Community Growth Calculator</h1>
+    <div id="error" class="error" style="display:none"></div>
+    <form id="growthForm" autocomplete="off">
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" required>
+      </div>
+      <div class="form-group">
+        <label for="currentMembers">Current Members</label>
+        <input type="number" id="currentMembers" min="1" required>
+      </div>
+      <div class="form-group">
+        <label for="targetMembers">Target Members</label>
+        <input type="number" id="targetMembers" min="1" required>
+      </div>
+      <div class="form-group">
+        <label for="growthModel">Growth Model</label>
+        <select id="growthModel" required>
+          <option value="linear">Linear</option>
+          <option value="exponential">Exponential</option>
+          <option value="rise-fall">Rise & Fall</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="growthRate" id="growthRateLabel">Growth Rate (per day)</label>
+        <input type="number" id="growthRate" step="any" min="0.001" required>
+      </div>
+      <div class="form-group" id="growthRateChangeGroup" style="display:none">
+        <label for="growthRateChange" id="growthRateChangeLabel">Growth Rate Change (per day<sup>2</sup>)</label>
+        <input type="number" id="growthRateChange" step="any">
+      </div>
+      <div class="form-group" style="flex:0 0 120px">
+        <button type="submit" style="margin-top:1.7rem;width:100%;padding:0.5rem 0.6rem;background:#1958d1;color:white;font-size:1.1rem;border:none;border-radius:4px;cursor:pointer;">Calculate</button>
+      </div>
+    </form>
+    <div id="output" class="output" style="display:none"></div>
+    <div class="chart-container">
+      <canvas id="growthChart" height="340"></canvas>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Helper for date formatting
+    function addDays(date, days) {
+      let d = new Date(date);
+      d.setDate(d.getDate() + days);
+      return d;
+    }
+    function formatDate(date) {
+      let d = new Date(date);
+      return d.toISOString().slice(0, 10);
+    }
+
+    // Show/Hide growth rate change for models
+    const modelSelect = document.getElementById('growthModel');
+    const growthRateChangeGroup = document.getElementById('growthRateChangeGroup');
+    modelSelect.addEventListener('change', () => {
+      if (modelSelect.value === 'rise-fall') {
+        growthRateChangeGroup.style.display = '';
+        document.getElementById('growthRateLabel').textContent = "Initial Growth Rate (per day)";
+        document.getElementById('growthRateChangeLabel').textContent = "Growth Rate Change (per day²)";
+        document.getElementById('growthRateChange').required = true;
+      } else if (modelSelect.value === 'linear') {
+        growthRateChangeGroup.style.display = 'none';
+        document.getElementById('growthRateLabel').textContent = "Growth Rate (members/day)";
+        document.getElementById('growthRateChange').required = false;
+      } else if (modelSelect.value === 'exponential') {
+        growthRateChangeGroup.style.display = 'none';
+        document.getElementById('growthRateLabel').textContent = "Growth Rate (fraction per day, e.g. 0.01)";
+        document.getElementById('growthRateChange').required = false;
+      }
+    });
+
+    // Chart.js chart instance
+    let chart;
+
+    document.getElementById('growthForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Get inputs
+      const startDate = document.getElementById('startDate').value;
+      const currentMembers = parseFloat(document.getElementById('currentMembers').value);
+      const targetMembers = parseFloat(document.getElementById('targetMembers').value);
+      const growthModel = document.getElementById('growthModel').value;
+      const growthRate = parseFloat(document.getElementById('growthRate').value);
+      const growthRateChange = parseFloat(document.getElementById('growthRateChange').value);
+
+      // Validate inputs
+      let error = '';
+      if (!startDate) error = 'Please select a start date.';
+      else if (isNaN(currentMembers) || currentMembers <= 0) error = 'Please enter a valid current member count (greater than 0).';
+      else if (isNaN(targetMembers) || targetMembers <= 0) error = 'Please enter a valid target member count (greater than 0).';
+      else if (targetMembers <= currentMembers) error = 'Target member count must be greater than current member count.';
+      else if (isNaN(growthRate) || growthRate <= 0) error = 'Growth rate must be a positive number.';
+      else if (growthModel === 'rise-fall' && (isNaN(growthRateChange) || growthRateChange === 0)) error = 'Growth rate change must not be zero for Rise & Fall model.';
+
+      if (error) {
+        document.getElementById('error').textContent = error;
+        document.getElementById('error').style.display = '';
+        document.getElementById('output').style.display = 'none';
+        if (chart) chart.destroy();
+        return;
+      } else {
+        document.getElementById('error').style.display = 'none';
+      }
+
+      // Calculation
+      let day = 0, maxDays = 3650; // limit to 10 years for graph
+      let members = currentMembers;
+      let data = [{ day: 0, members: currentMembers }];
+      let estimatedDays = null;
+
+      // Linear: M = M0 + r*t
+      if (growthModel === 'linear') {
+        estimatedDays = (targetMembers - currentMembers) / growthRate;
+        if (estimatedDays < 0) estimatedDays = null;
+        for (let t = 1; t <= Math.ceil(estimatedDays) && t <= maxDays; t++) {
+          let m = currentMembers + growthRate * t;
+          data.push({ day: t, members: m });
+        }
+      }
+      // Exponential: M = M0 * exp(r*t)
+      else if (growthModel === 'exponential') {
+        if (growthRate <= 0 || growthRate >= 1) {
+          document.getElementById('error').textContent = "For exponential, use a value like 0.01 for 1% daily growth.";
+          document.getElementById('error').style.display = '';
+          document.getElementById('output').style.display = 'none';
+          if (chart) chart.destroy();
+          return;
+        }
+        estimatedDays = Math.log(targetMembers / currentMembers) / Math.log(1 + growthRate);
+        if (estimatedDays < 0) estimatedDays = null;
+        for (let t = 1; t <= Math.ceil(estimatedDays) && t <= maxDays; t++) {
+          let m = currentMembers * Math.pow(1 + growthRate, t);
+          data.push({ day: t, members: m });
+        }
+      }
+      // Rise & Fall: M = M0 + r*t + 0.5*a*t²
+      else if (growthModel === 'rise-fall') {
+        // Quadratic: 0.5*a*t^2 + r*t + (M0 - target) = 0
+        // Use quadratic formula to solve for t
+        const a = growthRateChange;
+        const r = growthRate;
+        const M0 = currentMembers, Mt = targetMembers;
+        const A = 0.5 * a;
+        const B = r;
+        const C = M0 - Mt;
+        let roots = [];
+        if (Math.abs(a) > 1e-9) {
+          const D = B * B - 4 * A * C;
+          if (D >= 0) {
+            const sqrtD = Math.sqrt(D);
+            const t1 = (-B + sqrtD) / (2 * A);
+            const t2 = (-B - sqrtD) / (2 * A);
+            roots = [t1, t2].filter(x => x > 0);
+          }
+        } else if (B !== 0) { // fallback to linear if a is very small
+          roots = [(Mt - M0) / B].filter(x => x > 0);
+        }
+        estimatedDays = roots.length ? Math.min(...roots) : null;
+        // Build data for each day
+        for (let t = 1; t <= (estimatedDays ? Math.ceil(estimatedDays) : maxDays) && t <= maxDays; t++) {
+          let m = currentMembers + growthRate * t + 0.5 * growthRateChange * t * t;
+          data.push({ day: t, members: m });
+        }
+      }
+
+      // Find the actual crossing point if not exactly at integer day
+      if (estimatedDays != null && !isNaN(estimatedDays)) {
+        const endDate = addDays(startDate, Math.ceil(estimatedDays));
+        const msg = `Estimated time to reach <b>${targetMembers.toLocaleString()}</b> members: <b>${estimatedDays.toFixed(1)} days</b>
+          <br>Projected date: <b>${formatDate(endDate)}</b>`;
+        document.getElementById('output').innerHTML = msg;
+        document.getElementById('output').style.display = '';
+      } else {
+        document.getElementById('output').innerHTML = "Target cannot be reached with the given parameters.";
+        document.getElementById('output').style.display = '';
+      }
+
+      // Build chart data
+      const labels = data.map(pt => formatDate(addDays(startDate, pt.day)));
+      const values = data.map(pt => pt.members > 0 ? pt.members : 0);
+
+      // Draw chart
+      const ctx = document.getElementById('growthChart').getContext('2d');
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Member Count',
+            data: values,
+            borderColor: '#2f8fe9',
+            backgroundColor: 'rgba(47,143,233,0.07)',
+            fill: true,
+            pointRadius: 0,
+            borderWidth: 2,
+            tension: 0.15,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              title: { display: true, text: 'Date' },
+              ticks: { maxTicksLimit: 12, autoSkip: true }
+            },
+            y: {
+              title: { display: true, text: 'Members' },
+              beginAtZero: true,
+              suggestedMax: targetMembers * 1.1
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ` ${Math.round(ctx.parsed.y).toLocaleString()} members`
+              }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
