@@ -19,7 +19,21 @@
             <a href="report">Report</a>
         </nav>
     </header>
-
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const userId = localStorage.getItem("PB-userid");
+    if (userId === "1") {
+      const nav = document.querySelector("header nav");
+      if (nav) {
+        const adminLink = document.createElement("a");
+        adminLink.href = "admin.html";
+        adminLink.textContent = "Admin Panel";
+        adminLink.style.marginLeft = "10px"; // lil spacing so it doesn't jam up other links
+        nav.appendChild(adminLink);
+      }
+    }
+  });
+</script>
     <h1>Create a Post in <span id="subreddit-name">...</span></h1>
 
     <main>
