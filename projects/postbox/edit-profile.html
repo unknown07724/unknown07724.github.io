@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Edit Profile</title>
-    <link rel="stylesheet" href="styles.css">
-   <script src="settings-apply.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="settings-apply.js"></script>
 </head>
 <body>
     <header>
@@ -24,18 +24,24 @@
         <div id="edit-profile-form">
             <h2>Edit Your Profile</h2>
             <label for="profile-pic">Profile Picture</label>
-            <input type="file" id="profile-pic" accept="image/png, image/jpeg, image/webp"><br><br>
+            <input type="file" id="profile-pic" accept="image/png, image/jpeg, image/webp" /><br /><br />
             
-            <label for="description">Description</label><br>
-            <textarea id="description" placeholder="Write a short bio..."></textarea><br><br>
+            <label for="description">Description</label><br />
+            <textarea id="description" placeholder="Write a short bio..."></textarea><br /><br />
             
             <button id="submit-profile">Submit Changes for Review</button>
         </div>
     </main>
 
     <script>
-        const userId = window.location.hash.substring(1); // Get user ID from URL hash (if present)
-        
+        const userIdFromHash = window.location.hash.substring(1);
+        const storedUserId = localStorage.getItem("PB-userid");
+
+        // Redirect if userId doesn't match the stored ID
+        if (!storedUserId || storedUserId !== userIdFromHash) {
+            window.location.href = "https://unknown07724.github.io/projects/postbox/";
+        }
+
         document.getElementById("submit-profile").addEventListener("click", async (e) => {
             e.preventDefault();
 
@@ -47,11 +53,10 @@
                 return;
             }
 
-            // Prepare the data for Discord webhook
             const payload = {
                 embeds: [{
                     title: "Profile Update Submitted for Review",
-                    description: `User: ${userId}\nDescription: ${description}`,
+                    description: `User: ${userIdFromHash}\nDescription: ${description}`,
                     fields: [{
                         name: "Profile Picture",
                         value: profilePic ? profilePic.name : "No profile picture uploaded"
@@ -59,23 +64,25 @@
                     footer: {
                         text: `Submitted on: ${new Date().toLocaleString()}`
                     },
-                    color: 0x00ff00 // Green color for approval, can be changed
+                    color: 0x00ff00
                 }]
             };
 
             try {
-                // Send the data to a Discord webhook
-                const response = await fetch("https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8GlINLpk9Y2YGd%2FREtNg8K%2Fa9w43X1Y1PHRNy7ilnfTCIiPaI1QpJwpWRGX5%2B6UxAeuCumWtV%2BLWRPram9aC3OJ1pwWahYNuQFA1%2BVcUKonw8ENJMYdDabbY7KikvbxHqVYUf92fZRoFOZ17Ip2ezTsYH0UdBwXcrDedtI3pFqXx1EuFSwHU%2FwVA3UV3gjPhe%2BGpn8LtYkgVl7yt3AbjkzC4Vo3dv16sdJOMm5khY2saOD11bafjjXtC2OyjHzF9Vuu1AQBFXK58FuDOnWriXVtvbhhWAnIoKDzSF9%2FbfIkiEg5fwfBfTI6a%2FsCX9%2FvaEM9hbSADjAWI24Z%2B%2BWSicl5HQKS8y5RmwWDN7VO%2B7VFFso%3D/q7eX9epxHNXDNsWU", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(payload)
-                });
+                const response = await fetch(
+                    "https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8GlINLpk9Y2YGd%2FREtNg8K%2Fa9w43X1Y1PHRNy7ilnfTCIiPaI1QpJwpWRGX5%2B6UxAeuCumWtV%2BLWRPram9aC3OJ1pwWahYNuQFA1%2BVcUKonw8ENJMYdDabbY7KikvbxHqVYUf92fZRoFOZ17Ip2ezTsYH0UdBwXcrDedtI3pFqXx1EuFSwHU%2FwVA3UV3gjPhe%2BGpn8LtYkgVl7yt3AbjkzC4Vo3dv16sdJOMm5khY2saOD11bafjjXtC2OyjHzF9Vuu1AQBFXK58FuDOnWriXVtvbhhWAnIoKDzSF9%2FbfIkiEg5fwfBfTI6a%2FsCX9%2FvaEM9hbSADjAWI24Z%2B%2BWSicl5HQKS8y5RmwWDN7VO%2B7VFFso%3D/q7eX9epxHNXDNsWU",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(payload)
+                    }
+                );
 
                 if (response.ok) {
                     alert("Your profile update has been submitted for review.");
-                    window.location.href = `user.html#${userId}`;
+                    window.location.href = `user.html#${userIdFromHash}`;
                 } else {
                     throw new Error("Failed to submit changes for review.");
                 }
