@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Create a Post</title>
-    <link rel="stylesheet" href="styles.css">
-      <script src="settings-apply.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="settings-apply.js"></script>
 </head>
 <body>
     <header>
@@ -24,17 +24,20 @@
 
     <main>
         <form id="post-form">
-            <input type="text" id="post-title" placeholder="Title" required><br>
-            <textarea id="post-content" placeholder="Write your post..." required></textarea><br>
-            <input type="file" id="post-image" accept="image/png, image/jpeg, image/webp"><br>
+            <input type="text" id="post-title" placeholder="Title" required /><br />
+            <textarea id="post-content" placeholder="Write your post..." required></textarea
+            ><br />
+            <input type="file" id="post-image" accept="image/png, image/jpeg, image/webp" /><br />
             <button type="submit">Submit Post</button>
         </form>
     </main>
 
     <script>
-        const webhookURL = "https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8GlINLpk9Y2YGd%2FREtNg8K%2Fa9w43X1Y1PHRNy7ilnfTCIiPaI1QpJwpWRGX5%2B6UxAeuCumWtV%2BLWRPram9aC3OJ1pwWahYNuQFA1%2BVcUKonw8ENJMYdDabbY7KikvbxHqVYUf92fZRoFOZ17Ip2ezTsYH0UdBwXcrDedtI3pFqXx1EuFSwHU%2FwVA3UV3gjPhe%2BGpn8LtYkgVl7yt3AbjkzC4Vo3dv16sdJOMm5khY2saOD11bafjjXtC2OyjHzF9Vuu1AQBFXK58FuDOnWriXVtvbhhWAnIoKDzSF9%2FbfIkiEg5fwfBfTI6a%2FsCX9%2FvaEM9hbSADjAWI24Z%2B%2BWSicl5HQKS8y5RmwWDN7VO%2B7VFFso%3D/q7eX9epxHNXDNsWU"; // Replace with actual webhook
+        const webhookURL =
+            "https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8GlINLpk9Y2YGd%2FREtNg8K%2Fa9w43X1Y1PHRNy7ilnfTCIiPaI1QpJwpWRGX5%2B6UxAeuCumWtV%2BLWRPram9aC3OJ1pwWahYNuQFA1%2BVcUKonw8ENJMYdDabbY7KikvbxHqVYUf92fZRoFOZ17Ip2ezTsYH0UdBwXcrDedtI3pFqXx1EuFSwHU%2FwVA3UV3gjPhe%2BGpn8LtYkgVl7yt3AbjkzC4Vo3dv16sdJOMm5khY2saOD11bafjjXtC2OyjHzF9Vuu1AQBFXK58FuDOnWriXVtvbhhWAnIoKDzSF9%2FbfIkiEg5fwfBfTI6a%2FsCX9%2FvaEM9hbSADjAWI24Z%2B%2BWSicl5HQKS8y5RmwWDN7VO%2B7VFFso%3D/q7eX9epxHNXDNsWU";
+
         const subreddit = window.location.hash.substring(1).trim();
-        let userIP = "Unknown";
+        const userId = localStorage.getItem("PB-userid") || "Ignore post, no user";
 
         if (!subreddit) {
             alert("No subreddit specified.");
@@ -42,12 +45,6 @@
         } else {
             document.getElementById("subreddit-name").innerText = subreddit;
         }
-
-        // Get the user's IP
-        fetch("https://api64.ipify.org?format=json")
-            .then(response => response.json())
-            .then(data => { userIP = data.ip; })
-            .catch(error => console.error("Error fetching IP:", error));
 
         document.getElementById("post-form").addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -63,17 +60,20 @@
 
             const formData = new FormData();
 
-            // Append JSON payload without image field in embed
-            formData.append("payload_json", JSON.stringify({
-                content: "New post for review!",
-                embeds: [{
-                    title: title,
-                    description: content,
-                    footer: { text: `Subreddit: ${subreddit} | IP: ${userIP}` }
-                }]
-            }));
+            formData.append(
+                "payload_json",
+                JSON.stringify({
+                    content: "New post for review!",
+                    embeds: [
+                        {
+                            title: title,
+                            description: content,
+                            footer: { text: `Subreddit: ${subreddit} | User ID: ${userId}` },
+                        },
+                    ],
+                })
+            );
 
-            // Attach image file separately without adding it to the embed
             if (imageFile) {
                 formData.append("file", imageFile);
             }
@@ -81,7 +81,7 @@
             try {
                 const response = await fetch(webhookURL, {
                     method: "POST",
-                    body: formData
+                    body: formData,
                 });
 
                 if (response.ok) {
