@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Post View</title>
-       <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Ensure this path is correct -->
-    <style>
-        /* Your styles here */
-    </style>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
+<header>
+    <div id="logo">
+        <a href="https://unknown07724.github.io/projects/postbox/">Postbox</a>
+    </div>
+    <nav>
+        <a href="subreddits">Community Boxes</a>
+        <a href="signup">Sign up</a>
+        <a href="create-subreddit">Create a Community Box</a>
+        <a href="report">Report</a>
+    </nav>
+</header>
 
 <h1>Post View</h1>
 
@@ -27,25 +35,19 @@
 
 <div class="comment-form">
     <h3>Leave a Comment</h3>
-    <textarea id="comment-content" placeholder="Write your comment here..." rows="4"></textarea><br>
+    <textarea id="comment-content" placeholder="Write your comment here..." rows="4"></textarea><br />
     <button id="submit-comment">Submit Comment</button>
 </div>
 
 <script>
 const webhookURL = "https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8GlINLpk9Y2YGd%2FREtNg8K%2Fa9w43X1Y1PHRNy7ilnfTCIiPaI1QpJwpWRGX5%2B6UxAeuCumWtV%2BLWRPram9aC3OJ1pwWahYNuQFA1%2BVcUKonw8ENJMYdDabbY7KikvbxHqVYUf92fZRoFOZ17Ip2ezTsYH0UdBwXcrDedtI3pFqXx1EuFSwHU%2FwVA3UV3gjPhe%2BGpn8LtYkgVl7yt3AbjkzC4Vo3dv16sdJOMm5khY2saOD11bafjjXtC2OyjHzF9Vuu1AQBFXK58FuDOnWriXVtvbhhWAnIoKDzSF9%2FbfIkiEg5fwfBfTI6a%2FsCX9%2FvaEM9hbSADjAWI24Z%2B%2BWSicl5HQKS8y5RmwWDN7VO%2B7VFFso%3D/q7eX9epxHNXDNsWU";
 const postId = window.location.hash.substring(1);
-let userIP = "Unknown";
+const storedUserId = localStorage.getItem("PB-userid") || "Unknown";
 
-// Ensure the postId is available
 if (!postId) {
     alert("No post ID provided.");
-    window.location.href = "index.html";  // Redirect to index if no postId
+    window.location.href = "index.html";
 }
-
-fetch("https://api64.ipify.org?format=json")
-    .then(response => response.json())
-    .then(data => userIP = data.ip)
-    .catch(error => console.error("Error fetching IP:", error));
 
 document.addEventListener('DOMContentLoaded', function () {
     loadComments();
@@ -99,7 +101,7 @@ document.getElementById("submit-comment").addEventListener("click", async (e) =>
     const commentData = {
         id: crypto.randomUUID(),
         content: content,
-        user: userIP,  // User IP here (replace with actual user ID in your app)
+        user: storedUserId,  // Now uses localStorage user ID
         postId: postId,
         reference: reference
     };
@@ -111,7 +113,7 @@ document.getElementById("submit-comment").addEventListener("click", async (e) =>
             content: "New comment for review!",
             embeds: [{
                 description: content,
-                footer: { text: `Post ID: ${postId} | User: ${userIP}` }
+                footer: { text: `Post ID: ${postId} | User: ${storedUserId}` }
             }]
         })
     });
@@ -130,4 +132,3 @@ function getReplyToCommentId() {
 
 </body>
 </html>
-
