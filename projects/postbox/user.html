@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>User Profile</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
     <script src="settings-apply.js"></script>
 </head>
 <body>
@@ -25,38 +25,48 @@
             <img id="profile-pic" src="cdn/pfps/Default_pfp.png" alt="Profile Picture" />
             <h2 id="username">????</h2>
             <p id="description">This is someone's description.</p>
-            <button id="edit-profile">Edit Profile</button>
+            <button id="edit-profile" style="display:none;">Edit Profile</button>
         </div>
     </main>
 
     <script>
-       const userId = window.location.hash.substring(1).trim(); // Ensure there's an ID
+        const userId = window.location.hash.substring(1).trim(); // Ensure there's an ID
 
-if (!userId) {
-    alert("Invalid user profile.");
-    window.location.href = "index.html"; // Redirect to home if no ID
-}
-
-fetch(`data/users.json?t=${Date.now()}`)
-    .then(response => response.json())
-    .then(users => {
-        const user = users.find(u => String(u.id) === userId); // Convert id to string
-        if (user) {
-            document.getElementById("username").textContent = user.username;
-            document.getElementById("description").textContent = user.description || "No description set.";
-            if (user.profilePicture) {
-                document.getElementById("profile-pic").src = user.profilePicture;
-            }
-        } else {
-            alert("User not found.");
-            window.location.href = "index.html"; // Redirect if user not found
+        if (!userId) {
+            alert("Invalid user profile.");
+            window.location.href = "index.html"; // Redirect to home if no ID
         }
-    })
-    .catch(error => {
-        console.error("Error fetching user data:", error);
-        alert("Failed to load user profile.");
-    });
 
+        fetch(`data/users.json?t=${Date.now()}`)
+            .then(response => response.json())
+            .then(users => {
+                const user = users.find(u => String(u.id) === userId); // Convert id to string
+                if (user) {
+                    document.getElementById("username").textContent = user.username;
+                    document.getElementById("description").textContent = user.description || "No description set.";
+                    if (user.profilePicture) {
+                        document.getElementById("profile-pic").src = user.profilePicture;
+                    }
+
+                    // Show Edit Profile button ONLY if this profile matches logged in user ID
+                    const loggedInUserId = localStorage.getItem("PB-userid");
+                    if (loggedInUserId && loggedInUserId === userId) {
+                        const editBtn = document.getElementById("edit-profile");
+                        editBtn.style.display = "inline-block";
+                        editBtn.addEventListener("click", () => {
+                            // Redirect to edit profile page with userId in the hash
+                            window.location.href = `edit-profile.html#${userId}`;
+                        });
+                    }
+                } else {
+                    alert("User not found.");
+                    window.location.href = "index.html"; // Redirect if user not found
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching user data:", error);
+                alert("Failed to load user profile.");
+            });
     </script>
 </body>
 </html>
