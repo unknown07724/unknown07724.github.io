@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Signup</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <form id="signupForm">
@@ -35,7 +36,16 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          content: `New user signup:\nUsername: ${username}\nID: ${newId}`
+          content: "New user signup!",
+          embeds: [{
+            title: "New User Signup",
+            fields: [
+              { name: "Username", value: username, inline: true },
+              { name: "User ID", value: String(newId), inline: true }
+            ],
+            color: 5814783, // Optional nice color
+            timestamp: new Date().toISOString()
+          }]
         })
       }).then(() => {
         alert("Signed up successfully!");
