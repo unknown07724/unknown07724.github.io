@@ -58,7 +58,7 @@ function loadComments() {
         return;
     }
 
-    fetch(`comments.json?t=${Date.now()}`)
+    fetch(`data/comments.json?t=${Date.now()}`)
         .then(response => response.json())
         .then(comments => {
             const postComments = comments.filter(c => c.postId === parseInt(postId));
