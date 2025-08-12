@@ -4,7 +4,33 @@
   <title>Signup</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body> 
+  <header>
+        <div id="logo">
+            <a href="https://unknown07724.github.io/projects/postbox/">Postbox</a>
+        </div>
+        <nav>
+            <a href="subreddits">Community Boxes</a>
+            <a href="signup">Sign up</a>
+            <a href="create-subreddit">Create a Community Box</a>
+            <a href="report">Report</a>
+        </nav>
+    </header>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const userId = localStorage.getItem("PB-userid");
+    if (userId === "1") {
+      const nav = document.querySelector("header nav");
+      if (nav) {
+        const adminLink = document.createElement("a");
+        adminLink.href = "admin.html";
+        adminLink.textContent = "Admin Panel";
+        adminLink.style.marginLeft = "10px"; // lil spacing so it doesn't jam up other links
+        nav.appendChild(adminLink);
+      }
+    }
+  });
+</script>
   <form id="signupForm">
     <input type="text" id="username" placeholder="Username" required>
     <button type="submit">Sign Up</button>
