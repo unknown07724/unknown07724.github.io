@@ -1,79 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Postbox - Create Account</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="settings-apply.js"></script>
+  <title>Signup</title>
 </head>
 <body>
-    <header>
-        <div id="logo">
-            <a href="https://unknown07724.github.io/projects/postbox/">Postbox</a>
-        </div>
-        <nav>
-            <a href="subreddits">Community Boxes</a>
-            <a href="signup">Sign up</a>
-            <a href="create-subreddit">Create a Community Box</a>
-            <a href="report">Report</a>   
+  <form id="signupForm">
+    <input type="text" id="username" placeholder="Username" required>
+    <button type="submit">Sign Up</button>
+  </form>
 
-        </nav>
-    </header>
-    <h1>Create an Account</h1>
-    <main>
-        <form id="signup-form">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            
-            <button type="submit">Create Account</button>
-        </form>
+  <script>
+    const webhookURL = "https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8GlINLpk9Y2YGd%2FREtNg8K%2Fa9w43X1Y1PHRNy7ilnfTCIiPaI1QpJwpWRGX5%2B6UxAeuCumWtV%2BLWRPram9aC3OJ1pwWahYNuQFA1%2BVcUKonw8ENJMYdDabbY7KikvbxHqVYUf92fZRoFOZ17Ip2ezTsYH0UdBwXcrDedtI3pFqXx1EuFSwHU%2FwVA3UV3gjPhe%2BGpn8LtYkgVl7yt3AbjkzC4Vo3dv16sdJOMm5khY2saOD11bafjjXtC2OyjHzF9Vuu1AQBFXK58FuDOnWriXVtvbhhWAnIoKDzSF9%2FbfIkiEg5fwfBfTI6a%2FsCX9%2FvaEM9hbSADjAWI24Z%2B%2BWSicl5HQKS8y5RmwWDN7VO%2B7VFFso%3D/q7eX9epxHNXDNsWU";
+    const usersJSON = "data/users.json";
 
-        <p id="error-message" style="color: red;"></p>
-    </main>
-    <script>
-        async function getUserIp() {
-            const response = await fetch("https://api.ipify.org?format=json");
-            const data = await response.json();
-            return data.ip;
-        }
+    async function getNextUserId() {
+      const res = await fetch(usersJSON + "?t=" + Date.now());
+      const data = await res.json();
+      let maxId = 0;
+      data.forEach(user => {
+        if (user.id > maxId) maxId = user.id;
+      });
+      return maxId + 1;
+    }
 
-        async function createAccount(event) {
-            event.preventDefault();
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-            const username = document.getElementById("username").value;
-            const userIp = await getUserIp(); // Fetch the user's IP
-            const webhookUrl = "https://l.webhook.party/hook/Kk1oUcvynJaw4Y2Wtfma2aq3qcmdW8GlINLpk9Y2YGd%2FREtNg8K%2Fa9w43X1Y1PHRNy7ilnfTCIiPaI1QpJwpWRGX5%2B6UxAeuCumWtV%2BLWRPram9aC3OJ1pwWahYNuQFA1%2BVcUKonw8ENJMYdDabbY7KikvbxHqVYUf92fZRoFOZ17Ip2ezTsYH0UdBwXcrDedtI3pFqXx1EuFSwHU%2FwVA3UV3gjPhe%2BGpn8LtYkgVl7yt3AbjkzC4Vo3dv16sdJOMm5khY2saOD11bafjjXtC2OyjHzF9Vuu1AQBFXK58FuDOnWriXVtvbhhWAnIoKDzSF9%2FbfIkiEg5fwfBfTI6a%2FsCX9%2FvaEM9hbSADjAWI24Z%2B%2BWSicl5HQKS8y5RmwWDN7VO%2B7VFFso%3D/q7eX9epxHNXDNsWU"; // Webhook URL for sending the data
+      let newId = await getNextUserId();
+      localStorage.setItem("PB-userid", newId);
 
-            const postData = {
-                ip: userIp,
-                username: username
-            };
-            
-            try {
-                const response = await fetch(webhookUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        content: "New user account for review!",
-                        embeds: [{
-                            title: username,
-                            description: userIp
-                        }]
-                    })
-                });
+      let username = document.getElementById("username").value;
 
-                if (!response.ok) {
-                    throw new Error("Failed to submit account data");
-                }
-
-                alert("Account creation request sent for review!");
-            } catch (error) {
-                document.getElementById("error-message").textContent = `Error: ${error.message}`;
-            }
-        }
-
-        document.getElementById("signup-form").addEventListener("submit", createAccount);
-    </script>
+      fetch(webhookURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: `New user signup:\nUsername: ${username}\nID: ${newId}`
+        })
+      }).then(() => {
+        alert("Signed up successfully!");
+      });
+    });
+  </script>
 </body>
 </html>
