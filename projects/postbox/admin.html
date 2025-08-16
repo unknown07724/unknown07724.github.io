@@ -23,16 +23,6 @@
             <p id="ip-lookup-result">Result: </p>
         </section>
 
-        <!-- IP Truncator Tool -->
-        <section>
-            <h2>IP Truncator</h2>
-            <form id="ip-truncator-form">
-                <input type="text" id="ip-truncate-input" placeholder="Enter IP Address" required>
-                <button type="submit">Truncate IP</button>
-            </form>
-            <p id="ip-truncated-result">Truncated IP: </p>
-        </section>
-
         <!-- Post JSON Generator Tool -->
         <section>
             <h2>Post JSON Generator</h2>
@@ -44,17 +34,28 @@
             </form>
             <pre id="post-json-result">Generated JSON: </pre>
         </section>
+
+        <!-- User Switcher Tool -->
+        <section>
+            <h2>Switch User</h2>
+            <label for="user-select">Select User:</label>
+            <select id="user-select">
+                <option value="">Loading users...</option>
+            </select>
+            <button id="switch-user-btn">Switch User</button>
+            <p id="switch-user-result"></p>
+        </section>
     </main>
 
     <script>
-        // Simulated Data for IP-to-User ID Mapping (Replace with actual data)
+        // Simulated Data for IP-to-User ID Mapping (optional)
         const ipToUserData = {
             "194.xxx.155.134": { id: "2", username: "ginger1488" },
             "87.xxx.4.181": { id: "3", username: "um" },
             "38.xxx.236.238": { id: "1", username: "unknown07724" }
         };
 
-        // IP to User ID Lookup Function
+        // IP to User ID Lookup
         document.getElementById("ip-lookup-form").addEventListener("submit", (e) => {
             e.preventDefault();
             const ip = document.getElementById("ip-input").value.trim();
@@ -67,29 +68,7 @@
             }
         });
 
-        // IP Truncator Function
-        function truncateIP(ip) {
-            const ipParts = ip.split('.');
-            if (ipParts.length === 4) {
-                // Replace the last part with 'xxx' for truncation
-                ipParts[1] = 'xxx';
-            }
-            return ipParts.join('.');
-        }
-
-        // IP Truncator Tool Submit Handler
-        document.getElementById("ip-truncator-form").addEventListener("submit", (e) => {
-            e.preventDefault();
-            const ip = document.getElementById("ip-truncate-input").value.trim();
-            if (ip) {
-                const truncatedIp = truncateIP(ip);
-                document.getElementById("ip-truncated-result").innerText = `Truncated IP: ${truncatedIp}`;
-            } else {
-                document.getElementById("ip-truncated-result").innerText = "Please enter a valid IP address.";
-            }
-        });
-
-        // Post JSON Generator Function
+        // Post JSON Generator
         document.getElementById("post-json-form").addEventListener("submit", (e) => {
             e.preventDefault();
 
@@ -107,11 +86,41 @@
                 subreddit: subreddit,
                 title: title,
                 content: content,
-                userID: "PLACEHOLDER_USER_ID", // Replace with actual user ID logic
+                userID: "PLACEHOLDER_USER_ID", // Replace with actual logic
             };
 
-            // Display generated Post JSON
             document.getElementById("post-json-result").innerText = JSON.stringify(postJson, null, 4);
+        });
+
+        // User Switcher Tool
+        fetch('data/users.json')
+            .then(res => res.json())
+            .then(users => {
+                const select = document.getElementById('user-select');
+                select.innerHTML = ''; // Clear loading option
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.id;
+                    option.textContent = user.Username; // Show username
+                    select.appendChild(option);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('switch-user-result').innerText = 'Failed to load users.';
+            });
+
+        document.getElementById('switch-user-btn').addEventListener('click', () => {
+            const select = document.getElementById('user-select');
+            const userId = select.value;
+
+            if (!userId) {
+                document.getElementById('switch-user-result').innerText = 'Please select a user.';
+                return;
+            }
+
+            localStorage.setItem('PB-userid', userId);
+            document.getElementById('switch-user-result').innerText = `Switched to user: ${select.options[select.selectedIndex].text} (ID: ${userId})`;
         });
     </script>
 </body>
