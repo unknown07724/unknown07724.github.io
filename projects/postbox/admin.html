@@ -6,6 +6,27 @@
     <title>Admin Panel</title>
     <link rel="stylesheet" href="styles.css">
     <script src="settings-apply.js"></script>
+    <style>
+        .admin-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px;
+        }
+        .column {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        pre {
+            max-height: 200px;
+            overflow: auto;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 6px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,95 +34,154 @@
     </header>
 
     <main>
-        <!-- IP to User ID Tool -->
-        <section>
-            <h2>IP to User ID</h2>
-            <form id="ip-lookup-form">
-                <input type="text" id="ip-input" placeholder="Enter IP Address" required>
-                <button type="submit">Lookup User ID</button>
-            </form>
-            <p id="ip-lookup-result">Result: </p>
-        </section>
+        <div class="admin-columns">
+            <!-- IP Fuckery Column -->
+            <div class="column">
+                <h2>IP Fuckery</h2>
 
-        <!-- Post JSON Generator Tool -->
-        <section>
-            <h2>Post JSON Generator</h2>
-            <form id="post-json-form">
-                <input type="text" id="post-title" placeholder="Post Title" required><br>
-                <textarea id="post-content" placeholder="Post Content" required></textarea><br>
-                <input type="text" id="post-subreddit" placeholder="Subreddit" required><br>
-                <button type="submit">Generate Post JSON</button>
-            </form>
-            <pre id="post-json-result">Generated JSON: </pre>
-        </section>
+                <!-- IP Lookup -->
+                <section>
+                    <h3>IP to User ID</h3>
+                    <form id="ip-lookup-form">
+                        <input type="text" id="ip-input" placeholder="Enter IP Address" required>
+                        <button type="submit">Lookup User ID</button>
+                    </form>
+                    <p id="ip-lookup-result">Result: </p>
+                </section>
 
-        <!-- User Switcher Tool -->
-        <section>
-            <h2>Switch User</h2>
-            <label for="user-select">Select User:</label>
-            <select id="user-select">
-                <option value="">Loading users...</option>
-            </select>
-            <button id="switch-user-btn">Switch User</button>
-            <p id="switch-user-result"></p>
-        </section>
+                <!-- IP Truncator -->
+                <section>
+                    <h3>IP Truncator</h3>
+                    <form id="ip-truncator-form">
+                        <input type="text" id="ip-truncate-input" placeholder="Enter IP Address" required>
+                        <button type="submit">Truncate IP</button>
+                    </form>
+                    <p id="ip-truncated-result">Truncated IP: </p>
+                </section>
+            </div>
+
+            <!-- Post Fuckery Column -->
+            <div class="column">
+                <h2>Post Fuckery</h2>
+
+                <section>
+                    <h3>Post JSON Generator</h3>
+                    <form id="post-json-form">
+                        <input type="text" id="post-title" placeholder="Post Title" required><br>
+                        <textarea id="post-content" placeholder="Post Content" required></textarea><br>
+                        <input type="text" id="post-subreddit" placeholder="Subreddit" required><br>
+                        <button type="submit">Generate Post JSON</button>
+                    </form>
+                    <pre id="post-json-result">Generated JSON: </pre>
+                </section>
+            </div>
+
+            <!-- User Fuckery Column -->
+            <div class="column">
+                <h2>User Fuckery</h2>
+
+                <!-- Switch User -->
+                <section>
+                    <h3>Switch User</h3>
+                    <label for="user-select">Select User:</label>
+                    <select id="user-select">
+                        <option value="">Loading users...</option>
+                    </select>
+                    <button id="switch-user-btn">Switch User</button>
+                    <p id="switch-user-result"></p>
+                </section>
+
+                <!-- User Generator -->
+                <section>
+                    <h3>User Generator</h3>
+                    <form id="user-generator-form">
+                        <input type="text" id="new-user-id" placeholder="User ID" required><br>
+
+                        <label for="username-format">Username Format:</label>
+                        <select id="username-format">
+                            <option value="user_id">user_&lt;ID&gt;</option>
+                            <option value="xbox">Xbox-style</option>
+                            <option value="chaotic">Chaotic</option>
+                        </select>
+                        <button type="button" id="generate-username-btn">Generate Username</button><br>
+
+                        <input type="text" id="new-user-username" placeholder="Username" required><br>
+                        <textarea id="new-user-desc" placeholder="Description"></textarea><br>
+                        <button type="submit">Generate User JSON</button>
+                    </form>
+                    <pre id="user-json-result">Generated User JSON: </pre>
+                </section>
+            </div>
+        </div>
     </main>
 
     <script>
-        // Simulated Data for IP-to-User ID Mapping (optional)
+        // -------- IP Tools --------
         const ipToUserData = {
             "194.xxx.155.134": { id: "2", username: "ginger1488" },
             "87.xxx.4.181": { id: "3", username: "um" },
             "38.xxx.236.238": { id: "1", username: "unknown07724" }
         };
 
-        // IP to User ID Lookup
+        // IP Lookup
         document.getElementById("ip-lookup-form").addEventListener("submit", (e) => {
             e.preventDefault();
             const ip = document.getElementById("ip-input").value.trim();
             const userData = ipToUserData[ip];
+            document.getElementById("ip-lookup-result").innerText = userData
+                ? `User ID: ${userData.id}, Username: ${userData.username}`
+                : "User not found";
+        });
 
-            if (userData) {
-                document.getElementById("ip-lookup-result").innerText = `User ID: ${userData.id}, Username: ${userData.username}`;
+        // IP Truncator
+        function truncateIP(ip) {
+            const ipParts = ip.split('.');
+            if (ipParts.length === 4) {
+                ipParts[2] = 'xxx';
+                ipParts[3] = 'xxx';
+            }
+            return ipParts.join('.');
+        }
+        document.getElementById("ip-truncator-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const ip = document.getElementById("ip-truncate-input").value.trim();
+            if (ip) {
+                document.getElementById("ip-truncated-result").innerText = `Truncated IP: ${truncateIP(ip)}`;
             } else {
-                document.getElementById("ip-lookup-result").innerText = "User not found";
+                document.getElementById("ip-truncated-result").innerText = "Please enter a valid IP address.";
             }
         });
 
-        // Post JSON Generator
+        // -------- Post Generator --------
         document.getElementById("post-json-form").addEventListener("submit", (e) => {
             e.preventDefault();
-
             const title = document.getElementById("post-title").value.trim();
             const content = document.getElementById("post-content").value.trim();
             const subreddit = document.getElementById("post-subreddit").value.trim();
 
-            if (!title || !content || !subreddit) {
-                alert("All fields are required!");
-                return;
-            }
+            if (!title || !content || !subreddit) return alert("All fields are required!");
 
             const postJson = {
                 id: crypto.randomUUID(),
-                subreddit: subreddit,
-                title: title,
-                content: content,
-                userID: "PLACEHOLDER_USER_ID", // Replace with actual logic
+                subreddit,
+                title,
+                content,
+                userID: "PLACEHOLDER_USER_ID"
             };
-
             document.getElementById("post-json-result").innerText = JSON.stringify(postJson, null, 4);
         });
 
-        // User Switcher Tool
+        // -------- User Fuckery --------
+        // Load users for Switch User
         fetch('data/users.json')
             .then(res => res.json())
             .then(users => {
                 const select = document.getElementById('user-select');
-                select.innerHTML = ''; // Clear loading option
+                select.innerHTML = '';
                 users.forEach(user => {
                     const option = document.createElement('option');
                     option.value = user.id;
-                    option.textContent = user.username; // Show username
+                    option.textContent = user.Username || user.username || `User ${user.id}`;
                     select.appendChild(option);
                 });
             })
@@ -113,14 +193,36 @@
         document.getElementById('switch-user-btn').addEventListener('click', () => {
             const select = document.getElementById('user-select');
             const userId = select.value;
-
-            if (!userId) {
-                document.getElementById('switch-user-result').innerText = 'Please select a user.';
-                return;
-            }
-
+            if (!userId) return document.getElementById('switch-user-result').innerText = 'Please select a user.';
             localStorage.setItem('PB-userid', userId);
             document.getElementById('switch-user-result').innerText = `Switched to user: ${select.options[select.selectedIndex].text} (ID: ${userId})`;
+        });
+
+        // User Generator + Username Generator
+        function generateUsername(id = "") {
+            const adjectives = ["Epic", "Dank", "Crazy", "Lazy", "Red", "Blue", "Pixel", "Mega"];
+            const nouns = ["Monkey", "Potato", "Ninja", "Dragon", "Llama", "Wizard"];
+            const num = Math.floor(Math.random() * 100);
+            const format = document.getElementById("username-format").value;
+
+            if (format === "user_id") return `user_${id || num}`;
+            if (format === "xbox") return `${adjectives[Math.floor(Math.random() * adjectives.length)]}${nouns[Math.floor(Math.random() * nouns.length)]}${num}`;
+            if (format === "chaotic") return `_${nouns[Math.floor(Math.random() * nouns.length)]}${Math.floor(Math.random()*999)}_X`;
+        }
+
+        document.getElementById("generate-username-btn").addEventListener("click", () => {
+            const id = document.getElementById("new-user-id").value.trim();
+            document.getElementById("new-user-username").value = generateUsername(id);
+        });
+
+        document.getElementById("user-generator-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const id = document.getElementById("new-user-id").value.trim();
+            const username = document.getElementById("new-user-username").value.trim();
+            const description = document.getElementById("new-user-desc").value.trim();
+            if (!id || !username) return alert("ID and Username are required!");
+            const userJson = { id, username, description };
+            document.getElementById("user-json-result").innerText = JSON.stringify(userJson, null, 4);
         });
     </script>
 </body>
