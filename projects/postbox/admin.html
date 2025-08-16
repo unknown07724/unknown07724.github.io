@@ -199,16 +199,27 @@
         });
 
         // User Generator + Username Generator
-        function generateUsername(id = "") {
-            const adjectives = ["Epic", "Dank", "Crazy", "Lazy", "Red", "Blue", "Pixel", "Mega"];
-            const nouns = ["Monkey", "Potato", "Ninja", "Dragon", "Llama", "Wizard"];
-            const num = Math.floor(Math.random() * 100);
-            const format = document.getElementById("username-format").value;
+       function generateUsername(nextID) {
+    const adjectives = ["Epic","Dank","Crazy","Lazy","Red","Blue","Pixel","Mega"];
+    const nouns = ["Monkey","Potato","Ninja","Dragon","Llama","Wizard"];
+    const num = Math.floor(Math.random() * 100);
+    const format = document.getElementById("username-format").value;
 
-            if (format === "user_id") return `user_${id || num}`;
-            if (format === "xbox") return `${adjectives[Math.floor(Math.random() * adjectives.length)]}${nouns[Math.floor(Math.random() * nouns.length)]}${num}`;
-            if (format === "chaotic") return `_${nouns[Math.floor(Math.random() * nouns.length)]}${Math.floor(Math.random()*999)}_X`;
-        }
+    if (format === "user_id") {
+        return `user_${nextID}`;
+    } else if (format === "xbox") {
+        const adj = adjectives[Math.floor(Math.random()*adjectives.length)];
+        const noun = nouns[Math.floor(Math.random()*nouns.length)];
+        return `${adj}${noun}${num}`;
+    } else if (format === "chaotic") {
+        return `_${nouns[Math.floor(Math.random()*nouns.length)]}${Math.floor(Math.random()*999)}_X`;
+    }
+}
+
+// when creating a new user
+const lastUserID = parseInt(users[users.length-1].id, 10);
+const newID = lastUserID + 1;
+const newUsername = generateUsername(newID);
 
         document.getElementById("generate-username-btn").addEventListener("click", () => {
             const id = document.getElementById("new-user-id").value.trim();
