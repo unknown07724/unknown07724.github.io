@@ -11,27 +11,98 @@
   <title>Project List - by Unknown07724</title>
   <style>
     /* Gallery CSS */
-    #projects-list.gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
+   /* Gallery container */
+#projects-list.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 10px 0;
+}
 
-    .gallery-item {
-      flex: 0 1 calc(25% - 15px);
-      background: #f0f0f0;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.2);
-    }
+/* Each project card */
+.gallery-item {
+  border-radius: 12px;
+  flex: 1 1 calc(25% - 20px);
+  min-width: 220px;
+  max-width: 300px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s, border-color 0.3s;
+  cursor: pointer;
+}
 
-    .gallery-box h4 {
-      margin: 0 0 5px 0;
-    }
+/* Hover effect */
+.gallery-item:hover {
+  transform: translateY(-5px);
+}
 
-    .gallery-box p {
-      font-size: 0.9em;
-    }
+/* Inner box for content */
+.gallery-box {
+  padding: 15px;
+}
+
+/* Titles */
+.gallery-box h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+}
+
+/* Descriptions */
+.gallery-box p {
+  font-size: 0.9em;
+  line-height: 1.2em;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Author label */
+.gallery-box span {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.8em;
+}
+
+/* Dark mode */
+@media screen and (prefers-color-scheme: dark) {
+  .gallery-item {
+    background-color: #282828;
+    border: 2px solid #334BFF;
+    color: white;
+  }
+  .gallery-item:hover {
+    box-shadow: 0 8px 20px rgba(51, 75, 255, 0.5);
+  }
+  .gallery-box h4 { color: #334BFF; }
+  .gallery-box p { color: white; }
+  .gallery-box span { color: #6495ED; }
+}
+
+/* Light mode */
+@media screen and (prefers-color-scheme: light) {
+  .gallery-item {
+    background-color: #f7f7f7;
+    border: 2px solid #040273;
+    color: black;
+  }
+  .gallery-item:hover {
+    box-shadow: 0 8px 20px rgba(0, 4, 115, 0.5);
+  }
+  .gallery-box h4 { color: #040273; }
+  .gallery-box p { color: black; }
+  .gallery-box span { color: #334BFF; }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .gallery-item { flex: 1 1 calc(50% - 20px); }
+}
+@media (max-width: 500px) {
+  .gallery-item { flex: 1 1 100%; }
+}
+
   </style>
 </head>
 
