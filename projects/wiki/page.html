@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memepedia - Page</title>
+<style>
+  body { margin: 0; display: flex; font-family: Arial, sans-serif; height: 100vh; }
+  #sidebar { width: 250px; background: #eee; padding: 15px; box-sizing: border-box; overflow-y: auto; }
+  #sidebar h2 { margin-top: 0; }
+  #sidebar a, #sidebar button { display: block; padding: 8px; margin: 5px 0; text-decoration: none; background: #ddd; border: none; border-radius: 5px; color: black; cursor: pointer; }
+  #sidebar a:hover, #sidebar button:hover { background: #ccc; }
+  #content { flex: 1; border: none; height: 100%; }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <h2>Memepedia</h2>
+  <a href="page.html?page=memepedia">Home</a>
+  <a href="page.html?page=moon">The Moon</a>
+  <a href="page.html?page=sun">The Sun</a>
+  <a href="page.html?page=internet">The Internet</a>
+  <a href="page.html?page=memes">Memes</a>
+  <button id="editBtn">Edit This Page</button>
+</div>
+
+<iframe id="content" src="" name="contentFrame"></iframe>
+
+<script>
+  const githubBase = 'https://unknown07724.github.io/projects/wiki/';
+
+  // Get the page from URL search param
+  function getPageParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('page') || 'memepedia'; // default page
+  }
+
+  // Load the page in the iframe
+  function loadPage() {
+    const page = getPageParam();
+    document.getElementById('content').src = `${githubBase}${page}.html`;
+  }
+
+  // Edit button opens edit.html for the current page
+  document.getElementById('editBtn').addEventListener('click', () => {
+    const page = getPageParam();
+    window.open(`edit.html?page=${page}`, '_blank'); // can be modal later
+  });
+
+  // Initialize
+  window.addEventListener('load', loadPage);
+  window.addEventListener('popstate', loadPage); // optional, handles back/forward
+</script>
+
+</body>
+</html>
