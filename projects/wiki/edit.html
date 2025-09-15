@@ -32,7 +32,7 @@
     document.getElementById("pageName").textContent = pageName;
 
     // Try to load existing page HTML
-    fetch(`projects/wiki/pages/${pageName}.html`)
+    fetch(`/projects/wiki/pages/${pageName}.html`)
       .then(res => {
         if (!res.ok) throw new Error("Page not found");
         return res.text();
