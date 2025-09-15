@@ -1,85 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Page - Memepedia</title>
-<style>
-  body { margin: 0; display: flex; font-family: Arial, sans-serif; height: 100vh; }
-  #sidebar { width: 250px; background: #eee; padding: 15px; box-sizing: border-box; overflow-y: auto; }
-  #sidebar h2 { margin-top: 0; }
-  #sidebar a, #sidebar button { display: block; padding: 8px; margin: 5px 0; text-decoration: none; background: #ddd; border: none; border-radius: 5px; color: black; cursor: pointer; }
-  #sidebar a:hover, #sidebar button:hover { background: #ccc; }
-  #editor { flex: 1; padding: 15px; display: flex; flex-direction: column; }
-  textarea { flex: 1; width: 100%; font-family: monospace; font-size: 14px; margin-bottom: 10px; }
-  #saveBtn { padding: 10px; font-size: 16px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 5px; }
-  #saveBtn:hover { background: #218838; }
-</style>
+  <title>Edit Page - Memepedia</title>
+  <style>
+    body { font-family: sans-serif; display: flex; }
+    #sidebar { width: 200px; background: #eee; padding: 10px; }
+    #content { flex: 1; padding: 10px; }
+    textarea { width: 100%; height: 70vh; font-family: monospace; }
+    button { margin-top: 10px; padding: 6px 12px; }
+  </style>
 </head>
 <body>
+  <div id="sidebar">
+    <h2>Memepedia</h2>
+    <a href="memepedia.html">🏠 Home</a><br>
+    <a href="page.html?page=moon">🌙 Moon</a><br>
+    <a href="page.html?page=sun">☀️ Sun</a><br>
+  </div>
+  <div id="content">
+    <h1>Editing: <span id="pageName"></span></h1>
+    <textarea id="pageContent"></textarea>
+    <br>
+    <button id="saveBtn">Save Edit</button>
+  </div>
 
-<div id="sidebar">
-  <h2>Memepedia</h2>
-  <a href="page.html?page=memepedia">Home</a>
-  <a href="page.html?page=moon">The Moon</a>
-  <a href="page.html?page=sun">The Sun</a>
-  <a href="page.html?page=internet">The Internet</a>
-  <a href="page.html?page=memes">Memes</a>
-</div>
+  <script>
+    const webhookURL = "https://discord.com/api/webhooks/1416905580035182702/9YTThtpOtgXA07J3GB9mdtmVPLz8L-gr-bBMp_daM6uy0msS5jGO0YdqjQTyjc7Q4lKy"; // put your webhook here
+    let pageName = new URLSearchParams(window.location.search).get("page");
 
-<div id="editor">
-  <h2>Editing: <span id="pageName"></span></h2>
-  <textarea id="pageContent" placeholder="Write your HTML here..."></textarea>
-  <button id="saveBtn">Save & Send</button>
-</div>
+    // If no page param → prompt for one
+    if (!pageName) {
+      pageName = prompt("Enter a name for your new article:", "");
+      if (!pageName) pageName = "Untitled";
+      const newURL = `${window.location.pathname}?page=${encodeURIComponent(pageName)}`;
+      window.history.replaceState(null, "", newURL);
+    }
 
-<script>
-  const webhookURL = "YOUR_DISCORD_WEBHOOK_URL"; // replace with your webhook
+    document.getElementById("pageName").textContent = pageName;
 
-  // Get page param
-  let pageName = new URLSearchParams(window.location.search).get('page');
+    // Try to load existing page HTML
+    fetch(`projects/wiki/${pageName}.html`)
+      .then(res => {
+        if (!res.ok) throw new Error("Page not found");
+        return res.text();
+      })
+      .then(html => {
+        document.getElementById("pageContent").value = html;
+      })
+      .catch(() => {
+        // Leave empty if page doesn't exist
+        document.getElementById("pageContent").value = "";
+      });
 
-  // Prompt for new article name if missing
-  if (!pageName) {
-    pageName = prompt("Enter a name for your new article:", "");
-    if (!pageName) pageName = "Untitled";
-    // Update URL
-    const newURL = `${window.location.pathname}?page=${encodeURIComponent(pageName)}`;
-    window.history.replaceState(null, "", newURL);
-  }
+    // Save button sends edit to Discord webhook
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      const content = document.getElementById("pageContent").value;
 
-  document.getElementById("pageName").textContent = pageName;
+      const payload = {
+        username: "Memepedia Edit Bot",
+        embeds: [{
+          title: `Edit Request for ${pageName}.html`,
+          description: "New content submitted:",
+          color: 3447003,
+          fields: [
+            { name: "Page", value: pageName },
+            { name: "HTML Content", value: "```html\n" + content.substring(0, 1900) + "\n```" }
+          ]
+        }]
+      };
 
-  // Save button
-  document.getElementById("saveBtn").addEventListener("click", () => {
-    const content = document.getElementById("pageContent").value;
-
-    const payload = {
-      username: "Memepedia Editor",
-      embeds: [{
-        title: `Edit Request for ${pageName}.html`,
-        description: "New content submitted:",
-        color: 3447003,
-        fields: [
-          { name: "Page", value: pageName },
-          { name: "HTML Content", value: "```html\n" + content.substring(0, 1900) + "\n```" }
-        ]
-      }]
-    };
-
-    fetch(webhookURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    }).then(res => {
-      if (res.ok) {
-        alert("Edit sent to Discord for approval!");
-      } else {
-        alert("Failed to send edit.");
-      }
-    }).catch(err => alert("Error: " + err));
-  });
-</script>
-
+      fetch(webhookURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(res => {
+        if (res.ok) {
+          alert("Edit sent to Discord for approval!");
+        } else {
+          alert("Failed to send edit.");
+        }
+      }).catch(err => alert("Error: " + err));
+    });
+  </script>
 </body>
 </html>
