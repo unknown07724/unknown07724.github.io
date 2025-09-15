@@ -2,8 +2,20 @@
 <html>
 <head>
   <title>Memepedia, teh memey encyclopedia</title>
+  <style>
+  #sidebar { width: 250px; background: #eee; padding: 15px; box-sizing: border-box; overflow-y: auto; }
+  #sidebar h2 { margin-top: 0; }
+  #sidebar a, #sidebar button { display: block; padding: 8px; margin: 5px 0; text-decoration: none; background: #ddd; border: none; border-radius: 5px; color: black; cursor: pointer; }
+  #sidebar a:hover, #sidebar button:hover { background: #ccc; }
+  #content { flex: 1; border: none; height: 100%; }
+  </style>
 </head>
 <body>
+<div id="sidebar">
+  <h2>Memepedia</h2>
+  <a href="index.html">Main page</a>
+  <button>This page is locked</button>
+</div>
 
 <h1>welcome</h1>
 <p>to the wiki</p>
