@@ -3,27 +3,58 @@
 <head>
   <title>Memepedia, teh memey encyclopedia</title>
   <style>
-  #sidebar { width: 250px; background: #eee; padding: 15px; box-sizing: border-box; overflow-y: auto; }
-  #sidebar h2 { margin-top: 0; }
-  #sidebar a, #sidebar button { display: block; padding: 8px; margin: 5px 0; text-decoration: none; background: #ddd; border: none; border-radius: 5px; color: black; cursor: pointer; }
-  #sidebar a:hover, #sidebar button:hover { background: #ccc; }
-  #content { flex: 1; border: none; height: 100%; }
+    body {
+      margin: 0;
+      display: flex;
+      height: 100vh; /* make the layout take the whole screen */
+      font-family: sans-serif;
+    }
+    #sidebar {
+      width: 250px;
+      background: #eee;
+      padding: 15px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    #sidebar h2 { margin-top: 0; }
+    #sidebar a, #sidebar button {
+      display: block;
+      padding: 8px;
+      margin: 5px 0;
+      text-decoration: none;
+      background: #ddd;
+      border: none;
+      border-radius: 5px;
+      color: black;
+      cursor: pointer;
+    }
+    #sidebar a:hover, #sidebar button:hover {
+      background: #ccc;
+    }
+    #content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
   </style>
 </head>
 <body>
-<div id="sidebar">
-<img src="logo.svg" alt="Memepedia logo" width="175" height="175">
-  <a href="index.html">Main page</a>
-  <a href="edit.html">Create a page</a>
-  <button id="editBtn">this page is locked</button>
-</div>
+  <div id="sidebar">
+    <img src="logo.svg" alt="Memepedia logo" width="175" height="175">
+    <a href="index.html">Main page</a>
+    <a href="edit.html">Create a page</a>
+    <button id="editBtn">this page is locked</button>
+  </div>
 
-<h1>welcome</h1>
-<p>to the wiki</p>
-<p>pages will be made</p>
-<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">buy the better wiki for 9$</a>
-<h1>best articles</h1>
-<a href="pages/moon">the moon</a>
-<a href="pages/sun">the sun</a>
+  <div id="content">
+    <h1>welcome</h1>
+    <p>to the wiki</p>
+    <p>pages will be made</p>
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">buy the better wiki for 9$</a>
+    <h1>best articles</h1>
+    <a href="pages/moon">the moon</a><br>
+    <a href="pages/sun">the sun</a>
+  </div>
 </body>
 </html>
+
