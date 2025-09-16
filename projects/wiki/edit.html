@@ -3,87 +3,133 @@
 <head>
   <title>Edit Page - Memepedia</title>
   <style>
-    body { font-family: sans-serif; display: flex; }
-    #content { flex: 1; padding: 10px; }
-    textarea { width: 100%; height: 70vh; font-family: monospace; }
-    button { margin-top: 10px; padding: 6px 12px; }
+    body { font-family: sans-serif; display: flex; margin:0; height:100vh; }
     #sidebar { width: 250px; background: #eee; padding: 15px; box-sizing: border-box; overflow-y: auto; }
     #sidebar h2 { margin-top: 0; }
     #sidebar a, #sidebar button { display: block; padding: 8px; margin: 5px 0; text-decoration: none; background: #ddd; border: none; border-radius: 5px; color: black; cursor: pointer; }
     #sidebar a:hover, #sidebar button:hover { background: #ccc; }
+    #content { flex: 1; padding: 15px; overflow-y: auto; }
+    textarea { width: 100%; height: 70vh; font-family: monospace; }
+    button { margin-top: 10px; padding: 6px 12px; }
   </style>
 </head>
 <body>
  <div id="sidebar">
-<img src="logo.svg" alt="Memepedia logo" width="175" height="175">
-  <a href="index.html">Main page</a>
-  <a href="edit.html">Create a page</a>
+   <img src="logo.svg" alt="Memepedia logo" width="175" height="175">
+   <a href="index.html">Main page</a>
+   <a href="edit.html">Create a page</a>
  </div>
-  <div id="content">
-    <h1>Editing: <span id="pageName"></span></h1>
-    <p>If you're unsure what "HTML" is, you should run off and learn about it before editing</p>
-    <textarea id="pageContent"></textarea>
-    <br>
-    <button id="saveBtn">Save Edit</button>
-  </div>
 
-  <script>
-    const webhookURL = "https://discord.com/api/webhooks/1416905580035182702/9YTThtpOtgXA07J3GB9mdtmVPLz8L-gr-bBMp_daM6uy0msS5jGO0YdqjQTyjc7Q4lKy"; // put your webhook here
-    let pageName = new URLSearchParams(window.location.search).get("page");
+ <div id="content">
+   <h1>Editing: <span id="pageName"></span></h1>
+   <p>⚠If you're unsure what "HTML" is, you should run off and learn about it before editing.</p>
+   <textarea id="pageContent"></textarea>
+   <br>
+   <button id="saveBtn">Save Edit</button>
+ </div>
 
-    // If no page param → prompt for one
-    if (!pageName) {
-      pageName = prompt("Enter a name for your new article:", "");
-      if (!pageName) pageName = "Untitled";
-      const newURL = `${window.location.pathname}?page=${encodeURIComponent(pageName)}`;
-      window.history.replaceState(null, "", newURL);
-    }
+ <script>
+   const webhookURL = "https://discord.com/api/webhooks/1416905580035182702/9YTThtpOtgXA07J3GB9mdtmVPLz8L-gr-bBMp_daM6uy0msS5jGO0YdqjQTyjc7Q4lKy";
+   let pageName = new URLSearchParams(window.location.search).get("page");
 
-    document.getElementById("pageName").textContent = pageName;
+   // If no page param → prompt for one
+   if (!pageName) {
+     pageName = prompt("Enter a name for your new article:", "");
+     if (!pageName) pageName = "Untitled";
+     const newURL = `${window.location.pathname}?page=${encodeURIComponent(pageName)}`;
+     window.history.replaceState(null, "", newURL);
+   }
 
-    // Try to load existing page HTML
-    fetch(`/projects/wiki/pages/${pageName}.html`)
-      .then(res => {
-        if (!res.ok) throw new Error("Page not found");
-        return res.text();
-      })
-      .then(html => {
-        document.getElementById("pageContent").value = html;
-      })
-      .catch(() => {
-        // Leave empty if page doesn't exist
-        document.getElementById("pageContent").value = "";
-      });
+   document.getElementById("pageName").textContent = pageName;
 
-    // Save button sends edit to Discord webhook
-    document.getElementById("saveBtn").addEventListener("click", () => {
-      const content = document.getElementById("pageContent").value;
+   // Example template for new pages
+   const exampleHTML = `<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/projects/wiki/styles.css">
+  </head>
+  <body>
+<!--do not edit what is above since that will irreversibly give you (and the site) cancer-->
 
-      const payload = {
-        username: "Memepedia Edit Bot",
-        embeds: [{
-          title: `Edit Request for ${pageName}.html`,
-          description: "New content submitted:",
-          color: 3447003,
-          fields: [
-            { name: "Page", value: pageName },
-            { name: "HTML Content", value: "```html\n" + content.substring(0, 1900) + "\n```" }
-          ]
-        }]
-      };
+<h1>this is a blah header</h1>
+<p>Blah blah blah (put stuff here)</p>
+<p>Blah blah blah <a href="memepedia.html">change href and name</a></p>
+<p><strong>this is thick blah</strong></p>
+<p><i>this is italic blah</i></p>
+<p><em>this is emphasis blah</em></p>
+<p><code>const blah = blah</code></p>
 
-      fetch(webhookURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      }).then(res => {
-        if (res.ok) {
-          alert("Edit sent to Discord for approval!");
-        } else {
-          alert("Failed to send edit.");
-        }
-      }).catch(err => alert("Error: " + err));
-    });
-  </script>
+
+<ul>
+  <li>first blah item</li>
+  <li>second blah item</li>
+  <li>third blah item</li>
+</ul>
+<p>Ordered list blah:</p>
+<ol>
+  <li>first step blah</li>
+  <li>second step blah</li>
+  <li>third step blah</li>
+</ol>
+
+
+<p>Example image blah:</p>
+<img src="/projects/wiki/logo.svg" alt="example">
+<blockquote>
+This is a blah quote. Perfect for meme sayings or other blah.
+</blockquote>
+
+<p>Line one blah<br>Line two blah<br>Line three blah</p>
+<hr>
+<p>blah after break</p>
+
+<!--do not edit what is below since that will irreversibly fuck up the page-->
+  </body>
+</html>
+`;
+
+   // Try to load existing page HTML
+   fetch(`/projects/wiki/pages/${pageName}.html`)
+     .then(res => {
+       if (!res.ok) throw new Error("Page not found");
+       return res.text();
+     })
+     .then(html => {
+       document.getElementById("pageContent").value = html;
+     })
+     .catch(() => {
+       // Page doesn't exist → load example template
+       document.getElementById("pageContent").value = exampleHTML;
+     });
+
+   // Save button sends edit to Discord webhook
+   document.getElementById("saveBtn").addEventListener("click", () => {
+     const content = document.getElementById("pageContent").value;
+     const payload = {
+       username: "Memepedia Edit Bot",
+       embeds: [{
+         title: `Edit Request for ${pageName}.html`,
+         description: "New content submitted:",
+         color: 3447003,
+         fields: [
+           { name: "Page", value: pageName },
+           { name: "HTML Content", value: "```html\n" + content.substring(0, 1900) + "\n```" }
+         ]
+       }]
+     };
+
+     fetch(webhookURL, {
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify(payload)
+     }).then(res => {
+       if (res.ok) {
+         alert("Edit sent to Discord for approval!");
+       } else {
+         alert("Failed to send edit.");
+       }
+     }).catch(err => alert("Error: " + err));
+   });
+ </script>
 </body>
 </html>
