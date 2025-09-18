@@ -42,13 +42,31 @@
 
      <!-- Symbols dropdown -->
      <select id="symbolDropdown" onchange="insertSymbol(this.value)">
-       <option value="">Symbols...</option>
-       <option value="π">&pi;</option>
-       <option value="λ">&lambda;</option>
-       <option value="θ">&theta;</option>
-       <option value="∞">&infin;</option>
-       <option value="±">&plusmn;</option>
-     </select>
+  <option value="">Symbols...</option>
+
+  <optgroup label="Greek Letters">
+    <option value="λ">&lambda;</option>
+    <option value="θ">&theta;</option>
+  </optgroup>
+
+  <optgroup label="Math Symbols">
+    <option value="π">&pi;</option>
+    <option value="∞">&infin;</option>
+    <option value="±">&plusmn;</option>
+    <option value="×">&times;</option>
+    <option value="÷">&divide;</option>
+  </optgroup>
+       
+  <optgroup label="European latin">
+    <option value="ẞ">ẞ</option>
+    <option value="Þ">&THORN;</option>
+    <option value="þ">&thorn;</option>
+    <option value="æ">&aelig;</option>
+    <option value="Æ">&AElig;</option>
+    <option value="ß">&szlig;</option>
+  </optgroup>
+</select>
+
    </div>
 
    <textarea id="pageContent"></textarea>
