@@ -9,8 +9,9 @@
     #sidebar a, #sidebar button { display: block; padding: 8px; margin: 5px 0; text-decoration: none; background: #ddd; border: none; border-radius: 5px; color: black; cursor: pointer; }
     #sidebar a:hover, #sidebar button:hover { background: #ccc; }
     #content { flex: 1; padding: 15px; overflow-y: auto; }
-    textarea { width: 100%; height: 70vh; font-family: monospace; }
+    textarea { width: 100%; height: 60vh; font-family: monospace; }
     button { margin-top: 10px; padding: 6px 12px; }
+    #elementPlacer button { margin: 2px; }
   </style>
 </head>
 <body>
@@ -21,8 +22,22 @@
  </div>
 
  <div id="content">
-   <h1>Editing: <span id="pageName"></span></h1>
-   <p>⚠If you're unsure what "HTML" is, you should run off and learn about it before editing.</p>
+   <h1>Editing <span id="pageName"></span></h1>
+   <p> If you're unsure what "HTML" is, you should run off and learn about it before editing.</p>
+
+   <!-- Element Placer Buttons -->
+   <div id="elementPlacer" style="margin-bottom:10px;">
+     <button onclick="insertTag('<p>Example paragraph</p>')">Paragraph</button>
+     <button onclick="insertTag('<h2>Example header</h2>')">Header</button>
+     <button onclick="insertTag('<ul><li>Item 1</li></ul>')">Unordered List</button>
+     <button onclick="insertTag('<ol><li>Step 1</li></ol>')">Ordered List</button>
+     <button onclick="insertTag('<blockquote>Example quote</blockquote>')">Quote</button>
+     <button onclick="insertTag('<img src=\'/projects/wiki/logo.svg\' alt=\'example\'>')">Image</button>
+     <button onclick="insertTag('<strong>Bold text</strong>')">Bold</button>
+     <button onclick="insertTag('<em>Italic text</em>')">Italic</button>
+     <button onclick="insertTag('<code>const x = 1;</code>')">Code</button>
+   </div>
+
    <textarea id="pageContent"></textarea>
    <br>
    <button id="saveBtn">Save Edit</button>
@@ -59,7 +74,6 @@
 <p><em>this is emphasis blah</em></p>
 <p><code>const blah = blah</code></p>
 
-
 <ul>
   <li>first blah item</li>
   <li>second blah item</li>
@@ -71,7 +85,6 @@
   <li>second step blah</li>
   <li>third step blah</li>
 </ol>
-
 
 <p>Example image blah:</p>
 <img src="/projects/wiki/logo.svg" alt="example">
@@ -130,6 +143,18 @@ This is a blah quote. Perfect for meme sayings or other blah.
        }
      }).catch(err => alert("Error: " + err));
    });
+
+   // Insert tag at cursor in textarea
+   function insertTag(tag) {
+     const textarea = document.getElementById('pageContent');
+     const start = textarea.selectionStart;
+     const end = textarea.selectionEnd;
+     const before = textarea.value.substring(0, start);
+     const after = textarea.value.substring(end);
+     textarea.value = before + tag + after;
+     textarea.selectionStart = textarea.selectionEnd = start + tag.length;
+     textarea.focus();
+   }
  </script>
 </body>
 </html>
