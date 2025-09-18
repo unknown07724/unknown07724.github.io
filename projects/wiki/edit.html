@@ -12,6 +12,7 @@
     textarea { width: 100%; height: 60vh; font-family: monospace; }
     button { margin-top: 10px; padding: 6px 12px; }
     #elementPlacer button { margin: 2px; }
+    #symbolDropdown { margin-left: 5px; }
   </style>
 </head>
 <body>
@@ -23,21 +24,31 @@
 
  <div id="content">
    <h1>Editing <span id="pageName"></span></h1>
-   <p> If you're unsure what "HTML" is, you should run off and learn about it before editing.</p>
+   <p>If you're unsure what "HTML" is, you should run off and learn about it before editing.</p>
 
    <!-- Element Placer Buttons -->
    <div id="elementPlacer" style="margin-bottom:10px;">
-     <button onclick="insertTag('<p>Example paragraph</p>')">P</button>
-     <button onclick="insertTag('<h2>Example header</h2>')">H2</button>
-     <button onclick="insertTag('<ul><li>Item 1</li></ul>')">•</button>
-     <button onclick="insertTag('<ol><li>Step 1</li></ol>')">1.</button>
-     <button onclick="insertTag('<blockquote>Example quote</blockquote>')">Quote</button>
-     <button onclick="insertTag('<img src=\'/projects/wiki/logo.svg\' alt=\'example\'>')">Image</button>
-     <button onclick="insertTag('<a href="memepedia.html"></a>')">⫘</button>
-     <button onclick="insertTag('<strong>Bold text</strong>')"><strong>B</strong></button>
-     <button onclick="insertTag('<i>Italic text</i>')"><i>I</i></button>
-     <button onclick="insertTag('<code>const x = 1;</code>')">&lt;/&gt;</button>
-     <button onclick="insertTag('<var>x</var>')">&pi;</button>
+     <button onclick="insertTag(`<p>Example paragraph</p>`)">P</button>
+     <button onclick="insertTag(`<h2>Example header</h2>`)">H2</button>
+     <button onclick="insertTag(`<ul><li>Item 1</li></ul>`)">•</button>
+     <button onclick="insertTag(`<ol><li>Step 1</li></ol>`)">1.</button>
+     <button onclick="insertTag(`<blockquote>Example quote</blockquote>`)">Quote</button>
+     <button onclick="insertTag(`<img src='/projects/wiki/logo.svg' alt='example'>`)">Image</button>
+     <button onclick="insertTag(`<a href='memepedia.html'>link text</a>`)">⫘</button>
+     <button onclick="insertTag(`<strong>Bold text</strong>`)"><strong>B</strong></button>
+     <button onclick="insertTag(`<i>Italic text</i>`)"><i>I</i></button>
+     <button onclick="insertTag(`<code>const x = 1;</code>`)">&lt;/&gt;</button>
+     <button onclick="insertTag(`<var>π</var>`)">&pi;</button>
+
+     <!-- Symbols dropdown -->
+     <select id="symbolDropdown" onchange="insertSymbol(this.value)">
+       <option value="">Symbols...</option>
+       <option value="π">&pi;</option>
+       <option value="λ">&lambda;</option>
+       <option value="θ">&theta;</option>
+       <option value="∞">&infin;</option>
+       <option value="±">&plusmn;</option>
+     </select>
    </div>
 
    <textarea id="pageContent"></textarea>
@@ -49,7 +60,6 @@
    const webhookURL = "https://discord.com/api/webhooks/1416905580035182702/9YTThtpOtgXA07J3GB9mdtmVPLz8L-gr-bBMp_daM6uy0msS5jGO0YdqjQTyjc7Q4lKy";
    let pageName = new URLSearchParams(window.location.search).get("page");
 
-   // If no page param → prompt for one
    if (!pageName) {
      pageName = prompt("Enter a name for your new article:", "");
      if (!pageName) pageName = "Untitled";
@@ -59,7 +69,6 @@
 
    document.getElementById("pageName").textContent = pageName;
 
-   // Example template for new pages
    const exampleHTML = `<!DOCTYPE html>
 <html>
   <head>
@@ -103,21 +112,15 @@ This is a blah quote. Perfect for meme sayings or other blah.
 </html>
 `;
 
-   // Try to load existing page HTML
    fetch(`/projects/wiki/pages/${pageName}.html`)
-     .then(res => {
-       if (!res.ok) throw new Error("Page not found");
-       return res.text();
-     })
+     .then(res => res.ok ? res.text() : Promise.reject())
      .then(html => {
        document.getElementById("pageContent").value = html;
      })
      .catch(() => {
-       // Page doesn't exist → load example template
        document.getElementById("pageContent").value = exampleHTML;
      });
 
-   // Save button sends edit to Discord webhook
    document.getElementById("saveBtn").addEventListener("click", () => {
      const content = document.getElementById("pageContent").value;
      const payload = {
@@ -138,15 +141,10 @@ This is a blah quote. Perfect for meme sayings or other blah.
        headers: { "Content-Type": "application/json" },
        body: JSON.stringify(payload)
      }).then(res => {
-       if (res.ok) {
-         alert("Edit sent to Discord for approval!");
-       } else {
-         alert("Failed to send edit.");
-       }
+       alert(res.ok ? "Edit sent to Discord for approval!" : "Failed to send edit.");
      }).catch(err => alert("Error: " + err));
    });
 
-   // Insert tag at cursor in textarea
    function insertTag(tag) {
      const textarea = document.getElementById('pageContent');
      const start = textarea.selectionStart;
@@ -156,6 +154,17 @@ This is a blah quote. Perfect for meme sayings or other blah.
      textarea.value = before + tag + after;
      textarea.selectionStart = textarea.selectionEnd = start + tag.length;
      textarea.focus();
+   }
+
+   function insertSymbol(symbol) {
+     if (!symbol) return;
+     const textarea = document.getElementById('pageContent');
+     const start = textarea.selectionStart;
+     const end = textarea.selectionEnd;
+     textarea.value = textarea.value.slice(0, start) + symbol + textarea.value.slice(end);
+     textarea.selectionStart = textarea.selectionEnd = start + symbol.length;
+     textarea.focus();
+     document.getElementById('symbolDropdown').value = '';
    }
  </script>
 </body>
