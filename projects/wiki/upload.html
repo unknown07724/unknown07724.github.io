@@ -26,50 +26,34 @@
  <div id="content">
    <h1>Upload images</h1>
    <input type="file" id="imageInput" accept="image/*"><br>
-   <button id="uploadBtn">Submit</button>
-   <p id="status"></p>
- </div>
+<button id="uploadBtn">Submit</button>
+<p id="status"></p>
+</div>
+<script>
+const webhookURL = "https://discord.com/api/webhooks/1416905580035182702/9YTThtpOtgXA07J3GB9mdtmVPLz8L-gr-bBMp_daM6uy0msS5jGO0YdqjQTyjc7Q4lKy";
 
- <script>
-   const webhookURL = "https://discord.com/api/webhooks/1416905580035182702/9YTThtpOtgXA07J3GB9mdtmVPLz8L-gr-bBMp_daM6uy0msS5jGO0YdqjQTyjc7Q4lKy"; // replace with your Discord webhook
+document.getElementById('uploadBtn').addEventListener('click', () => {
+  const file = document.getElementById('imageInput').files[0];
+  if (!file) return alert("Select an image first!");
 
-   document.getElementById('uploadBtn').addEventListener('click', () => {
-     const file = document.getElementById('imageInput').files[0];
-     if (!file) return alert("Select an image first!");
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('payload_json', JSON.stringify({
+    username: "Memepedia Image Bot",
+    content: `Image submitted for review: ${file.name}`
+  }));
 
-     const reader = new FileReader();
-     reader.onload = () => {
-       const dataURI = reader.result;              // full Data URI
-       const base64 = dataURI.split(',')[1];       // just base64 part
-
-       const payload = {
-         username: "Memepedia Image Bot",
-         embeds: [{
-           title: file.name,
-           description: `Image submitted for review.`,
-           color: 3447003,
-           fields: [
-             { name: "Base64", value: base64 },
-             { name: "Data URI", value: dataURI }
-           ]
-         }]
-       };
-
-       fetch(webhookURL, {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify(payload)
-       })
-       .then(res => {
-         document.getElementById('status').textContent = res.ok 
-           ? "Image sent for review!" 
-           : "Failed to send image.";
-       })
-       .catch(err => document.getElementById('status').textContent = "Error: " + err);
-     };
-
-     reader.readAsDataURL(file);
-   });
- </script>
+  fetch(webhookURL, {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => {
+    document.getElementById('status').textContent = res.ok
+      ? "Image sent for review!"
+      : "Failed to send image.";
+  })
+  .catch(err => document.getElementById('status').textContent = "Error: " + err);
+});
+</script>
 </body>
 </html>
