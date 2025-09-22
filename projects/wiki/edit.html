@@ -4,6 +4,18 @@
   <title>Edit Page - Memepedia</title>
   <link rel="icon" href="favicon.png">
   <style>
+    #searchResults li {
+  padding: 6px 10px;
+  background: #ddd;
+  margin-bottom: 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+#searchResults li:hover {
+  background: #ccc;
+}
+
     body { font-family: sans-serif; display: flex; margin:0; height:100vh; }
     #sidebar { width: 250px; background: #eee; padding: 15px; box-sizing: border-box; overflow-y: auto; }
     #sidebar h2 { margin-top: 0; }
@@ -25,6 +37,8 @@
  </div>
 
  <div id="content">
+   <input type="text" id="searchInput" placeholder="Search Memepedia..." style="width: 100%; padding: 10px; margin-bottom: 15px; font-size: 16px;">
+<ul id="searchResults" style="list-style: none; padding-left: 0; margin-top: 0;"></ul>
    <h1>Editing <span id="pageName"></span></h1>
    <p>If you're unsure what "HTML" is, you should run off and learn about it before editing.</p>
 
@@ -62,7 +76,6 @@
 <option value="ν">&nu;</option>
 <option value="ξ">&xi;</option>
 <option value="ο">&omicron;</option>
-<option value="π">&pi;</option>
 <option value="ρ">&rho;</option>
 <option value="σ">&sigma;</option>
 <option value="τ">&tau;</option>
@@ -347,6 +360,34 @@ This is a blah quote. Perfect for meme sayings or other blah.
      textarea.focus();
      document.getElementById('symbolDropdown').value = '';
    }
+   const searchResults = document.getElementById('searchResults');
+   
+let articles = [];
+
+fetch('/projects/wiki/articles.json')
+  .then(res => res.json())
+  .then(data => articles = data)
+  .catch(err => console.error("Failed to load articles.json", err));
+
+
+searchInput.addEventListener('input', () => {
+  const query = searchInput.value.toLowerCase();
+  searchResults.innerHTML = ''; // clear old results
+
+  if (!query) return;
+
+  const matches = articles.filter(a => a.title.toLowerCase().includes(query));
+  
+  matches.forEach(match => {
+    const li = document.createElement('li');
+    li.textContent = match.title;
+    li.addEventListener('click', () => {
+      window.location.href = `page.html?page=${encodeURIComponent(match.title)}`;
+    });
+    searchResults.appendChild(li);
+  });
+});
+
  </script>
 </body>
 </html>
