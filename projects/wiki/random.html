@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Random Meme - Memepedia</title>
+  <script>
+    fetch('/projects/wiki/articles.json')
+      .then(res => res.json())
+      .then(articles => {
+        if (articles.length === 0) {
+          document.body.textContent = "No articles available 😭";
+          return;
+        }
+        const randomIndex = Math.floor(Math.random() * articles.length);
+        const randomPage = articles[randomIndex].title;
+        window.location.href = `page.html?page=${encodeURIComponent(randomPage)}`;
+      })
+      .catch(err => {
+        document.body.textContent = "Failed to load articles 😢";
+        console.error(err);
+      });
+  </script>
+</head>
+<body>
+  <p>Redirecting you to a random meme…</p>
+</body>
+</html>
