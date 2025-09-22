@@ -32,22 +32,35 @@
 </div>
 
 <script>
-// example articles list
-const articles = [
-  {title: "moon"},
-  {title: "icbm"},
-  {title: "conservapedia"},
-  {title: "ai"},
-  {title: "chair"}
-];
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+let articles = [];
 
-const input = document.getElementById('searchInput');
-const results = document.getElementById('searchResults');
+// fetch JSON file
+fetch('/projects/wiki/articles.json')
+  .then(res => res.json())
+  .then(data => articles = data)
+  .catch(err => console.error("Failed to load articles.json", err));
 
-input.addEventListener('input', () => {
-  const query = input.value.toLowerCase();
+// search handler
+searchInput.addEventListener('input', () => {
+  const query = searchInput.value.toLowerCase();
+  searchResults.innerHTML = '';
+
+  if (!query) return;
+
   const filtered = articles.filter(a => a.title.toLowerCase().includes(query));
-  results.innerHTML = filtered.map(a => `<a href="page.html?page=${encodeURIComponent(a.title)}">${a.title}</a>`).join('') || '<p>No memes found 🤷‍♂️</p>';
+
+  if (filtered.length === 0) {
+    searchResults.innerHTML = '<p>No memes found 🤷‍♂️</p>';
+  } else {
+    filtered.forEach(a => {
+      const link = document.createElement('a');
+      link.href = `page.html?page=${encodeURIComponent(a.title)}`;
+      link.textContent = a.title;
+      searchResults.appendChild(link);
+    });
+  }
 });
 </script>
 
