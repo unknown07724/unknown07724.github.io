@@ -7,7 +7,7 @@
     body {
       margin: 0;
       display: flex;
-      height: 100vh; /* make the layout take the whole screen */
+      height: 100vh;
       font-family: sans-serif;
     }
     #sidebar {
@@ -37,6 +37,18 @@
       padding: 20px;
       overflow-y: auto;
     }
+    #searchResults a {
+      display: block;
+      padding: 5px;
+      margin: 2px 0;
+      text-decoration: none;
+      background: #f0f0f0;
+      border-radius: 3px;
+      color: black;
+    }
+    #searchResults a:hover {
+      background: #ddd;
+    }
   </style>
 </head>
 <body>
@@ -46,6 +58,7 @@
     <a href="edit.html">Create a page</a>
     <button id="editBtn">this page is locked</button>
     <a href="upload.html">Upload Image</a>
+    <a href="random.html" id="randomPageLink">Random Page</a>
   </div>
 
   <div id="content">
@@ -53,10 +66,48 @@
     <p>to the wiki</p>
     <p>pages will be made</p>
     <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">buy the better wiki for 9$</a>
-    <h1>best articles (<a href="page.html?page=htmaga">how to make a good article</a>) </h1>
+    <h1>best articles (<a href="page.html?page=htmaga">how to make a good article</a>)</h1>
     <p>there are sadly none yet but you can have the first good article</p>
-    <p>whoever attempts to make pages about the holocaust, 9/11, armenian genocide, etc, we will instantly pwn them from existance</p>
+    <p>whoever attempts to make pages about the holocaust, 9/11, armenian genocide, etc, we will instantly pwn them from existence</p>
+
+    <h2>Search Memepedia</h2>
+    <input type="text" id="searchInput" placeholder="Type to search memes..." style="width: 100%; padding: 10px; margin-bottom: 15px; font-size: 16px;">
+    <div id="searchResults"></div>
   </div>
+
+  <script>
+    // fetch the articles list
+    fetch('/projects/wiki/articles.json')
+      .then(res => res.json())
+      .then(articles => {
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('input', () => {
+          const query = searchInput.value.toLowerCase();
+          searchResults.innerHTML = '';
+          if (!query) return;
+
+          const matches = articles.filter(a => a.title.toLowerCase().includes(query));
+
+          if (matches.length === 0) {
+            searchResults.innerHTML = '<p>No memes found 🤷‍♂️</p>';
+            return;
+          }
+
+          matches.forEach(match => {
+            const link = document.createElement('a');
+            link.href = `page.html?page=${encodeURIComponent(match.title)}`;
+            link.textContent = match.title;
+            searchResults.appendChild(link);
+          });
+        });
+      })
+      .catch(err => {
+        console.error("Failed to load articles:", err);
+      });
+  </script>
 </body>
 </html>
+
 
