@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Memepedia Search</title>
+<style>
+  body { margin: 0; display: flex; font-family: Arial, sans-serif; height: 100vh; }
+  #sidebar { width: 250px; background: #eee; padding: 15px; box-sizing: border-box; overflow-y: auto; }
+  #sidebar h2 { margin-top: 0; }
+  #sidebar a, #sidebar button { display: block; padding: 8px; margin: 5px 0; text-decoration: none; background: #ddd; border: none; border-radius: 5px; color: black; cursor: pointer; }
+  #sidebar a:hover, #sidebar button:hover { background: #ccc; }
+  #content { flex: 1; padding: 20px; overflow-y: auto; }
+  #searchResults a { display: block; padding: 5px; margin: 2px 0; text-decoration: none; background: #f0f0f0; border-radius: 3px; color: black; }
+  #searchResults a:hover { background: #ddd; }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <img src="logo.svg" alt="Memepedia logo" width="175" height="175">
+  <a href="index.html">Main page</a>
+  <a href="edit.html">Create a page</a>
+  <button id="editBtn">Edit This Page</button>
+  <a href="upload.html">Upload Image</a>
+</div>
+
+<div id="content">
+  <h1>Search Memepedia</h1>
+  <input type="text" id="searchInput" placeholder="Type to search memes..." style="width: 100%; padding: 10px; margin-bottom: 15px; font-size: 16px;">
+  <div id="searchResults"></div>
+</div>
+
+<script>
+// example articles list
+const articles = [
+  {title: "moon"},
+  {title: "moon"},
+  {title: "ai"}
+  {title: "chair"}
+];
+
+const input = document.getElementById('searchInput');
+const results = document.getElementById('searchResults');
+
+input.addEventListener('input', () => {
+  const query = input.value.toLowerCase();
+  const filtered = articles.filter(a => a.title.toLowerCase().includes(query));
+  results.innerHTML = filtered.map(a => `<a href="page.html?page=${encodeURIComponent(a.title)}">${a.title}</a>`).join('') || '<p>No memes found 🤷‍♂️</p>';
+});
+</script>
+
+</body>
+</html>
