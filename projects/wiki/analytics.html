@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Memepedia Analytics</title>
+  <link rel="icon" href="favicon.png">
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+    #sidebar {
+      width: 250px;
+      background: #eee;
+      padding: 15px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    #sidebar a, #sidebar button {
+      display: block;
+      padding: 8px;
+      margin: 5px 0;
+      text-decoration: none;
+      background: #ddd;
+      border: none;
+      border-radius: 5px;
+      color: black;
+      cursor: pointer;
+    }
+    #sidebar a:hover, #sidebar button:hover {
+      background: #ccc;
+    }
+    #content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar">
+    <img src="logo.svg" alt="Memepedia logo" width="175" height="175">
+    <a href="index.html">Main page</a>
+    <a href="edit.html">Create a page</a>
+    <a href="search.html">Search</a>
+    <a href="random.html">Random page</a>
+    <a href="analytics.html">Analytics</a>
+  </div>
+
+  <div id="content">
+    <h1>Memepedia Analytics</h1>
+    <p id="totalPages">Loading total pages...</p>
+  </div>
+
+  <script>
+    fetch('articles.json')
+      .then(res => res.json())
+      .then(data => {
+        const count = data.length;
+        document.getElementById('totalPages').textContent = `Total pages: ${count}`;
+      })
+      .catch(() => {
+        document.getElementById('totalPages').textContent = 'Failed to load articles.';
+      });
+  </script>
+</body>
+</html>
