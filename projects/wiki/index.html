@@ -18,36 +18,67 @@
     text-align: center;
   }
 
- 
+  img {
+    margin: 20px 0; /* space above and below logo */
+  }
 
-  input[type="text"] {
+  .search-container {
+    display: flex;
+    margin: 20px 0; /* spacing around search bar */
+  }
+
+  #search {
     width: 300px;
     padding: 10px;
     font-size: 1.2em;
     border: 3px solid #ff00ff;
-    border-radius: 10px;
+    border-radius: 10px 0 0 10px;
     outline: none;
     text-align: center;
-    margin-top: 20px;
   }
 
-  input[type="submit"] {
-    margin-top: 10px;
+  #search-btn {
     padding: 10px 20px;
     font-size: 1.2em;
     border: none;
-    border-radius: 10px;
+    border-radius: 0 10px 10px 0;
     background-color: #00ffff;
     color: #1a1a1a;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
   }
-a {
-    color: #88A3E8
-}
+
+  #search-btn:hover {
+    background-color: #ff00ff;
+    color: #fff;
+  }
+
+  #results {
+    margin-top: 15px;
+    width: 320px;
+    background: #181c20;
+    border-radius: 10px;
+    text-align: left;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  #results div {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+
+  #results div:hover {
+    background: #262c33;
+  }
+
+  a {
+    color: #88A3E8;
+    margin: 5px;
+  }
 
   .sister-projects {
-    margin-top: 30px;
+    margin-top: 40px;
     font-size: 1em;  
   }
 
@@ -67,14 +98,65 @@ a {
 <body>
   <h1>Memepedia</h1>
   <div class="subtitle">teh memey encyclopedia</div>
-  <a href="main.html">English</a>
+  <a style="margin: 10px;" href="main.html">English</a>
   <sub>5+ articles</sub>
 
-  <img src="logo.svg" alt="Memepedia Logo" style="width:300px; height:auto;">
+  <img src="logo-no-text.svg" alt="Memepedia Logo" style="width:300px; height:auto;">
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <input type="text" id="search" placeholder="Search Memepedia...">
+    <button id="search-btn">Search</button>
+  </div>
+  <div id="results"></div>
 
   <div class="sister-projects">
     <strong>Sister Projects:</strong>
-  <p>none yet</p>
+    <p>none yet</p>
   </div>
+
+<script>
+  let articles = [];
+
+  // Load articles.json
+  fetch("articles.json")
+    .then(res => res.json())
+    .then(data => articles = data);
+
+  const searchInput = document.getElementById("search");
+  const resultsDiv = document.getElementById("results");
+  const searchBtn = document.getElementById("search-btn");
+
+  function showResults(query) {
+    resultsDiv.innerHTML = "";
+    if (!query) return;
+
+    const matches = articles.filter(a =>
+      a.title.toLowerCase().includes(query.toLowerCase())
+    );
+
+    matches.forEach(m => {
+      const div = document.createElement("div");
+      div.textContent = m.title;
+      div.onclick = () => {
+        window.location.href = `page.html?page=${encodeURIComponent(m.title)}`;
+      };
+      resultsDiv.appendChild(div);
+    });
+  }
+
+  // Live search
+  searchInput.addEventListener("input", () => {
+    showResults(searchInput.value);
+  });
+
+  // Button click
+  searchBtn.addEventListener("click", () => {
+    if (searchInput.value.trim()) {
+      window.location.href = `page.html?page=${encodeURIComponent(searchInput.value.trim())}`;
+    }
+  });
+</script>
 </body>
 </html>
+
