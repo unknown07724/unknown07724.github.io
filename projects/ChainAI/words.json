@@ -1,15 +1,14 @@
 {
-    "hello": {
-        "part_of_speech": "interjection",
-        "valid_next": ["noun", "verb"],
-        "transitions": { "world": 0.3, "there": 0.3, "everyone": 0.2, "friend": 0.2 }
-    },
-    "world": {
-        "part_of_speech": "noun",
-        "valid_next": ["verb", "adjective", "preposition"],
-        "transitions": { "is": 0.5, "spins": 0.3, "beautiful": 0.1, "round": 0.1 }
-    },
-    {
+  "hello": {
+    "part_of_speech": "interjection",
+    "valid_next": ["noun", "verb"],
+    "transitions": { "world": 0.3, "there": 0.3, "everyone": 0.2, "friend": 0.2 }
+  },
+  "world": {
+    "part_of_speech": "noun",
+    "valid_next": ["verb", "adjective", "preposition"],
+    "transitions": { "is": 0.5, "spins": 0.3, "beautiful": 0.1, "round": 0.1 }
+  },
   "sus": {
     "part_of_speech": "adjective",
     "valid_next": ["noun", "verb"],
@@ -75,104 +74,100 @@
     "valid_next": ["no_cap", "big"],
     "transitions": { "no_cap": 0.7, "big": 0.3 }
   },
-    "is": {
-        "part_of_speech": "verb",
-        "valid_next": ["adjective", "noun", "verb"],
-        "transitions": { "beautiful": 0.5, "cold": 0.2, "large": 0.2, "empty": 0.1 }
-    },
-    "beautiful": {
-        "part_of_speech": "adjective",
-        "valid_next": ["noun", "verb"],
-        "transitions": { "day": 0.6, "view": 0.4, "place": 0.3, "sight": 0.1 }
-    },
-    "cold": {
-        "part_of_speech": "adjective",
-        "valid_next": ["noun", "verb"],
-        "transitions": { "winter": 0.6, "night": 0.2, "air": 0.1, "heart": 0.1 }
-    },
-    "winter": {
-        "part_of_speech": "noun",
-        "valid_next": ["verb", "adjective"],
-        "transitions": { "is": 0.5, "comes": 0.5 }
-    },
-    "day": {
-        "part_of_speech": "noun",
-        "valid_next": ["verb", "adjective"],
-        "transitions": { "is": 0.7, "ends": 0.3 }
-    },
-    "there": {
-        "part_of_speech": "adverb",
-        "valid_next": ["verb", "noun"],
-        "transitions": { "is": 0.6, "was": 0.4 }
-    },
-    "everyone": {
-        "part_of_speech": "pronoun",
-        "valid_next": ["verb"],
-        "transitions": { "is": 1.0 }
-    },
-    "friend": {
-        "part_of_speech": "noun",
-        "valid_next": ["verb", "adjective"],
-        "transitions": { "is": 0.5, "was": 0.5 }
-    },
-    "spins": {
-        "part_of_speech": "verb",
-        "valid_next": ["noun", "adjective"],
-        "transitions": { "fast": 0.7, "slow": 0.3 }
-    },
-    "round": {
-        "part_of_speech": "adjective",
-        "valid_next": ["noun"],
-        "transitions": { "shape": 1.0 }
-    },
-    "empty": {
-        "part_of_speech": "adjective",
-        "valid_next": ["noun"],
-        "transitions": { "room": 1.0 }
-    },
-    "large": {
-        "part_of_speech": "adjective",
-        "valid_next": ["noun"],
-        "transitions": { "building": 0.8, "space": 0.2 }
-    },
-    "place": {
-        "part_of_speech": "noun",
-        "valid_next": ["verb"],
-        "transitions": { "is": 0.7, "was": 0.3 }
-    },
-    "sight": {
-        "part_of_speech": "noun",
-        "valid_next": ["verb"],
-        "transitions": { "is": 1.0 }
-    },
-    "night": {
-        "part_of_speech": "noun",
-        "valid_next": ["verb"],
-        "transitions": { "is": 0.8, "falls": 0.2 }
-    },
-    "air": {
-        "part_of_speech": "noun",
-        "valid_next": ["verb", "adjective"],
-        "transitions": { "is": 0.9, "feels": 0.1 }
-    },
-    "heart": {
-        "part_of_speech": "noun",
-        "valid_next": ["verb", "adjective"],
-        "transitions": { "is": 0.6, "beats": 0.4 }
-    },
-    "view": {
-        "part_of_speech": "noun",
-        "valid_next": ["verb", "adjective"],
-        "transitions": { "is": 0.7, "changes": 0.3 }
-    },
-    "place": {
-        "part_of_speech": "noun",
-        "valid_next": ["verb", "adjective"],
-        "transitions": { "is": 0.5, "was": 0.5 }
-    },
-    "was": {
-        "part_of_speech": "verb",
-        "valid_next": ["adjective", "noun"],
-        "transitions": { "beautiful": 0.4, "a dream": 0.6 }
-    }
+  "is": {
+    "part_of_speech": "verb",
+    "valid_next": ["adjective", "noun", "verb"],
+    "transitions": { "beautiful": 0.5, "cold": 0.2, "large": 0.2, "empty": 0.1 }
+  },
+  "beautiful": {
+    "part_of_speech": "adjective",
+    "valid_next": ["noun", "verb"],
+    "transitions": { "day": 0.6, "view": 0.4, "place": 0.3, "sight": 0.1 }
+  },
+  "cold": {
+    "part_of_speech": "adjective",
+    "valid_next": ["noun", "verb"],
+    "transitions": { "winter": 0.6, "night": 0.2, "air": 0.1, "heart": 0.1 }
+  },
+  "winter": {
+    "part_of_speech": "noun",
+    "valid_next": ["verb", "adjective"],
+    "transitions": { "is": 0.5, "comes": 0.5 }
+  },
+  "day": {
+    "part_of_speech": "noun",
+    "valid_next": ["verb", "adjective"],
+    "transitions": { "is": 0.7, "ends": 0.3 }
+  },
+  "there": {
+    "part_of_speech": "adverb",
+    "valid_next": ["verb", "noun"],
+    "transitions": { "is": 0.6, "was": 0.4 }
+  },
+  "everyone": {
+    "part_of_speech": "pronoun",
+    "valid_next": ["verb"],
+    "transitions": { "is": 1.0 }
+  },
+  "friend": {
+    "part_of_speech": "noun",
+    "valid_next": ["verb", "adjective"],
+    "transitions": { "is": 0.5, "was": 0.5 }
+  },
+  "spins": {
+    "part_of_speech": "verb",
+    "valid_next": ["noun", "adjective"],
+    "transitions": { "fast": 0.7, "slow": 0.3 }
+  },
+  "round": {
+    "part_of_speech": "adjective",
+    "valid_next": ["noun"],
+    "transitions": { "shape": 1.0 }
+  },
+  "empty": {
+    "part_of_speech": "adjective",
+    "valid_next": ["noun"],
+    "transitions": { "room": 1.0 }
+  },
+  "large": {
+    "part_of_speech": "adjective",
+    "valid_next": ["noun"],
+    "transitions": { "building": 0.8, "space": 0.2 }
+  },
+  "place": {
+    "part_of_speech": "noun",
+    "valid_next": ["verb", "adjective"],
+    "transitions": { "is": 0.5, "was": 0.5 }
+  },
+  "sight": {
+    "part_of_speech": "noun",
+    "valid_next": ["verb"],
+    "transitions": { "is": 1.0 }
+  },
+  "night": {
+    "part_of_speech": "noun",
+    "valid_next": ["verb"],
+    "transitions": { "is": 0.8, "falls": 0.2 }
+  },
+  "air": {
+    "part_of_speech": "noun",
+    "valid_next": ["verb", "adjective"],
+    "transitions": { "is": 0.9, "feels": 0.1 }
+  },
+  "heart": {
+    "part_of_speech": "noun",
+    "valid_next": ["verb", "adjective"],
+    "transitions": { "is": 0.6, "beats": 0.4 }
+  },
+  "view": {
+    "part_of_speech": "noun",
+    "valid_next": ["verb", "adjective"],
+    "transitions": { "is": 0.7, "changes": 0.3 }
+  },
+  "was": {
+    "part_of_speech": "verb",
+    "valid_next": ["adjective", "noun"],
+    "transitions": { "beautiful": 0.4, "a dream": 0.6 }
+  }
 }
+
