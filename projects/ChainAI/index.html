@@ -88,12 +88,12 @@ async function loadCBPTJSON() {
     }
     if(!needsJSON) return;
     try {
-        const res = await fetch('cbpt1.json');
+        const res = await fetch('words.json');
         cbptJSON = await res.json();
         console.log("CBPT-1 JSON loaded");
         // For CBPT-2, initialize JS/other languages as copy of cbptJSON
         models["CBPT-2"].js = JSON.parse(JSON.stringify(cbptJSON));
-    } catch(e){ console.error("Failed to load CBPT-1 JSON:", e);}
+    } catch(e){ console.error("Failed to load words.json:", e);}
 }
 
 // ===== Populate model selector dynamically =====
