@@ -1,201 +1,297 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markov AI Chat</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        button { margin: 5px; padding: 10px; font-size: 16px; }
-        input { margin: 5px; padding: 5px; font-size: 16px; }
-        #output { margin-top: 20px; font-size: 18px; font-weight: bold; }
-        .message-list { margin-top: 20px; list-style-type: none; padding: 0; max-height: 400px; overflow-y: auto; }
-        .message-item { margin: 10px 0; padding: 10px; background-color: #f1f1f1; border: 1px solid #ccc; }
-        #user-message { width: 80%; }
-        
-        /* Floating button for settings */
-        .settings-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        .settings-button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Settings Modal */
-        .settings-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .settings-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: left;
-            width: 300px;
-            position: relative;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: red;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .close-button:hover {
-            background: darkred;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBPT Markov AI Chat</title>
+<style>
+body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+button, input, select { margin: 5px; padding: 10px; font-size: 16px; }
+#messageList { margin-top: 20px; list-style: none; max-height: 400px; overflow-y: auto; padding: 0; }
+.message-item { margin: 10px 0; padding: 10px; background: #f1f1f1; border: 1px solid #ccc; }
+.settings-button { position: fixed; bottom: 20px; right: 20px; background-color: #007BFF; color: white; border: none; padding: 15px; border-radius: 50%; font-size: 20px; cursor: pointer; }
+.settings-button:hover { background-color: #0056b3; }
+.settings-modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+.settings-content { background: white; padding: 20px; border-radius: 10px; text-align: left; width: 500px; position: relative; max-height: 90%; overflow-y: auto; }
+.close-button { position: absolute; top:10px; right:15px; background:red; color:white; border:none; padding:5px 10px; cursor:pointer; font-size:14px; }
+.close-button:hover { background: darkred; }
+#modelDescription { font-size: 14px; color: #333; margin-top: 5px; margin-bottom:10px; }
+.word-list { margin-top: 10px; }
+.word-item { margin: 5px 0; padding: 5px; border: 1px solid #aaa; display:flex; justify-content:space-between; align-items:center; }
+.word-item button { margin-left:5px; }
+.training-section { display:none; margin-top:10px; border:1px solid red; padding:10px; border-radius:5px; background:#ffe5e5; }
+</style>
 </head>
 <body>
 
-    <h1>Markov AI Chat</h1>
-    
-    <h2>Messages</h2>
-    <ul id="messageList" class="message-list"></ul>
+<h1>CBPT Markov AI Chat</h1>
 
-    <h2>Send a Message</h2>
-    <input type="text" id="user-message" placeholder="Type a message">
-    <button onclick="sendMessage()">Send Message</button>
+<h2>Messages</h2>
+<ul id="messageList"></ul>
 
-    <button class="settings-button" onclick="toggleSettings()">⚙️</button>
+<h2>Send a Message</h2>
+<input type="text" id="user-message" placeholder="Type a message" style="width:70%;">
+<button onclick="sendMessage()">Send</button>
 
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="settings-modal">
-        <div class="settings-content">
-            <button class="close-button" onclick="toggleSettings()">✖</button>
-            <h2>Settings - Train AI</h2>
-            <input type="text" id="word" placeholder="New word">
-            <input type="text" id="partOfSpeech" placeholder="Part of speech">
-            <input type="text" id="transitions" placeholder="Transitions (word:probability)">
-            <button onclick="train()">Add Word</button>
+<button class="settings-button" onclick="toggleSettings()">⚙️</button>
+
+<!-- Settings / Training Modal -->
+<div id="settingsModal" class="settings-modal">
+    <div class="settings-content">
+        <button class="close-button" onclick="toggleSettings()">✖</button>
+        <h2>Settings - Select Model</h2>
+        <label for="modelSelect">Select Model:</label>
+        <select id="modelSelect" onchange="updateModelDescription()"></select>
+        <div id="modelDescription"></div>
+
+        <hr>
+        <button onclick="revealTraining()">⚠️ Warning: Do not mess with training unless you know what you are doing ⚠️</button>
+
+        <div id="trainingSection" class="training-section">
+            <h3>CBPT-2 Word Manager</h3>
+            <button onclick="showMakeWordForm()">Make New Word</button>
+            <div id="wordList" class="word-list"></div>
+
+            <div id="makeWordForm" style="margin-top:10px; display:none;">
+                <input type="text" id="wordInput" placeholder="Word">
+                <input type="text" id="posInput" placeholder="Part of speech">
+                <input type="text" id="transitionsInput" placeholder="Transitions (word:prob,word:prob)">
+                <button onclick="saveWord()">Save</button>
+                <button id="deleteWordBtn" onclick="deleteWord()" style="display:none; background:red; color:white;">Delete</button>
+                <button onclick="cancelWordForm()">Cancel</button>
+            </div>
         </div>
     </div>
+</div>
 
-    <script>
-        let words = {};  // Holds our word data from the JSON file
-        let userMessages = [];
-        let generatedMessages = [];
+<script>
+// ===== Models JSON =====
+let models = {
+  "CBPT-1": {
+    "ngrams": 0,
+    "js": null,
+    "python": null,
+    "html": null,
+    "rust": null,
+    "english": null,
+    "description": "English only, JSON-based, old-school responses"
+  },
+  "CBPT-2": {
+    "ngrams": 3,
+    "js": {},
+    "python": {},
+    "html": {},
+    "rust": {},
+    "english": null,
+    "description": "Dynamic code n-grams, supports multiple languages, can also use English strings"
+  }
+};
 
-        async function loadWords() {
-            try {
-                const response = await fetch('words.json'); 
-                if (!response.ok) {
-                    throw new Error('Failed to load words JSON');
-                }
-                words = await response.json();
-                console.log('Words loaded:', words);
-            } catch (error) {
-                console.error('Error loading words:', error);
-            }
-        }
+let selectedModel = "CBPT-1";
+let cbptJSON = {}; // CBPT-1 JSON for English
+let userMessages = [];
+let generatedMessages = [];
 
-        window.onload = () => {
-            loadWords();
-        };
+// ===== Load CBPT-1 JSON =====
+async function loadCBPTJSON() {
+    try {
+        const res = await fetch('cbpt1.json');
+        cbptJSON = await res.json();
+        console.log("CBPT-1 JSON loaded");
+    } catch(e) { console.error("Failed to load CBPT-1 JSON:", e); }
+}
 
-        function generateSentence(startWord = "hello", maxWords = 10) {
-            let word = startWord;
-            let sentence = [word];
+// ===== Populate model selector dynamically =====
+function populateModelSelector() {
+    const select = document.getElementById("modelSelect");
+    select.innerHTML = "";
+    for (let key in models) {
+        const opt = document.createElement("option");
+        opt.value = key;
+        opt.textContent = key;
+        select.appendChild(opt);
+    }
+    updateModelDescription();
+}
 
-            for (let i = 0; i < maxWords - 1; i++) {
-                if (!words[word] || !words[word].transitions) break;
-                let possibleNextWords = Object.keys(words).filter(
-                    w => words[w].part_of_speech && words[word].valid_next.includes(words[w].part_of_speech)
-                );
-                if (possibleNextWords.length === 0) break;
-                let nextWord = possibleNextWords[Math.floor(Math.random() * possibleNextWords.length)];
-                sentence.push(nextWord);
-                word = nextWord;
-            }
+// ===== Update description below selector =====
+function updateModelDescription() {
+    const descDiv = document.getElementById("modelDescription");
+    selectedModel = document.getElementById("modelSelect").value;
+    descDiv.textContent = models[selectedModel].description;
+}
 
-            return sentence.join(" ");
-        }
+// ===== Training Section =====
+function revealTraining() {
+    document.getElementById("trainingSection").style.display="block";
+    renderWordList();
+}
 
-        function train() {
-            let word = document.getElementById("word").value.trim();
-            let partOfSpeech = document.getElementById("partOfSpeech").value.trim();
-            let transitionsInput = document.getElementById("transitions").value.trim();
-            
-            if (!word || !partOfSpeech || !transitionsInput) {
-                alert("Please fill out all fields!");
-                return;
-            }
+// ===== Word List Management =====
+let editingWord = null;
 
-            let transitions = {};
-            transitionsInput.split(",").forEach(pair => {
-                let [key, value] = pair.split(":");
-                transitions[key.trim()] = parseFloat(value);
-            });
+function renderWordList(){
+    const listDiv = document.getElementById("wordList");
+    listDiv.innerHTML="";
+    if(selectedModel!=="CBPT-2") return;
+    for(const word in models["CBPT-2"].js){
+        const div = document.createElement("div");
+        div.className="word-item";
+        div.textContent = word;
+        const editBtn = document.createElement("button");
+        editBtn.textContent="Edit";
+        editBtn.onclick=()=>showEditWordForm(word);
+        div.appendChild(editBtn);
+        listDiv.appendChild(div);
+    }
+}
 
-            words[word] = { part_of_speech: partOfSpeech, valid_next: [], transitions };
-            localStorage.setItem("words", JSON.stringify(words));
+function showMakeWordForm(){
+    editingWord=null;
+    document.getElementById("makeWordForm").style.display="block";
+    document.getElementById("wordInput").value="";
+    document.getElementById("posInput").value="";
+    document.getElementById("transitionsInput").value="";
+    document.getElementById("deleteWordBtn").style.display="none";
+}
 
-            alert(`Added: ${word}`);
-        }
+function showEditWordForm(word){
+    editingWord=word;
+    const wordObj=models["CBPT-2"].js[word];
+    document.getElementById("makeWordForm").style.display="block";
+    document.getElementById("wordInput").value=word;
+    document.getElementById("posInput").value=wordObj.part_of_speech || "";
+    const transitionsArr=[];
+    for(const t in wordObj.transitions) transitionsArr.push(`${t}:${wordObj.transitions[t]}`);
+    document.getElementById("transitionsInput").value=transitionsArr.join(",");
+    document.getElementById("deleteWordBtn").style.display="inline-block";
+}
 
-        function sendMessage() {
-            let userMessage = document.getElementById("user-message").value.trim();
-            if (userMessage) {
-                userMessages.push(userMessage);
-                document.getElementById("user-message").value = ""; // Clear input instantly
+function cancelWordForm(){
+    document.getElementById("makeWordForm").style.display="none";
+}
 
-                // Delay AI response slightly for realism
-                setTimeout(() => {
-                    let aiResponse = generateSentence(userMessage.split(" ").slice(-1)[0]);
-                    generatedMessages.push(aiResponse);
-                    displayMessages();
-                }, 150); // 150ms delay for a smoother effect
-            }
-        }
+function saveWord(){
+    const word=document.getElementById("wordInput").value.trim();
+    const pos=document.getElementById("posInput").value.trim();
+    const transitionsInput=document.getElementById("transitionsInput").value.trim();
+    if(!word||!pos) { alert("Word and POS required"); return; }
+    const transitions={};
+    transitionsInput.split(",").forEach(pair=>{
+        const [key,val]=pair.split(":");
+        if(key && val) transitions[key.trim()]=parseFloat(val);
+    });
+    models["CBPT-2"].js[word]={part_of_speech: pos, valid_next: [], transitions};
+    cancelWordForm();
+    renderWordList();
+}
 
-        function displayMessages() {
-            const messageList = document.getElementById("messageList");
-            messageList.innerHTML = '';
+function deleteWord(){
+    if(editingWord && confirm("Are you sure you want to delete "+editingWord+"?")){
+        delete models["CBPT-2"].js[editingWord];
+        editingWord=null;
+        cancelWordForm();
+        renderWordList();
+    }
+}
 
-            let allMessages = [...userMessages, ...generatedMessages];
+// ===== N-gram functions =====
+function buildNgrams(text, n = 3) {
+    const tokens = text.match(/[\w]+|[{}()[\];,.<>:=+-/*]|".*?"|'.*?'/g) || [];
+    const ngrams = {};
+    for (let i=0; i <= tokens.length-n; i++){
+        const key = tokens.slice(i,i+n).join(" ");
+        const next = tokens[i+n];
+        if(!ngrams[key]) ngrams[key] = [];
+        if(next) ngrams[key].push(next);
+    }
+    return ngrams;
+}
 
-            allMessages.forEach(message => {
-                let li = document.createElement("li");
-                li.classList.add("message-item");
-                if (userMessages.includes(message)) {
-                    li.textContent = `You: ${message}`;
-                } else {
-                    li.textContent = `AI: ${message}`;
-                }
-                messageList.appendChild(li);
-            });
+function mergeNgrams(target,newNgrams){
+    for(const key in newNgrams){
+        if(!target[key]) target[key]=[];
+        target[key]=target[key].concat(newNgrams[key]);
+    }
+}
 
-            messageList.scrollTop = messageList.scrollHeight;
-        }
+// ===== Message Generation =====
+function generateCBPT2(start="", maxWords=15){
+    if(selectedModel!=="CBPT-2") return generateCBPT1(start,maxWords);
+    const model=models["CBPT-2"];
+    const lang="js"; // example, can add UI later to choose language
+    const n=model.ngrams;
+    const ngramsObj=model[lang];
+    const tokens=start.split(" ");
+    let sentence=[...tokens];
+    for(let i=0;i<maxWords;i++){
+        const key=sentence.slice(-n).join(" ");
+        const possibilities=ngramsObj[key]||[];
+        if(possibilities.length===0) break;
+        const next=possibilities[Math.floor(Math.random()*possibilities.length)];
+        sentence.push(next);
+    }
+    return sentence.join(" ");
+}
 
-        function toggleSettings() {
-            let modal = document.getElementById("settingsModal");
-            modal.style.display = modal.style.display === "flex" ? "none" : "flex";
-        }
-    </script>
+function generateCBPT1(start="", maxWords=10){
+    let word=start.split(" ").slice(-1)[0];
+    let sentence=[word];
+    for(let i=0;i<maxWords-1;i++){
+        if(!cbptJSON[word] || !cbptJSON[word].transitions) break;
+        const possibleNextWords = Object.keys(cbptJSON).filter(
+            w => cbptJSON[word].valid_next.includes(cbptJSON[w].part_of_speech)
+        );
+        if(possibleNextWords.length===0) break;
+        const next = possibleNextWords[Math.floor(Math.random()*possibleNextWords.length)];
+        sentence.push(next);
+        word=next;
+    }
+    return sentence.join(" ");
+}
 
+// ===== Sending Messages =====
+function sendMessage(){
+    const userMsg=document.getElementById("user-message").value.trim();
+    if(!userMsg) return;
+    userMessages.push(userMsg);
+    document.getElementById("user-message").value="";
+    setTimeout(()=>{
+        const aiResp=selectedModel==="CBPT-2"?generateCBPT2(userMsg):generateCBPT1(userMsg);
+        generatedMessages.push(aiResp);
+        displayMessages();
+    },150);
+}
+
+function displayMessages(){
+    const list=document.getElementById("messageList");
+    list.innerHTML="";
+    for(const m of userMessages) {
+        const li=document.createElement("li");
+        li.textContent="You: "+m;
+        li.className="message-item";
+        list.appendChild(li);
+    }
+    for(const m of generatedMessages) {
+        const li=document.createElement("li");
+        li.textContent="AI: "+m;
+        li.className="message-item";
+        list.appendChild(li);
+    }
+    list.scrollTop=list.scrollHeight;
+}
+
+// ===== Toggle Settings Modal =====
+function toggleSettings(){
+    const modal=document.getElementById("settingsModal");
+    modal.style.display = modal.style.display==="flex"?"none":"flex";
+}
+
+// ===== Init =====
+window.onload=()=>{
+    populateModelSelector();
+    loadCBPTJSON();
+}
+</script>
 </body>
 </html>
