@@ -28,30 +28,45 @@
 <iframe id="content" src="" name="contentFrame"></iframe>
 
 <script>
-  const githubBase = 'https://unknown07724.github.io/projects/wiki/pages/';
+const githubBase = 'https://unknown07724.github.io/projects/wiki/pages/';
 
-  // Get the page from URL search param
-  function getPageParam() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('page') || 'memepedia'; // default page
-  }
+// Get the page from URL search param
+function getPageParam() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('page') || 'memepedia'; // default page
+}
 
-  // Load the page in the iframe
-  function loadPage() {
-    const page = getPageParam();
-    document.getElementById('content').src = `${githubBase}${page}.html`;
-  }
+// Update URL without reloading
+function updateUrl(page) {
+  const url = new URL(window.location);
+  url.searchParams.set('page', page);
+  window.history.replaceState({}, '', url);
+}
 
-  // Edit button opens edit.html for the current page
-  document.getElementById('editBtn').addEventListener('click', () => {
-    const page = getPageParam();
-    window.open(`edit.html?page=${page}`, '_blank'); // can be modal later
-  });
+// Load the page in the iframe
+function loadPage(page = null) {
+  if (!page) page = getPageParam();
+  document.getElementById('content').src = `${githubBase}${page}.html`;
+  updateUrl(page); // sync URL to current page
+}
 
-  // Initialize
-  window.addEventListener('load', loadPage);
-  window.addEventListener('popstate', loadPage); // optional, handles back/forward
+// Edit button opens edit.html for the current page
+document.getElementById('editBtn').addEventListener('click', () => {
+  const page = getPageParam();
+  window.open(`edit.html?page=${page}`, '_blank'); // can be modal later
+});
+
+// Make a global redirect function (iframe-aware)
+window.redirect = function(page) {
+  if (!page) return;
+  loadPage(page);
+};
+
+// Initialize
+window.addEventListener('load', loadPage);
+window.addEventListener('popstate', loadPage); // handle back/forward
 </script>
+
 
 </body>
 </html>
