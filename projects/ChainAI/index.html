@@ -69,10 +69,13 @@ button, input, select { margin: 5px; padding: 10px; font-size: 16px; }
 <script>
 // ===== Models JSON =====
 let models = {
-  "CBPT-1": { ngrams: 0, english:null, description:"English only, JSON-based, old-school responses" },
-  "CBPT-2": { ngrams: 3, js:null, python:null, html:null, rust:null, english:null, description:"Dynamic n-grams, multiple languages, uses CBPT-1 JSON" },
-  "CBPT-test-1":  { ngrams: 3, js:null, python:null, html:null, rust:null, english:"The United States of America (USA), also known as the United States (U.S.) or America, is a country primarily located in North America. It is a federal republic of 50 states and a federal capital district, Washington, D.C. The 48 contiguous states border Canada to the north and Mexico to the south, with the semi-exclave of Alaska in the northwest and the archipelago of Hawaii in the Pacific Ocean. The United States also asserts sovereignty over five major island territories and various uninhabited islands in Oceania and the Caribbean. It is a megadiverse country, with the world's third-largest land area and third-largest population, exceeding 340 million.", description:"Test model" }
-
+    "CBPT-1": { ngrams: 0, english:null, description:"English only, JSON-based, old-school responses" },
+    "CBPT-2": { ngrams: 3, js:null, python:null, html:null, rust:null, english:null, description:"Dynamic n-grams, multiple languages, uses CBPT-1 JSON" },
+    "CBPT-test-1":  { 
+        ngrams: 3, js:null, python:null, html:null, rust:null, 
+        english: "The United States of America (USA), also known as the United States (U.S.) or America, is a country primarily located in North America. It is a federal republic of 50 states and a federal capital district, Washington, D.C. The 48 contiguous states border Canada to the north and Mexico to the south, with the semi-exclave of Alaska in the northwest and the archipelago of Hawaii in the Pacific Ocean. The United States also asserts sovereignty over five major island territories and various uninhabited islands in Oceania and the Caribbean. It is a megadiverse country, with the world's third-largest land area and third-largest population, exceeding 340 million.",
+        description:"Test model" 
+    }
 };
 
 let selectedModel = "CBPT-1";
@@ -93,7 +96,6 @@ async function loadCBPTJSON() {
         const res = await fetch('words.json');
         cbptJSON = await res.json();
         console.log("CBPT-1 JSON loaded");
-        // For CBPT-2, initialize JS/other languages as copy of cbptJSON
         models["CBPT-2"].js = JSON.parse(JSON.stringify(cbptJSON));
     } catch(e){ console.error("Failed to load words.json:", e);}
 }
@@ -119,13 +121,12 @@ function updateModelDescription() {
 }
 
 // ===== Training Section =====
+let editingWord = null;
+
 function revealTraining() {
     document.getElementById("trainingSection").style.display="block";
     renderWordList();
 }
-
-// ===== Word List Management =====
-let editingWord = null;
 
 function renderWordList(){
     const listDiv = document.getElementById("wordList");
@@ -190,9 +191,9 @@ function deleteWord(){
     }
 }
 
-// ===== N-gram functions (dynamically from JSON) =====
+// ===== N-gram functions =====
 function buildNgramsFromJSON(json, n=3){
-    const tokens=[];
+    const tokens=[]; 
     for(const word in json) tokens.push(word);
     const ngrams={};
     for(let i=0;i<=tokens.length-n;i++){
@@ -204,22 +205,19 @@ function buildNgramsFromJSON(json, n=3){
     return ngrams;
 }
 
-// ===== Message Generation =====
-function generateCBPT2(start="", maxWords=15){
-    const n=models["CBPT-2"].ngrams;
-    const ngramsObj=buildNgramsFromJSON(models["CBPT-2"].js,n);
-    const tokens=start.split(" ");
-    let sentence=[...tokens];
-    for(let i=0;i<maxWords;i++){
-        const key=sentence.slice(-n).join(" ");
-        const possibilities=ngramsObj[key]||[];
-        if(possibilities.length===0) break;
-        const next=possibilities[Math.floor(Math.random()*possibilities.length)];
-        sentence.push(next);
+function buildNgramsFromString(text, n=3){
+    const tokens = text.split(/\s+/);
+    const ngrams = {};
+    for(let i=0;i<=tokens.length-n;i++){
+        const key = tokens.slice(i,i+n).join(" ");
+        const next = tokens[i+n];
+        if(!ngrams[key]) ngrams[key] = [];
+        if(next) ngrams[key].push(next);
     }
-    return sentence.join(" ");
+    return ngrams;
 }
 
+// ===== Message Generation =====
 function generateCBPT1(start="", maxWords=10){
     let word=start.split(" ").slice(-1)[0];
     let sentence=[word];
@@ -236,6 +234,43 @@ function generateCBPT1(start="", maxWords=10){
     return sentence.join(" ");
 }
 
+function generateCBPT2(start="", maxWords=15){
+    const n = models["CBPT-2"].ngrams;
+    const ngramsObj = buildNgramsFromJSON(models["CBPT-2"].js, n);
+    const tokens = start.split(" ");
+    let sentence = [...tokens];
+    for(let i=0;i<maxWords;i++){
+        const key = sentence.slice(-n).join(" ");
+        const possibilities = ngramsObj[key] || [];
+        if(possibilities.length === 0) break;
+        const next = possibilities[Math.floor(Math.random()*possibilities.length)];
+        sentence.push(next);
+    }
+    return sentence.join(" ");
+}
+
+function generateMessage(start="", maxWords=15){
+    const model = models[selectedModel];
+
+    if(model.english){
+        const n = model.ngrams;
+        const ngrams = buildNgramsFromString(model.english, n);
+        const tokens = start.split(" ");
+        let sentence = [...tokens];
+        for(let i=0;i<maxWords;i++){
+            const key = sentence.slice(-n).join(" ");
+            const possibilities = ngrams[key] || [];
+            if(possibilities.length === 0) break;
+            const next = possibilities[Math.floor(Math.random()*possibilities.length)];
+            sentence.push(next);
+        }
+        return sentence.join(" ");
+    }
+
+    if(selectedModel === "CBPT-1") return generateCBPT1(start, maxWords);
+    return generateCBPT2(start, maxWords);
+}
+
 // ===== Sending Messages =====
 function sendMessage(){
     const userMsg=document.getElementById("user-message").value.trim();
@@ -243,7 +278,7 @@ function sendMessage(){
     userMessages.push(userMsg);
     document.getElementById("user-message").value="";
     setTimeout(()=>{
-        const aiResp=selectedModel==="CBPT-2"?generateCBPT2(userMsg):generateCBPT1(userMsg);
+        const aiResp = generateMessage(userMsg);
         generatedMessages.push(aiResp);
         displayMessages();
     },150);
@@ -279,6 +314,7 @@ window.onload=()=>{
     loadCBPTJSON();
 }
 </script>
+
 </body>
 </html>
 
