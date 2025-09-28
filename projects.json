@@ -32,10 +32,10 @@
           "HasAds": false
         },
         {
-          "name": "the meme-wiki",
-          "description": "Stuff explained in simple terms and memes",
+          "name": "memepedia",
+          "description": "Stuff explained in jokes",
           "url": "projects/wiki/index",
-          "last_updated": "2025-02-12",
+          "last_updated": "2025-09-27",
           "HasAds": false
         },
         {
