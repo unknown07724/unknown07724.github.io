@@ -70,7 +70,9 @@ button, input, select { margin: 5px; padding: 10px; font-size: 16px; }
 // ===== Models JSON =====
 let models = {
   "CBPT-1": { ngrams: 0, english:null, description:"English only, JSON-based, old-school responses" },
-  "CBPT-2": { ngrams: 10, js:{}, python:{}, html:{}, rust:{}, english:null, description:"Dynamic n-grams, multiple languages, uses CBPT-1 JSON" }
+  "CBPT-2": { ngrams: 3, js:null, python:null, html:null, rust:null, english:null, description:"Dynamic n-grams, multiple languages, uses CBPT-1 JSON" },
+  "CBPT-test-1":  { ngrams: 3, js:null, python:null, html:null, rust:null, english:"The United States of America (USA), also known as the United States (U.S.) or America, is a country primarily located in North America. It is a federal republic of 50 states and a federal capital district, Washington, D.C. The 48 contiguous states border Canada to the north and Mexico to the south, with the semi-exclave of Alaska in the northwest and the archipelago of Hawaii in the Pacific Ocean. The United States also asserts sovereignty over five major island territories and various uninhabited islands in Oceania and the Caribbean. It is a megadiverse country, with the world's third-largest land area and third-largest population, exceeding 340 million.", description:"Test model" }
+
 };
 
 let selectedModel = "CBPT-1";
