@@ -69,12 +69,15 @@ button, input, select { margin: 5px; padding: 10px; font-size: 16px; }
 <script>
 // ===== Models JSON =====
 let models = {
-    "CBPT-1": { ngrams: 0, english:null, description:"English only, JSON-based, old-school responses" },
+    "CBPT-1": { ngrams: 0, english: null, description:"English only, JSON-based, old-school responses" },
     "CBPT-2": { ngrams: 3, js:null, python:null, html:null, rust:null, english:null, description:"Dynamic n-grams, multiple languages, uses CBPT-1 JSON" },
     "CBPT-test-1":  { 
-        ngrams: 3, js:null, python:null, html:null, rust:null, 
-        english: "The United States of America (USA), also known as the United States (U.S.) or America, is a country primarily located in North America. It is a federal republic of 50 states and a federal capital district, Washington, D.C. The 48 contiguous states border Canada to the north and Mexico to the south, with the semi-exclave of Alaska in the northwest and the archipelago of Hawaii in the Pacific Ocean. The United States also asserts sovereignty over five major island territories and various uninhabited islands in Oceania and the Caribbean. It is a megadiverse country, with the world's third-largest land area and third-largest population, exceeding 340 million.",
-        description:"Test model" 
+        ngrams: 10, js:null, python:null, html:null, rust:null, 
+        english: [
+            "The United States of America (USA), also known as the United States (U.S.) or America, is a country primarily located in North America. It is a federal republic of 50 states and a federal capital district, Washington, D.C. The 48 contiguous states border Canada to the north and Mexico to the south, with the semi-exclave of Alaska in the northwest and the archipelago of Hawaii in the Pacific Ocean. The United States also asserts sovereignty over five major island territories and various uninhabited islands in Oceania and the Caribbean. It is a megadiverse country, with the world's third-largest land area and third-largest population, exceeding 340 million.",
+            "America is a federal republic composed of fifty states. The country stretches from the Atlantic Ocean to the Pacific, with diverse geography and climates. Its government is a democracy with a president and Congress, and it is one of the world's most influential nations."
+        ],
+        description:"Test model with multiple corpora and decagrams" 
     }
 };
 
@@ -83,21 +86,21 @@ let cbptJSON = {}; // CBPT-1 JSON
 let userMessages = [];
 let generatedMessages = [];
 
-// ===== Load CBPT-1 JSON if any model has english null =====
+// ===== Load CBPT-1 JSON if any model needs it =====
 async function loadCBPTJSON() {
-    let needsJSON = false;
-    for(const key in models){
-        if(models[key].english === null){
-            needsJSON = true; break;
-        }
-    }
+    const needsJSON = Object.values(models).some(m => m.english === null);
     if(!needsJSON) return;
+
     try {
         const res = await fetch('words.json');
         cbptJSON = await res.json();
         console.log("CBPT-1 JSON loaded");
+
+        // initialize CBPT-2 from CBPT-1 JSON
         models["CBPT-2"].js = JSON.parse(JSON.stringify(cbptJSON));
-    } catch(e){ console.error("Failed to load words.json:", e);}
+    } catch(e) {
+        console.error("Failed to load words.json:", e);
+    }
 }
 
 // ===== Populate model selector dynamically =====
@@ -113,11 +116,10 @@ function populateModelSelector() {
     updateModelDescription();
 }
 
-// ===== Update description below selector =====
+// ===== Update model description =====
 function updateModelDescription() {
-    const descDiv = document.getElementById("modelDescription");
     selectedModel = document.getElementById("modelSelect").value;
-    descDiv.textContent = models[selectedModel].description;
+    document.getElementById("modelDescription").textContent = models[selectedModel].description;
 }
 
 // ===== Training Section =====
@@ -131,53 +133,58 @@ function revealTraining() {
 function renderWordList(){
     const listDiv = document.getElementById("wordList");
     listDiv.innerHTML="";
-    if(selectedModel!=="CBPT-2") return;
+    if(selectedModel !== "CBPT-2") return;
+
     for(const word in models["CBPT-2"].js){
         const div = document.createElement("div");
         div.className="word-item";
         div.textContent = word;
+
         const editBtn = document.createElement("button");
         editBtn.textContent="Edit";
-        editBtn.onclick=()=>showEditWordForm(word);
+        editBtn.onclick = () => showEditWordForm(word);
+
         div.appendChild(editBtn);
         listDiv.appendChild(div);
     }
 }
 
 function showMakeWordForm(){
-    editingWord=null;
-    document.getElementById("makeWordForm").style.display="block";
-    document.getElementById("wordInput").value="";
-    document.getElementById("posInput").value="";
-    document.getElementById("transitionsInput").value="";
-    document.getElementById("deleteWordBtn").style.display="none";
+    editingWord = null;
+    document.getElementById("makeWordForm").style.display = "block";
+    document.getElementById("wordInput").value = "";
+    document.getElementById("posInput").value = "";
+    document.getElementById("transitionsInput").value = "";
+    document.getElementById("deleteWordBtn").style.display = "none";
 }
 
 function showEditWordForm(word){
-    editingWord=word;
-    const wordObj=models["CBPT-2"].js[word];
-    document.getElementById("makeWordForm").style.display="block";
-    document.getElementById("wordInput").value=word;
-    document.getElementById("posInput").value=wordObj.part_of_speech || "";
-    const transitionsArr=[];
+    editingWord = word;
+    const wordObj = models["CBPT-2"].js[word];
+    document.getElementById("makeWordForm").style.display = "block";
+    document.getElementById("wordInput").value = word;
+    document.getElementById("posInput").value = wordObj.part_of_speech || "";
+    const transitionsArr = [];
     for(const t in wordObj.transitions) transitionsArr.push(`${t}:${wordObj.transitions[t]}`);
-    document.getElementById("transitionsInput").value=transitionsArr.join(",");
-    document.getElementById("deleteWordBtn").style.display="inline-block";
+    document.getElementById("transitionsInput").value = transitionsArr.join(",");
+    document.getElementById("deleteWordBtn").style.display = "inline-block";
 }
 
 function cancelWordForm(){ document.getElementById("makeWordForm").style.display="none"; }
 
 function saveWord(){
-    const word=document.getElementById("wordInput").value.trim();
-    const pos=document.getElementById("posInput").value.trim();
-    const transitionsInput=document.getElementById("transitionsInput").value.trim();
-    if(!word||!pos){ alert("Word and POS required"); return; }
-    const transitions={};
-    transitionsInput.split(",").forEach(pair=>{
-        const [key,val]=pair.split(":");
-        if(key && val) transitions[key.trim()]=parseFloat(val);
+    const word = document.getElementById("wordInput").value.trim();
+    const pos = document.getElementById("posInput").value.trim();
+    const transitionsInput = document.getElementById("transitionsInput").value.trim();
+    if(!word || !pos){ alert("Word and POS required"); return; }
+
+    const transitions = {};
+    transitionsInput.split(",").forEach(pair => {
+        const [key,val] = pair.split(":");
+        if(key && val) transitions[key.trim()] = parseFloat(val);
     });
-    models["CBPT-2"].js[word]={part_of_speech: pos, valid_next: [], transitions};
+
+    models["CBPT-2"].js[word] = { part_of_speech: pos, valid_next: [], transitions };
     cancelWordForm();
     renderWordList();
 }
@@ -185,7 +192,7 @@ function saveWord(){
 function deleteWord(){
     if(editingWord && confirm("Are you sure you want to delete "+editingWord+"?")){
         delete models["CBPT-2"].js[editingWord];
-        editingWord=null;
+        editingWord = null;
         cancelWordForm();
         renderWordList();
     }
@@ -193,20 +200,19 @@ function deleteWord(){
 
 // ===== N-gram functions =====
 function buildNgramsFromJSON(json, n=3){
-    const tokens=[]; 
-    for(const word in json) tokens.push(word);
-    const ngrams={};
+    const tokens = Object.keys(json);
+    const ngrams = {};
     for(let i=0;i<=tokens.length-n;i++){
         const key = tokens.slice(i,i+n).join(" ");
-        const next=tokens[i+n];
-        if(!ngrams[key]) ngrams[key]=[];
+        const next = tokens[i+n];
+        if(!ngrams[key]) ngrams[key] = [];
         if(next) ngrams[key].push(next);
     }
     return ngrams;
 }
 
 function buildNgramsFromString(text, n=3){
-    const tokens = text.split(/\s+/);
+    const tokens = text.match(/\b[\w'()-]+\b|[.,!?;]/g) || [];
     const ngrams = {};
     for(let i=0;i<=tokens.length-n;i++){
         const key = tokens.slice(i,i+n).join(" ");
@@ -218,18 +224,18 @@ function buildNgramsFromString(text, n=3){
 }
 
 // ===== Message Generation =====
-function generateCBPT1(start="", maxWords=10){
-    let word=start.split(" ").slice(-1)[0];
-    let sentence=[word];
+function generateCBPT1(start="", maxWords=15){
+    let word = start.split(" ").slice(-1)[0];
+    let sentence = [word];
     for(let i=0;i<maxWords-1;i++){
         if(!cbptJSON[word] || !cbptJSON[word].transitions) break;
         const possibleNextWords = Object.keys(cbptJSON).filter(
             w => cbptJSON[word].valid_next.includes(cbptJSON[w].part_of_speech)
         );
-        if(possibleNextWords.length===0) break;
+        if(possibleNextWords.length === 0) break;
         const next = possibleNextWords[Math.floor(Math.random()*possibleNextWords.length)];
         sentence.push(next);
-        word=next;
+        word = next;
     }
     return sentence.join(" ");
 }
@@ -249,34 +255,43 @@ function generateCBPT2(start="", maxWords=15){
     return sentence.join(" ");
 }
 
-function generateMessage(start="", maxWords=15){
-    const model = models[selectedModel];
-
-    if(model.english){
-        const n = model.ngrams;
-        const ngrams = buildNgramsFromString(model.english, n);
-        const tokens = start.split(" ");
-        let sentence = [...tokens];
-        for(let i=0;i<maxWords;i++){
-            const key = sentence.slice(-n).join(" ");
-            const possibilities = ngrams[key] || [];
-            if(possibilities.length === 0) break;
-            const next = possibilities[Math.floor(Math.random()*possibilities.length)];
-            sentence.push(next);
-        }
-        return sentence.join(" ");
+function generateFromCorpusModel(model, start="", maxWords=50){
+    const corpora = Array.isArray(model.english) ? model.english : [model.english];
+    const corpus = corpora[Math.floor(Math.random()*corpora.length)];
+    const n = model.ngrams;
+    const tokens = corpus.match(/\b[\w'()-]+\b|[.,!?;]/g) || [];
+    const ngrams = {};
+    for(let i=0;i<=tokens.length-n;i++){
+        const key = tokens.slice(i,i+n).join(" ");
+        const next = tokens[i+n];
+        if(!ngrams[key]) ngrams[key] = [];
+        if(next) ngrams[key].push(next);
     }
 
+    let sentence = start ? start.split(" ") : tokens.slice(0,n);
+    for(let i=0;i<maxWords;i++){
+        const key = sentence.slice(-n).join(" ");
+        const possibilities = ngrams[key] || [];
+        if(possibilities.length === 0) break;
+        const next = possibilities[Math.floor(Math.random()*possibilities.length)];
+        sentence.push(next);
+    }
+    return sentence.join(" ");
+}
+
+function generateMessage(start="", maxWords=50){
+    const model = models[selectedModel];
+    if(model.english) return generateFromCorpusModel(model, start, maxWords);
     if(selectedModel === "CBPT-1") return generateCBPT1(start, maxWords);
     return generateCBPT2(start, maxWords);
 }
 
 // ===== Sending Messages =====
 function sendMessage(){
-    const userMsg=document.getElementById("user-message").value.trim();
+    const userMsg = document.getElementById("user-message").value.trim();
     if(!userMsg) return;
     userMessages.push(userMsg);
-    document.getElementById("user-message").value="";
+    document.getElementById("user-message").value = "";
     setTimeout(()=>{
         const aiResp = generateMessage(userMsg);
         generatedMessages.push(aiResp);
@@ -289,31 +304,32 @@ function displayMessages(){
     list.innerHTML="";
     for(const m of userMessages){
         const li=document.createElement("li");
-        li.textContent=m;
-        li.className="message-item user-message";
+        li.textContent = m;
+        li.className = "message-item user-message";
         list.appendChild(li);
     }
     for(const m of generatedMessages){
         const li=document.createElement("li");
-        li.textContent=m;
-        li.className="message-item ai-message";
+        li.textContent = m;
+        li.className = "message-item ai-message";
         list.appendChild(li);
     }
-    list.scrollTop=list.scrollHeight;
+    list.scrollTop = list.scrollHeight;
 }
 
 // ===== Toggle Settings Modal =====
 function toggleSettings(){
-    const modal=document.getElementById("settingsModal");
+    const modal = document.getElementById("settingsModal");
     modal.style.display = modal.style.display==="flex"?"none":"flex";
 }
 
 // ===== Init =====
-window.onload=()=>{
+window.onload = ()=>{
     populateModelSelector();
     loadCBPTJSON();
 }
 </script>
+
 
 </body>
 </html>
