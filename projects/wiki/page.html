@@ -17,7 +17,7 @@
 <body>
 
 <div id="sidebar">
-<img src="logo.svg" alt="Memepedia logo" width="175" height="175">
+  <img src="logo.svg" alt="Memepedia logo" width="175" height="175">
   <a href="main.html">Main page</a>
   <a href="edit.html">Create a page</a>
   <button id="editBtn">Edit This Page</button>
@@ -36,7 +36,7 @@ function getPageParam() {
   return params.get('page') || 'memepedia'; // default page
 }
 
-// Update URL without reloading
+// Update the URL without reloading
 function updateUrl(page) {
   const url = new URL(window.location);
   url.searchParams.set('page', page);
@@ -45,28 +45,31 @@ function updateUrl(page) {
 
 // Load the page in the iframe
 function loadPage(page = null) {
-  if (!page) page = getPageParam();
-  document.getElementById('content').src = `${githubBase}${page}.html`;
-  updateUrl(page); // sync URL to current page
+  if (typeof page !== 'string' || !page) page = getPageParam();
+  const iframe = document.getElementById('content');
+  iframe.src = `${githubBase}${page}.html`;
+  updateUrl(page);
 }
 
 // Edit button opens edit.html for the current page
 document.getElementById('editBtn').addEventListener('click', () => {
   const page = getPageParam();
-  window.open(`edit.html?page=${page}`, '_blank'); // can be modal later
+  window.open(`edit.html?page=${page}`, '_blank');
 });
 
-// Make a global redirect function (iframe-aware)
+// Global hard redirect helper (for article-level redirects)
 window.redirect = function(page) {
   if (!page) return;
   loadPage(page);
 };
 
-// Initialize
-window.addEventListener('load', loadPage);
-window.addEventListener('popstate', loadPage); // handle back/forward
-</script>
+// Initialize iframe on page load
+window.addEventListener('load', () => loadPage());
 
+// Fix popstate listener to prevent passing Event object
+window.addEventListener('popstate', () => loadPage());
+</script>
 
 </body>
 </html>
+
