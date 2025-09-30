@@ -1,6 +1,6 @@
 [
   { "title": "moon" },
-  { "title": "icbm" },
+  { "title": "ICBM" },
   { "title": "conservapedia" },
   { "title": "ai" },
   { "title": "sun" },
@@ -8,5 +8,7 @@
   { "title": "toaster" },
   { "title": "cheese" },
   { "title": "milk" },
-  { "title": "chair" }
+  { "title": "chair" },
+  { "title": "astroneer" },
+  { "title": "[object Event]" }
 ]
