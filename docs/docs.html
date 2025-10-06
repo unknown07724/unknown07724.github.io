@@ -69,33 +69,31 @@
 <body>
   <div id="sidebar">
     <a href="#" data-file="introduction/1.md">Introduction</a>
-    <a href="#" data-file="introduction/2.md">CSS junk</a>
+    <a href="#" data-file="introduction/2.md">CSS stuff</a>
     <a href="#" data-file="introduction/3.md">your first project</a>
   </div>
   <div id="content">
-    <h1>Documentation Viewer</h1>
+    <h1>Documentation</h1>
     <p>Select a topic from the sidebar to load its content.</p>
   </div>
 
+<!-- Include marked.js first -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <script>
-  // Markdown rendering function
   async function loadMarkdown(file) {
     try {
       const response = await fetch(file);
       if (!response.ok) throw new Error('File not found');
       const markdown = await response.text();
-
-      // Convert Markdown to HTML using marked.js
       const html = marked.parse(markdown);
 
-      // Replace content and dynamically handle links
       const contentDiv = document.getElementById('content');
       contentDiv.innerHTML = html;
 
-      // Apply custom handling for alert tags
+      // Alerts
       contentDiv.querySelectorAll('p').forEach(p => {
         const text = p.textContent.trim();
-
         if (text.startsWith('[!CAUTION]')) {
           p.className = 'alert alert-warning';
           p.textContent = text.replace(/\[!CAUTION\]\s*/i, '');
@@ -105,37 +103,35 @@
         }
       });
 
-      // Intercept links pointing to .md files
+      // Markdown links
       contentDiv.querySelectorAll('a').forEach(link => {
         const href = link.getAttribute('href');
         if (href && href.endsWith('.md')) {
-          link.addEventListener('click', (e) => {
+          link.addEventListener('click', e => {
             e.preventDefault();
-            loadMarkdown(href); // Load the linked Markdown file
+            loadMarkdown(href);
           });
         }
       });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
     } catch (error) {
       console.error('Error loading Markdown file:', error);
-      document.getElementById('content').innerHTML = '<p>Error loading content.</p>';
+      contentDiv.innerHTML = '<p>Error loading content.</p>';
     }
   }
 
-  // Event listeners for sidebar links
   document.querySelectorAll('#sidebar a').forEach(link => {
-    link.addEventListener('click', (e) => {
+    link.addEventListener('click', e => {
       e.preventDefault();
       const file = e.target.getAttribute('data-file');
       loadMarkdown(file);
     });
   });
 
-  // Initial load (optional: load a default file)
-  loadMarkdown('introduction.md');
+  // Load the first topic by default
+  loadMarkdown('introduction/1.md');
 </script>
-
-
-  <!-- Include marked.js for Markdown parsing -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>
 </html>
