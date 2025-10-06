@@ -49,16 +49,26 @@ if (!postId) {
     window.location.href = "index.html";
 }
 
+// Users map
+let usersMap = {};
+fetch("data/users.json?t=" + Date.now())
+    .then(res => res.json())
+    .then(users => {
+        users.forEach(u => usersMap[u.id] = u.username);
+        loadComments(); // Load comments after users loaded
+    })
+    .catch(err => {
+        console.error("Error loading users:", err);
+        loadComments(); // fallback
+    });
+
 document.addEventListener('DOMContentLoaded', function () {
-    loadComments();
+    // Already loading comments after users fetched
 });
 
 function loadComments() {
     const commentsSection = document.getElementById("comments-section");
-    if (!commentsSection) {
-        console.error("Comments section element not found.");
-        return;
-    }
+    if (!commentsSection) return;
 
     fetch(`data/comments.json?t=${Date.now()}`)
         .then(response => response.json())
@@ -70,7 +80,8 @@ function loadComments() {
             }
 
             commentsSection.innerHTML = postComments.map(c => {
-                let commentText = `<div class="comment"><p><strong>User ${c.user}</strong>: ${c.content}</p>`;
+                const username = usersMap[c.user] || `User ${c.user}`;
+                let commentText = `<div class="comment"><p><strong>${username}</strong>: ${c.content}</p>`;
                 if (c.reference[0] === "comment" && c.reference[1]) {
                     commentText += `<p class="reply"><strong>Replying to Comment ${c.reference[1]}</strong></p>`;
                 }
@@ -94,18 +105,30 @@ document.getElementById("submit-comment").addEventListener("click", async (e) =>
 
     let reference = [null, null];
     const replyToCommentId = getReplyToCommentId();
-    if (replyToCommentId) {
-        reference = ["comment", replyToCommentId];
-    }
+    if (replyToCommentId) reference = ["comment", replyToCommentId];
 
     const commentData = {
         id: crypto.randomUUID(),
         content: content,
-        user: storedUserId,  // Now uses localStorage user ID
+        user: storedUserId,
         postId: postId,
         reference: reference
     };
 
+    // Push comment instantly to DOM
+    const commentsSection = document.getElementById("comments-section");
+    const username = usersMap[storedUserId] || storedUserId;
+    let commentText = `<div class="comment"><p><strong>${username}</strong>: ${content}</p>`;
+    if (reference[0] === "comment") {
+        commentText += `<p class="reply"><strong>Replying to Comment ${reference[1]}</strong></p>`;
+    }
+    commentText += `</div>`;
+    commentsSection.innerHTML += commentText;
+
+    // Clear textarea
+    document.getElementById("comment-content").value = "";
+
+    // Send to webhook for review
     await fetch(webhookURL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -113,14 +136,12 @@ document.getElementById("submit-comment").addEventListener("click", async (e) =>
             content: "New comment for review!",
             embeds: [{
                 description: content,
-                footer: { text: `Post ID: ${postId} | User: ${storedUserId}` }
+                footer: { text: `Post ID: ${postId} | User: ${username}` }
             }]
         })
     });
 
     alert("Comment submitted for review!");
-    document.getElementById("comment-content").value = "";
-    loadComments();
 });
 
 function getReplyToCommentId() {
@@ -132,3 +153,4 @@ function getReplyToCommentId() {
 
 </body>
 </html>
+
