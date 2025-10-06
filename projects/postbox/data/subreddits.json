@@ -50,7 +50,7 @@
     {
         "id": "deltarune",
         "name": "Deltarune",
-        "description": "An unofficial subreddit to discuss the 2018 indie game Deltarune and its creator Toby Fox",
+        "description": "An unofficial community box to discuss the 2018 indie game Deltarune and its creator Toby Fox",
         "createdOn": "Feb 9, 2025"
     },
     {
@@ -58,6 +58,12 @@
         "name": "Postbox help",
         "description": "help for postbox",
         "createdOn": "Feb 5, 2025"
+    },
+     {
+        "id": "shitpost",
+        "name": "shitposting",
+        "description": "help for postbox",
+        "createdOn": "Oct 6, 2025"
     },
     {
         "id": "undertale",
