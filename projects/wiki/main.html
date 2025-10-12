@@ -37,18 +37,28 @@
       padding: 20px;
       overflow-y: auto;
     }
-    #searchResults a {
-      display: block;
-      padding: 5px;
-      margin: 2px 0;
-      text-decoration: none;
-      background: #f0f0f0;
-      border-radius: 3px;
-      color: black;
-    }
-    #searchResults a:hover {
-      background: #ddd;
-    }
+   #searchResults {
+  position: absolute; /* stick it near the input */
+  top: 50px;          /* drop a bit below the input */
+  right: 10px;        /* match input’s right spacing */
+  width: 200px;       /* same as input for consistency */
+  z-index: 999;       /* stay above other stuff */
+}
+
+#searchResults a {
+  display: block;
+  padding: 5px;
+  margin: 2px 0;
+  text-decoration: none;
+  background: #f0f0f0;
+  border-radius: 3px;
+  color: black;
+}
+
+#searchResults a:hover {
+  background: #ddd;
+}
+
   </style>
 </head>
 <body>
