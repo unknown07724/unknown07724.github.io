@@ -8,6 +8,14 @@
     "sensitive": false
   },
   {
+  "name": "Imgflip - Create and Share Awesome Images",
+  "url": "https://imgflip.com/",
+  "keywords": [],
+  "description": "Quickly turn your ideas into catchy shareables with Imgflip's meme and GIF tools and community of content creators",
+  "favicon": "https://imgflip.com/favicon.ico?b",
+  "sensitive": false
+},
+  {
     "name": "Example Domain",
     "url": "https://example.org",
     "keywords": ["example", "Domain", "Example", "domain"],
