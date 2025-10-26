@@ -1,0 +1,3 @@
+<div class="mt">
+  This page has too few jokes and could use more humorous content.
+</div>
