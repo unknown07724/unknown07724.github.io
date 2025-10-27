@@ -243,7 +243,11 @@
 </optgroup>
 
 </select>
-
+     <select id="symbolDropdown" onchange="insertSymbol(this.value)">
+        <option value="<div class='mt'>This page has too few jokes and could use more humorous content.</div>">Too Few Jokes</option>
+  <option value="<div class='mt'>This page needs more sources.</div>">Needs Sources</option>
+  <option value="<div class='mt'>This page is outdated.</div>">Outdated</option>
+       </select>
    </div>
 <!-- Add this right above the textarea -->
 <p id="charCount">0 B</p>
