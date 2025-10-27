@@ -245,6 +245,9 @@
 </select>
 
    </div>
+<!-- Add this right above the textarea -->
+<p id="charCount">0 B</p>
+<textarea id="pageContent"></textarea>
 
    <textarea id="pageContent"></textarea>
    <br>
@@ -388,6 +391,26 @@ searchInput.addEventListener('input', () => {
     searchResults.appendChild(li);
   });
 });
+const textarea = document.getElementById('pageContent');
+const charCount = document.getElementById('charCount');
+
+function formatSize(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024*1024) return `${(bytes/1024).toFixed(2)} KiB`;
+  return `${(bytes/(1024*1024)).toFixed(2)} MiB`;
+}
+
+function updateCharCount() {
+  const bytes = new TextEncoder().encode(textarea.value).length;
+  charCount.textContent = `${formatSize(bytes)} (${textarea.value.length} chars)`;
+  charCount.style.color = bytes > 1900 ? 'red' : 'black';
+}
+
+// update counter initially
+updateCharCount();
+
+// update counter on input
+textarea.addEventListener('input', updateCharCount);
 
  </script>
 </body>
