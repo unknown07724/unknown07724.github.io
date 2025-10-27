@@ -4,17 +4,28 @@
   <title>Edit Page - Memepedia</title>
   <link rel="icon" href="favicon.png">
   <style>
-    #searchResults li {
-  padding: 6px 10px;
-  background: #ddd;
-  margin-bottom: 2px;
-  cursor: pointer;
-  border-radius: 4px;
+   #searchResults {
+  position: absolute; /* stick it near the input */
+  top: 50px;          /* drop a bit below the input */
+  right: 10px;        /* match input’s right spacing */
+  width: 200px;       /* same as input for consistency */
+  z-index: 999;       /* stay above other stuff */
 }
 
-#searchResults li:hover {
-  background: #ccc;
+#searchResults a {
+  display: block;
+  padding: 5px;
+  margin: 2px 0;
+  text-decoration: none;
+  background: #f0f0f0;
+  border-radius: 3px;
+  color: black;
 }
+
+#searchResults a:hover {
+  background: #ddd;
+}
+
 
     body { font-family: sans-serif; display: flex; margin:0; height:100vh; }
     #sidebar { width: 250px; background: #eee; padding: 15px; box-sizing: border-box; overflow-y: auto; }
