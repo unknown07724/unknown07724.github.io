@@ -4,7 +4,6 @@
   { "name": "Vulcan (Star Trek)", "yearLength": 280, "starClass": "G", "eccentricity": 0.05 },
   { "name": "Arrakis (Dune)", "yearLength": 361, "starClass": "F", "eccentricity": 0.1 },
   { "name": "Copper-9 (Murder Drones)", "yearLength": 390, "starClass": "G", "eccentricity": 0.03 },
-  { "name": "Tatooine (Star Wars)", "yearLength": 304, "starClass": "A", "eccentricity": 0.1 },
   { "name": "Hoth (Star Wars)", "yearLength": 400, "starClass": "G", "eccentricity": 0.05 },
   { "name": "Coruscant (Star Wars)", "yearLength": 365, "starClass": "G", "eccentricity": 0.02 },
   { "name": "Endor (Star Wars)", "yearLength": 402, "starClass": "G", "eccentricity": 0.03 },
