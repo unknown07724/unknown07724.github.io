@@ -175,13 +175,14 @@ function calculate() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  fetch('planets.json')
-    .then(res => res.json())
-    .then(data => {
-      examplePlanets = data;
-      populateDropdowns();
-      calculate();
-    });
+ fetch('planets.json?t=' + new Date().getTime())
+  .then(res => res.json())
+  .then(data => {
+    examplePlanets = data;
+    populateDropdowns(); // only for example planets
+    calculate();
+  });
+
 
   const exampleDropdown = document.getElementById('examplePlanet');
   exampleDropdown.addEventListener('change', () => {
