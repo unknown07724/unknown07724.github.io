@@ -274,7 +274,7 @@
    <button id="saveBtn">Save Edit</button>
  </div>
 
- <script>
+  <script>
    const webhookURL = "https://discord.com/api/webhooks/1416905580035182702/9YTThtpOtgXA07J3GB9mdtmVPLz8L-gr-bBMp_daM6uy0msS5jGO0YdqjQTyjc7Q4lKy";
    let pageName = new URLSearchParams(window.location.search).get("page");
 
@@ -293,54 +293,69 @@
     <link rel="stylesheet" href="/projects/wiki/styles.css">
   </head>
   <body>
-<!--do not edit what is above since that will irreversibly give you (and the site) cancer-->
+<!--do not edit what is above-->
 
 <h1>this is a blah header</h1>
 <p>Blah blah blah (put stuff here)</p>
-<p>Blah blah blah <a href="memepedia.html">change href and name</a></p>
-<p><strong>this is thick blah</strong></p>
-<p><i>this is italic blah</i></p>
-<p><em>this is emphasis blah</em></p>
-<p><code>const blah = blah</code></p>
 
-<ul>
-  <li>first blah item</li>
-  <li>second blah item</li>
-  <li>third blah item</li>
-</ul>
-<p>Ordered list blah:</p>
-<ol>
-  <li>first step blah</li>
-  <li>second step blah</li>
-  <li>third step blah</li>
-</ol>
-
-<p>Example image blah:</p>
-<img src="/projects/wiki/logo.svg" alt="example">
-<blockquote>
-This is a blah quote. Perfect for meme sayings or other blah.
-</blockquote>
-
-<p>Line one blah<br>Line two blah<br>Line three blah</p>
-<hr>
-<p>blah after break</p>
-
-<!--do not edit what is below since that will irreversibly fuck up the page-->
+<!--do not edit what is below-->
   </body>
 </html>
 `;
 
+   const textarea = document.getElementById('pageContent');
+   const charCount = document.getElementById('charCount');
+   let isDirty = false;
+
    fetch(`/projects/wiki/pages/${pageName}.html`)
      .then(res => res.ok ? res.text() : Promise.reject())
-     .then(html => {
-       document.getElementById("pageContent").value = html;
-     })
-     .catch(() => {
-       document.getElementById("pageContent").value = exampleHTML;
-     });
+     .then(html => { textarea.value = html; })
+     .catch(() => { textarea.value = exampleHTML; });
+
+   function insertTag(tag) {
+     const start = textarea.selectionStart;
+     const end = textarea.selectionEnd;
+     textarea.value = textarea.value.substring(0, start) + tag + textarea.value.substring(end);
+     textarea.selectionStart = textarea.selectionEnd = start + tag.length;
+     textarea.focus();
+     isDirty = true; // mark as changed
+     updateCharCount();
+   }
+
+   function insertSymbol(symbol) {
+     if (!symbol) return;
+     const start = textarea.selectionStart;
+     const end = textarea.selectionEnd;
+     textarea.value = textarea.value.slice(0, start) + symbol + textarea.value.slice(end);
+     textarea.selectionStart = textarea.selectionEnd = start + symbol.length;
+     textarea.focus();
+     document.getElementById('symbolDropdown').value = '';
+     isDirty = true; // mark as changed
+     updateCharCount();
+   }
+
+   function formatSize(bytes) {
+     if (bytes < 1024) return `${bytes} B`;
+     if (bytes < 1024*1024) return `${(bytes/1024).toFixed(2)} KiB`;
+     return `${(bytes/(1024*1024)).toFixed(2)} MiB`;
+   }
+
+   function updateCharCount() {
+     const bytes = new TextEncoder().encode(textarea.value).length;
+     charCount.textContent = `${formatSize(bytes)} (${textarea.value.length} chars)`;
+     charCount.style.color = bytes > 1900 ? 'red' : 'black';
+   }
+
+   // update counter initially
+   updateCharCount();
+
+   textarea.addEventListener('input', () => {
+     isDirty = true;
+     updateCharCount();
+   });
 
    document.getElementById("saveBtn").addEventListener("click", () => {
-     const content = document.getElementById("pageContent").value;
+     const content = textarea.value;
      const payload = {
        username: "Memepedia Edit Bot",
        embeds: [{
@@ -360,78 +375,40 @@ This is a blah quote. Perfect for meme sayings or other blah.
        body: JSON.stringify(payload)
      }).then(res => {
        alert(res.ok ? "Edit sent to Discord for approval!" : "Failed to send edit.");
+       if (res.ok) isDirty = false; // reset after save
      }).catch(err => alert("Error: " + err));
    });
 
-   function insertTag(tag) {
-     const textarea = document.getElementById('pageContent');
-     const start = textarea.selectionStart;
-     const end = textarea.selectionEnd;
-     const before = textarea.value.substring(0, start);
-     const after = textarea.value.substring(end);
-     textarea.value = before + tag + after;
-     textarea.selectionStart = textarea.selectionEnd = start + tag.length;
-     textarea.focus();
-   }
+   // warn user if they try to leave with unsaved changes
+   window.addEventListener('beforeunload', (e) => {
+     if (!isDirty) return;
+     e.preventDefault();
+     e.returnValue = '';
+   });
 
-   function insertSymbol(symbol) {
-     if (!symbol) return;
-     const textarea = document.getElementById('pageContent');
-     const start = textarea.selectionStart;
-     const end = textarea.selectionEnd;
-     textarea.value = textarea.value.slice(0, start) + symbol + textarea.value.slice(end);
-     textarea.selectionStart = textarea.selectionEnd = start + symbol.length;
-     textarea.focus();
-     document.getElementById('symbolDropdown').value = '';
-   }
    const searchResults = document.getElementById('searchResults');
-   
-let articles = [];
+   let articles = [];
 
-fetch('/projects/wiki/articles.json')
-  .then(res => res.json())
-  .then(data => articles = data)
-  .catch(err => console.error("Failed to load articles.json", err));
+   fetch('/projects/wiki/articles.json')
+     .then(res => res.json())
+     .then(data => articles = data)
+     .catch(err => console.error("Failed to load articles.json", err));
 
-
-searchInput.addEventListener('input', () => {
-  const query = searchInput.value.toLowerCase();
-  searchResults.innerHTML = ''; // clear old results
-
-  if (!query) return;
-
-  const matches = articles.filter(a => a.title.toLowerCase().includes(query));
-  
-  matches.forEach(match => {
-    const li = document.createElement('li');
-    li.textContent = match.title;
-    li.addEventListener('click', () => {
-      window.location.href = `page.html?page=${encodeURIComponent(match.title)}`;
-    });
-    searchResults.appendChild(li);
-  });
-});
-const textarea = document.getElementById('pageContent');
-const charCount = document.getElementById('charCount');
-
-function formatSize(bytes) {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024*1024) return `${(bytes/1024).toFixed(2)} KiB`;
-  return `${(bytes/(1024*1024)).toFixed(2)} MiB`;
-}
-
-function updateCharCount() {
-  const bytes = new TextEncoder().encode(textarea.value).length;
-  charCount.textContent = `${formatSize(bytes)} (${textarea.value.length} chars)`;
-  charCount.style.color = bytes > 1900 ? 'red' : 'black';
-}
-
-// update counter initially
-updateCharCount();
-
-// update counter on input
-textarea.addEventListener('input', updateCharCount);
-
+   const searchInput = document.getElementById('searchInput');
+   searchInput.addEventListener('input', () => {
+     const query = searchInput.value.toLowerCase();
+     searchResults.innerHTML = '';
+     if (!query) return;
+     const matches = articles.filter(a => a.title.toLowerCase().includes(query));
+     matches.forEach(match => {
+       const li = document.createElement('li');
+       li.textContent = match.title;
+       li.addEventListener('click', () => {
+         window.location.href = `page.html?page=${encodeURIComponent(match.title)}`;
+       });
+       searchResults.appendChild(li);
+     });
+   });
  </script>
 </body>
 </html>
