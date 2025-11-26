@@ -3,75 +3,81 @@
    #334BFF
    #000d6b
  */ 
+
+/* default theme = dark */
+:root {
+    --theme: dark;
+}
+
+/* Base font & general body styles */
 body {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+/* dark mode */
+body[data-theme="dark"] {
     background-color: #000d6b;
     color: white;
-    font-family: sans-serif;
 }
 
-p,h2,h1,h3,h4,h5 {
-     text-align: center;
+body[data-theme="dark"] button {
+    color: orange;
+    background-color: #000d6b;
+    border: 2px solid orange;
 }
 
-summary {
-      text-align: center;
-    }
-
-details {
-  padding: 10px; 
-  border: 5px solid #f7f7f7;
-  border-radius: 3px;
+/* light mode */
+body[data-theme="light"] {
+    background-color: white;
+    color: #1a1625;
 }
 
-ul
-{
-  text-align: center;
-  display: inline-block;
+body[data-theme="light"] button {
+    color: orange;
+    background-color: white;
+    border: 2px solid orange;
 }
 
- a:visited {
-      color: orange;
-  }
+/* links */
+body[data-theme="dark"] a:link { color: white; }
+body[data-theme="dark"] a:visited { color: orange; }
+body[data-theme="dark"] a:hover { color: green; }
 
- a:hover {
-      color: green;
-  }
+body[data-theme="light"] a:link { color: black; }
+body[data-theme="light"] a:visited { color: orange; }
+body[data-theme="light"] a:hover { color: green; }
 
- button:hover {
-      color: white;
-      background-color: orange;
-      cursor: pointer;
-  }
+/* details border */
+body[data-theme="dark"] details { border: 5px solid #f7f7f7; }
+body[data-theme="light"] details { border: 5px solid #ccc; }
 
-button{
-      color: orange;
-      transition-duration: 0.4s;
-      background-color: #000d6b;
-      border: 2px solid orange;
-      margin: 4px 2px;
-      display: inline-block;
-      font-size: 16px;
-    
+/* common styles */
+p,h1,h2,h3,h4,h5,summary { text-align: center; }
+
+ul { 
+    text-align: center; 
+    display: inline-block; 
 }
-   a:link {
+
+/* common button styles for both themes */
+button {
+    margin: 4px 2px;
+    display: inline-block;
+    font-size: 16px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+/* hover effect common to both themes */
+button:hover {
     color: white;
-  }
-    .center {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      width: 50%;
-    }
-    @media screen and (prefers-color-scheme: light) {
-      body {
-        background-color: white;
-        color: #1a1625;
-      }
-      button{
-        color: orange;
-        background-color: white;
-      }
-      a:link {
-     color: black;
-      }
-    }
+    background-color: orange;
+}
+
+.center { 
+    display: block; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 50%; 
+}
