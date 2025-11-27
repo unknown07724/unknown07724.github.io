@@ -121,6 +121,13 @@
           "url": "projects/growth_calculator/",
           "last_updated": "2025-08-04",
           "HasAds": false
+        },
+           {
+          "name": "Crates 2 Beta 1",
+          "description": "Sequel to crates",
+          "url": "projects/crates2/betas/1/index.html",
+          "last_updated": "2025-11-27",
+          "HasAds": false
         }
       ]
     },
