@@ -233,7 +233,7 @@ function displayProjects(projects) {
     if (!galleryOn) {
       if (currentAuthor !== project.author) {
         currentAuthor = project.author;
-        container.innerHTML += `<hr><a href="/users/${project.author}.html"><h2>${project.author}</h2></a><hr>`;
+        container.innerHTML += `<hr><a href="author.html?auth=${encodeURIComponent(project.author)}"><h2>${project.author}</h2></a><hr>`;
       }
       let projectDiv = document.createElement('div');
       projectDiv.innerHTML = `
