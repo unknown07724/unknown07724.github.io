@@ -1,22 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>Author Page</title>
+  <title>Developer</title>
   <style>
     body {
+      text-align: center;
       font-family: sans-serif;
-      max-width: 600px;
-      margin: 20px auto;
-      text-align: left;
     }
     h1 {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px solid #ccc;
-      padding-bottom: 8px;
-      margin-bottom: 16px;
+      max-width: 400px;
+      margin: auto;
     }
   </style>
 </head>
@@ -24,7 +21,7 @@
 
 <script>
 const params = new URLSearchParams(window.location.search);
-const auth = params.get('auth'); // reads ?user=
+const auth = params.get('auth');
 
 fetch('users.json')
   .then(res => res.json())
@@ -46,20 +43,16 @@ fetch('users.json')
     if (femaleVariants.includes(gender.toLowerCase())) gender = "♀";
     if (!["♂","♀"].includes(gender)) gender = "N/A";
 
-    // render <br> in description
+    // support <br> in descriptions
     description = description.replace(/\n/g, "<br>");
 
     document.body.innerHTML = `
       <h1>
-        <span>${username}</span>
-        <span>${gender}</span>
+        <span>${username}</span><span>${gender}</span>
       </h1>
+      <hr>
       <p>${description}</p>
     `;
-  })
-  .catch(err => {
-    console.error(err);
-    document.body.innerHTML = "<h1>Error loading user data</h1>";
   });
 </script>
 
