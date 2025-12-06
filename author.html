@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Developer</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+    }
+    h1 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 400px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const auth = params.get('auth');
+
+fetch('users.json')
+  .then(res => res.json())
+  .then(data => {
+    const user = data[auth];
+    if (!user) {
+      document.body.innerHTML = "<h1>User not found</h1>";
+      return;
+    }
+
+    const username = user.username || "Unknown";
+    let description = user.description || "No description";
+    let gender = user.gender || "N/A";
+
+    // normalize gender
+    const maleVariants = ["male","man","men","boy","♂"];
+    const femaleVariants = ["female","woman","women","girl","♀"];
+    if (maleVariants.includes(gender.toLowerCase())) gender = "♂";
+    if (femaleVariants.includes(gender.toLowerCase())) gender = "♀";
+    if (!["♂","♀"].includes(gender)) gender = "N/A";
+
+    // support <br> in descriptions
+    description = description.replace(/\n/g, "<br>");
+
+    document.body.innerHTML = `
+      <h1>
+        <span>${username}</span><span>${gender}</span>
+      </h1>
+      <hr>
+      <p>${description}</p>
+    `;
+  });
+</script>
+
+</body>
+</html>
