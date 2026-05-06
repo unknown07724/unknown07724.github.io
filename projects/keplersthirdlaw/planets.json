@@ -1,6 +1,7 @@
 [
   { "name": "Earth (Planet)", "yearLength": 365, "starClass": "G", "eccentricity": 0.0167 },
   { "name": "Proxima Centauri b (Exoplanet)", "yearLength": 11.2, "starClass": "M", "eccentricity": 0 },
+  { "name": "Kerbin (Kerbal Space Program)", "yearLength": 36.5, "starClass": "G", "eccentricity": 0.02 },
   { "name": "Vulcan (Star Trek)", "yearLength": 280, "starClass": "G", "eccentricity": 0.05 },
   { "name": "Arrakis (Dune)", "yearLength": 361, "starClass": "F", "eccentricity": 0.1 },
   { "name": "Copper-9 (Murder Drones)", "yearLength": 390, "starClass": "G", "eccentricity": 0.03 },
