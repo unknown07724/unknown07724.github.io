@@ -48,6 +48,20 @@
     window.open(`edit.html?page=${page}`, '_blank'); // can be modal later
   });
 
+window.addEventListener('message', (event) => {
+  if (event.data?.type === 'navigate') {
+    goToPage(event.data.page);
+  }
+});
+
+function goToPage(page) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('page', page);
+  window.history.pushState({}, '', url);
+
+  document.getElementById('content').src = `${githubBase}${page}.html`;
+}
+  
   // Initialize
   window.addEventListener('load', loadPage);
   window.addEventListener('popstate', loadPage); // optional, handles back/forward
