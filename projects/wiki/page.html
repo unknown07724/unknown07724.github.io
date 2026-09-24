@@ -30,41 +30,68 @@
 <script>
   const githubBase = 'https://unknown07724.github.io/projects/wiki/pages/';
 
-  // Get the page from URL search param
   function getPageParam() {
     const params = new URLSearchParams(window.location.search);
-    return params.get('page') || 'memepedia'; // default page
+    return params.get('page') || 'memepedia';
   }
 
-  // Load the page in the iframe
   function loadPage() {
     const page = getPageParam();
     document.getElementById('content').src = `${githubBase}${page}.html`;
   }
 
-  // Edit button opens edit.html for the current page
-  document.getElementById('editBtn').addEventListener('click', () => {
-    const page = getPageParam();
-    window.open(`edit.html?page=${page}`, '_blank'); // can be modal later
+  function navigateToPage(page) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', page);
+
+    window.history.pushState({}, '', url);
+
+    document.getElementById('content').src =
+      `${githubBase}${page}.html`;
+  }
+
+  // Automatically handle links inside the article
+  document.getElementById('content').addEventListener('load', function () {
+    const iframe = this;
+
+    try {
+      const doc = iframe.contentDocument;
+
+      doc.addEventListener('click', function (event) {
+        const link = event.target.closest('a');
+
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+
+        // Only handle normal links
+        if (!href || href.startsWith('#')) return;
+
+        const url = new URL(href, iframe.src);
+
+        // If it's an article link
+        if (url.pathname.endsWith('.html')) {
+          const filename = url.pathname.split('/').pop();
+          const page = filename.replace('.html', '');
+
+          event.preventDefault();
+
+          navigateToPage(page);
+        }
+      });
+    } catch (error) {
+      console.error('Could not access article links:', error);
+    }
   });
 
-window.addEventListener('message', (event) => {
-  if (event.data?.type === 'navigate') {
-    goToPage(event.data.page);
-  }
-});
+  document.getElementById('editBtn').addEventListener('click', () => {
+    const page = getPageParam();
+    window.open(`edit.html?page=${page}`, '_blank');
+  });
 
-function goToPage(page) {
-  const url = new URL(window.location.href);
-  url.searchParams.set('page', page);
-  window.history.pushState({}, '', url);
-
-  document.getElementById('content').src = `${githubBase}${page}.html`;
-}
-  
-  // Initialize
   window.addEventListener('load', loadPage);
-  window.addEventListener('popstate', loadPage); // optional, handles back/forward
+
+  window.addEventListener('popstate', loadPage);
 </script>
 
 </body>
