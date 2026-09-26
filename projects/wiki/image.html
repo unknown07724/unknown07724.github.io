@@ -64,15 +64,16 @@
       margin-top: 10px;
     }
 
-    .file-info th,
-    .file-info td {
+     td {
       border: 1px solid #aaa;
       padding: 8px 12px;
       text-align: left;
     }
 
-    .file-info th {
-      background: #eee;
+     th {
+      background: #CCCCFF;
+      text-align: left;
+      padding: 8px 12px;
     }
   </style>
 </head>
@@ -134,7 +135,7 @@ function renderImagePage(filename, data) {
     const imagePath = `images/${encodeURIComponent(filename)}`;
 
     content.innerHTML = `
-        <h1>File: ${escapeHTML(filename)}</h1>
+        <h1>File:${escapeHTML(filename)}</h1>
 
         <div class="image-viewer">
             <img
@@ -144,32 +145,22 @@ function renderImagePage(filename, data) {
         </div>
 
         <h2>Summary</h2>
-
-        <p>
-            ${escapeHTML(data.description || "No description has been provided.")}
-        </p>
-
-        <h2>File information</h2>
-
-        <table class="file-info">
+       <table class="Summary">
             <tr>
-                <th>Filename</th>
-                <td>${escapeHTML(filename)}</td>
-            </tr>
-
-            <tr>
-                <th>Author</th>
+                <th>Description</th>
                 <td>${escapeHTML(data.author || "Unknown")}</td>
             </tr>
-
             <tr>
                 <th>Date</th>
                 <td>${escapeHTML(data.date || "Unknown")}</td>
             </tr>
-
             <tr>
                 <th>Source</th>
                 <td>${formatSource(data.source)}</td>
+            </tr>
+            <tr>
+                <th>Author</th>
+                <td>${escapeHTML(data.author || "Unknown")}</td>
             </tr>
         </table>
 
