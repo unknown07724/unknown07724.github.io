@@ -1,1 +1,239 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Memepedia, teh memey encyclopedia</title>
+  <link rel="icon" href="favicon.png">
 
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+
+    #sidebar {
+      width: 250px;
+      background: #eee;
+      padding: 15px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    #sidebar h2 {
+      margin-top: 0;
+    }
+
+    #sidebar a,
+    #sidebar button {
+      display: block;
+      padding: 8px;
+      margin: 5px 0;
+      text-decoration: none;
+      background: #ddd;
+      border: none;
+      border-radius: 5px;
+      color: black;
+      cursor: pointer;
+    }
+
+    #sidebar a:hover,
+    #sidebar button:hover {
+      background: #ccc;
+    }
+
+    #content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .image-viewer {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .image-viewer img {
+      max-width: 100%;
+      max-height: 70vh;
+      height: auto;
+    }
+
+    .file-info {
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .file-info th,
+    .file-info td {
+      border: 1px solid #aaa;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    .file-info th {
+      background: #eee;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="sidebar">
+    <img src="logo.svg" alt="Memepedia logo" width="175" height="175">
+
+    <a href="main.html">Main page</a>
+    <a href="edit.html">Create a page</a>
+
+    <button id="editBtn">this page is locked</button>
+
+    <a href="upload.html">Upload Image</a>
+
+    <a href="random.html" id="randomPageLink">Random Page</a>
+  </div>
+
+  <div id="content">
+  </div>
+<script>
+const params = new URLSearchParams(window.location.search);
+const filename = params.get("file");
+
+const content = document.getElementById("content");
+
+async function loadImagePage() {
+    if (!filename) {
+        showError("No image was specified.");
+        return;
+    }
+
+    try {
+        const response = await fetch("data/images.json");
+
+        if (!response.ok) {
+            throw new Error("Could not load image database.");
+        }
+
+        const images = await response.json();
+        const data = images[filename];
+
+        if (!data) {
+            showError(`The image "${filename}" does not exist.`);
+            return;
+        }
+
+        renderImagePage(filename, data);
+    } catch (error) {
+        console.error(error);
+        showError("Something went wrong while loading this image.");
+    }
+}
+
+function renderImagePage(filename, data) {
+    document.title = `${data.title || filename} - Memepedia`;
+
+    const imagePath = `images/${encodeURIComponent(filename)}`;
+
+    content.innerHTML = `
+        <h1>File: ${escapeHTML(filename)}</h1>
+
+        <div class="image-viewer">
+            <img
+                src="${imagePath}"
+                alt="${escapeHTML(data.description || data.title || filename)}"
+            >
+        </div>
+
+        <h2>Summary</h2>
+
+        <p>
+            ${escapeHTML(data.description || "No description has been provided.")}
+        </p>
+
+        <h2>File information</h2>
+
+        <table class="file-info">
+            <tr>
+                <th>Filename</th>
+                <td>${escapeHTML(filename)}</td>
+            </tr>
+
+            <tr>
+                <th>Author</th>
+                <td>${escapeHTML(data.author || "Unknown")}</td>
+            </tr>
+
+            <tr>
+                <th>Date</th>
+                <td>${escapeHTML(data.date || "Unknown")}</td>
+            </tr>
+
+            <tr>
+                <th>Source</th>
+                <td>${formatSource(data.source)}</td>
+            </tr>
+        </table>
+
+        ${renderUsage(data.usedOn)}
+    `;
+}
+
+function renderUsage(usedOn) {
+    if (!Array.isArray(usedOn) || usedOn.length === 0) {
+        return "";
+    }
+
+    return `
+        <h2>File usage</h2>
+
+        <ul>
+            ${usedOn.map(article => `
+                <li>${escapeHTML(article)}</li>
+            `).join("")}
+        </ul>
+    `;
+}
+
+function formatSource(source) {
+    if (!source) {
+        return "Unknown";
+    }
+
+    const safeURL = escapeHTML(source);
+
+    return `
+        <a href="${safeURL}" target="_blank" rel="noopener noreferrer">
+            ${safeURL}
+        </a>
+    `;
+}
+
+function showError(message) {
+    document.title = "Image not found - Memepedia";
+
+    content.innerHTML = `
+        <h1>Image not found</h1>
+
+        <p>${escapeHTML(message)}</p>
+
+        <p>
+            <a href="index.html">Return to Memepedia</a>
+        </p>
+    `;
+}
+
+function escapeHTML(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+loadImagePage();
+
+</script>
+
+</body>
+</html>
