@@ -177,10 +177,12 @@ function renderUsage(usedOn) {
         <h2>File usage</h2>
 
         <ul>
-            ${usedOn.map(article => `
-                <li>${escapeHTML(article)}</li>
-            `).join("")}
-        </ul>
+    ${usedOn.map(article => `
+        <li>
+            <a href="page.html?page=${encodeURIComponent(article)}">${escapeHTML(article)}</a>
+        </li>
+    `).join("")}
+</ul>
     `;
 }
 
