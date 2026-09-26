@@ -37,7 +37,7 @@ const searchResults = document.getElementById('searchResults');
 let articles = [];
 
 // fetch JSON file
-fetch('/projects/wiki/articles.json')
+fetch('/projects/wiki/data/articles.json')
   .then(res => res.json())
   .then(data => articles = data)
   .catch(err => console.error("Failed to load articles.json", err));
